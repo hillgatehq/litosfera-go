@@ -1,0 +1,78 @@
+Compiled from "BolCachedFile.java"
+public final class org.bol.certs.BolCachedFile implements java.io.Externalizable {
+  private long lastModified;
+
+  private java.lang.String content;
+
+  public org.bol.certs.BolCachedFile();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public long getLastModified();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field lastModified:J
+       4: lreturn
+
+  public java.lang.String getContent();
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field content:Ljava/lang/String;
+       4: areturn
+
+  public void setContent(java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #3                  // Field content:Ljava/lang/String;
+       5: return
+
+  public void setLastModified(long);
+    Code:
+       0: aload_0
+       1: lload_1
+       2: putfield      #2                  // Field lastModified:J
+       5: return
+
+  public void writeExternal(java.io.ObjectOutput) throws java.io.IOException;
+    Code:
+       0: aload_1
+       1: aload_0
+       2: getfield      #2                  // Field lastModified:J
+       5: invokeinterface #4,  3            // InterfaceMethod java/io/ObjectOutput.writeLong:(J)V
+      10: aload_1
+      11: aload_0
+      12: getfield      #3                  // Field content:Ljava/lang/String;
+      15: invokeinterface #5,  2            // InterfaceMethod java/io/ObjectOutput.writeObject:(Ljava/lang/Object;)V
+      20: return
+
+  public void readExternal(java.io.ObjectInput) throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokeinterface #6,  1            // InterfaceMethod java/io/ObjectInput.readLong:()J
+       7: putfield      #2                  // Field lastModified:J
+      10: aload_0
+      11: aload_1
+      12: invokeinterface #7,  1            // InterfaceMethod java/io/ObjectInput.readObject:()Ljava/lang/Object;
+      17: checkcast     #8                  // class java/lang/String
+      20: putfield      #3                  // Field content:Ljava/lang/String;
+      23: goto          27
+      26: astore_2
+      27: return
+    Exception table:
+       from    to  target type
+          10    23    26   Class java/lang/ClassNotFoundException
+          10    23    26   Class java/io/IOException
+
+  public java.lang.String toString();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field lastModified:J
+       4: aload_0
+       5: getfield      #3                  // Field content:Ljava/lang/String;
+       8: invokedynamic #11,  0             // InvokeDynamic #0:makeConcatWithConstants:(JLjava/lang/String;)Ljava/lang/String;
+      13: areturn
+}

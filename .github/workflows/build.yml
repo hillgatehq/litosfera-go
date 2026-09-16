@@ -1,0 +1,100 @@
+name: Build and test
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: ${{ matrix.target }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: linux-amd64
+            runner: ubuntu-22.04
+            shell: bash
+            cc: gcc
+            extension: ''
+          - target: windows-amd64
+            runner: windows-2025
+            shell: 'msys2 {0}'
+            cc: gcc
+            extension: .exe
+          - target: darwin-arm64
+            runner: macos-15
+            shell: bash
+            cc: clang
+            extension: ''
+          - target: darwin-amd64
+            runner: macos-15-intel
+            shell: bash
+            cc: clang
+            extension: ''
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
+    env:
+      CGO_ENABLED: '1'
+      CC: ${{ matrix.cc }}
+      TARGET: ${{ matrix.target }}
+      EXE_EXTENSION: ${{ matrix.extension }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          cache: true
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Install Windows C compiler
+        if: runner.os == 'Windows'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          path-type: inherit
+          update: true
+          install: mingw-w64-ucrt-x86_64-gcc
+      - name: Check toolchains and target
+        run: |
+          set -euo pipefail
+          go version
+          "$CC" --version
+          java -version
+          actual="$(go env GOOS)-$(go env GOARCH)"
+          test "$actual" = "$TARGET"
+      - name: Test
+        run: go test -v ./...
+      - name: Vet
+        run: go vet ./...
+      - name: Build and smoke test
+        run: |
+          set -euo pipefail
+          mkdir -p dist/package
+          go build -trimpath -o "dist/package/litosfera-go${EXE_EXTENSION}" .
+          "./dist/package/litosfera-go${EXE_EXTENSION}" --help
+          cp README.md PROTOCOL.md dist/package/
+      - name: Package Unix executable
+        if: runner.os != 'Windows'
+        run: tar -czf "dist/litosfera-go-${TARGET}.tar.gz" -C dist/package .
+      - name: Package Windows executable
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: Compress-Archive -Path dist/package/* -DestinationPath "dist/litosfera-go-$env:TARGET.zip"
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: litosfera-go-${{ matrix.target }}
+          path: |
+            dist/*.tar.gz
+            dist/*.zip
+          if-no-files-found: error
+          retention-days: 30

@@ -1,0 +1,617 @@
+Compiled from "SignCryptoCore.java"
+public class org.bol.crypto.SignCryptoCore extends org.bol.crypto.CryptoCore {
+  private static org.slf4j.Logger log;
+
+  public org.bol.crypto.SignCryptoCore() throws java.security.KeyStoreException, java.security.NoSuchAlgorithmException, java.security.cert.CertStoreException, java.security.cert.CertificateException, java.security.cert.CRLException, java.io.IOException;
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method org/bol/crypto/CryptoCore."<init>":()V
+       4: return
+
+  public void signXadesBesCurrent(java.lang.String, java.io.DataOutputStream, java.time.LocalDateTime, java.security.cert.X509CRL) throws javax.xml.parsers.ParserConfigurationException, org.xml.sax.SAXException, java.io.IOException, xades4j.XAdES4jException, java.security.NoSuchAlgorithmException, java.security.cert.CRLException, javax.xml.xpath.XPathExpressionException, java.security.InvalidKeyException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_0
+       3: invokevirtual #2                  // Method getSignPk:()Ljava/security/PrivateKey;
+       6: aload_0
+       7: invokevirtual #3                  // Method getSignCertificate:()Ljava/security/cert/X509Certificate;
+      10: aload_2
+      11: aload_3
+      12: aload         4
+      14: invokevirtual #4                  // Method signXadesBes:(Ljava/lang/String;Ljava/security/PrivateKey;Ljava/security/cert/X509Certificate;Ljava/io/DataOutputStream;Ljava/time/LocalDateTime;Ljava/security/cert/X509CRL;)V
+      17: return
+
+  protected void signXadesBes(java.lang.String, java.security.PrivateKey, java.security.cert.X509Certificate, java.io.DataOutputStream, java.time.LocalDateTime, java.security.cert.X509CRL) throws javax.xml.parsers.ParserConfigurationException, org.xml.sax.SAXException, java.io.IOException, xades4j.XAdES4jException, java.security.NoSuchAlgorithmException, java.security.cert.CRLException, javax.xml.xpath.XPathExpressionException, java.security.InvalidKeyException;
+    Code:
+       0: aconst_null
+       1: aload_3
+       2: if_acmpeq     10
+       5: aconst_null
+       6: aload_2
+       7: if_acmpne     20
+      10: new           #5                  // class java/security/InvalidKeyException
+      13: dup
+      14: ldc           #6                  // String Missing signing certificate or private key for Xades signing
+      16: invokespecial #7                  // Method java/security/InvalidKeyException."<init>":(Ljava/lang/String;)V
+      19: athrow
+      20: getstatic     #8                  // Field log:Lorg/slf4j/Logger;
+      23: getstatic     #9                  // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+      26: ldc           #10                 // String --------------------
+      28: invokestatic  #11                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      31: getstatic     #8                  // Field log:Lorg/slf4j/Logger;
+      34: getstatic     #9                  // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+      37: aload_3
+      38: invokevirtual #12                 // Method java/security/cert/X509Certificate.toString:()Ljava/lang/String;
+      41: invokestatic  #11                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      44: getstatic     #8                  // Field log:Lorg/slf4j/Logger;
+      47: getstatic     #9                  // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+      50: aload_2
+      51: invokevirtual #13                 // Method java/lang/Object.toString:()Ljava/lang/String;
+      54: invokestatic  #11                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      57: getstatic     #8                  // Field log:Lorg/slf4j/Logger;
+      60: getstatic     #9                  // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+      63: ldc           #10                 // String --------------------
+      65: invokestatic  #11                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      68: aload_1
+      69: invokedynamic #14,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      74: invokestatic  #15                 // Method org/bol/xml/XmlHelper.loadDocumentFromString:(Ljava/lang/String;)Lorg/w3c/dom/Document;
+      77: astore        7
+      79: aload         7
+      81: invokeinterface #16,  1           // InterfaceMethod org/w3c/dom/Document.getDocumentElement:()Lorg/w3c/dom/Element;
+      86: astore        8
+      88: new           #17                 // class xades4j/providers/impl/DirectKeyingDataProvider
+      91: dup
+      92: aload_3
+      93: aload_2
+      94: invokespecial #18                 // Method xades4j/providers/impl/DirectKeyingDataProvider."<init>":(Ljava/security/cert/X509Certificate;Ljava/security/PrivateKey;)V
+      97: astore        9
+      99: new           #19                 // class org/bol/crypto/SignCryptoCore$1
+     102: dup
+     103: aload_0
+     104: aload         9
+     106: invokespecial #20                 // Method org/bol/crypto/SignCryptoCore$1."<init>":(Lorg/bol/crypto/SignCryptoCore;Lxades4j/providers/KeyingDataProvider;)V
+     109: astore        10
+     111: aload         10
+     113: ldc           #21                 // class xades4j/properties/UnsignedQualifyingProperties
+     115: new           #22                 // class xades4j/properties/UnsignedQualifyingPropertiesGen
+     118: dup
+     119: invokespecial #23                 // Method xades4j/properties/UnsignedQualifyingPropertiesGen."<init>":()V
+     122: invokevirtual #24                 // Method xades4j/production/XadesSigningProfile.withPropertyDataObjectGenerator:(Ljava/lang/Class;Lxades4j/production/PropertyDataObjectGenerator;)Lxades4j/production/XadesSigningProfile;
+     125: pop
+     126: new           #25                 // class xades4j/production/BasicSignatureOptions
+     129: dup
+     130: invokespecial #26                 // Method xades4j/production/BasicSignatureOptions."<init>":()V
+     133: iconst_0
+     134: invokevirtual #27                 // Method xades4j/production/BasicSignatureOptions.includePublicKey:(Z)Lxades4j/production/BasicSignatureOptions;
+     137: getstatic     #28                 // Field xades4j/production/SigningCertificateMode.NONE:Lxades4j/production/SigningCertificateMode;
+     140: invokevirtual #29                 // Method xades4j/production/BasicSignatureOptions.includeSigningCertificate:(Lxades4j/production/SigningCertificateMode;)Lxades4j/production/BasicSignatureOptions;
+     143: getstatic     #30                 // Field org/bol/server/ConsoleServlet.VALIDATE:Z
+     146: invokevirtual #31                 // Method xades4j/production/BasicSignatureOptions.checkCertificateValidity:(Z)Lxades4j/production/BasicSignatureOptions;
+     149: astore        11
+     151: aload         10
+     153: aload         11
+     155: invokevirtual #32                 // Method xades4j/production/XadesSigningProfile.withBasicSignatureOptions:(Lxades4j/production/BasicSignatureOptions;)Lxades4j/production/XadesSigningProfile;
+     158: pop
+     159: aload         10
+     161: aload         5
+     163: invokedynamic #33,  0             // InvokeDynamic #1:provideProperties:(Ljava/time/LocalDateTime;)Lxades4j/providers/SignaturePropertiesProvider;
+     168: invokevirtual #34                 // Method xades4j/production/XadesSigningProfile.withSignaturePropertiesProvider:(Lxades4j/providers/SignaturePropertiesProvider;)Lxades4j/production/XadesSigningProfile;
+     171: pop
+     172: new           #35                 // class xades4j/production/SignatureAlgorithms
+     175: dup
+     176: invokespecial #36                 // Method xades4j/production/SignatureAlgorithms."<init>":()V
+     179: new           #37                 // class xades4j/algorithms/ExclusiveCanonicalXMLWithoutComments
+     182: dup
+     183: iconst_0
+     184: anewarray     #38                 // class java/lang/String
+     187: invokespecial #39                 // Method xades4j/algorithms/ExclusiveCanonicalXMLWithoutComments."<init>":([Ljava/lang/String;)V
+     190: invokevirtual #40                 // Method xades4j/production/SignatureAlgorithms.withCanonicalizationAlgorithmForSignature:(Lxades4j/algorithms/Algorithm;)Lxades4j/production/SignatureAlgorithms;
+     193: new           #37                 // class xades4j/algorithms/ExclusiveCanonicalXMLWithoutComments
+     196: dup
+     197: iconst_2
+     198: anewarray     #38                 // class java/lang/String
+     201: dup
+     202: iconst_0
+     203: ldc           #41                 // String ds
+     205: aastore
+     206: dup
+     207: iconst_1
+     208: ldc           #42                 // String xades
+     210: aastore
+     211: invokespecial #39                 // Method xades4j/algorithms/ExclusiveCanonicalXMLWithoutComments."<init>":([Ljava/lang/String;)V
+     214: invokevirtual #43                 // Method xades4j/production/SignatureAlgorithms.withCanonicalizationAlgorithmForTimeStampProperties:(Lxades4j/algorithms/Algorithm;)Lxades4j/production/SignatureAlgorithms;
+     217: ldc           #45                 // String http://www.w3.org/2001/04/xmlenc#sha256
+     219: invokevirtual #46                 // Method xades4j/production/SignatureAlgorithms.withDigestAlgorithmForDataObjectReferences:(Ljava/lang/String;)Lxades4j/production/SignatureAlgorithms;
+     222: ldc           #45                 // String http://www.w3.org/2001/04/xmlenc#sha256
+     224: invokevirtual #47                 // Method xades4j/production/SignatureAlgorithms.withDigestAlgorithmForReferenceProperties:(Ljava/lang/String;)Lxades4j/production/SignatureAlgorithms;
+     227: ldc           #45                 // String http://www.w3.org/2001/04/xmlenc#sha256
+     229: invokevirtual #48                 // Method xades4j/production/SignatureAlgorithms.withDigestAlgorithmForTimeStampProperties:(Ljava/lang/String;)Lxades4j/production/SignatureAlgorithms;
+     232: ldc           #49                 // String RSA
+     234: ldc           #51                 // String http://www.w3.org/2001/04/xmldsig-more#rsa-sha256
+     236: invokevirtual #52                 // Method xades4j/production/SignatureAlgorithms.withSignatureAlgorithm:(Ljava/lang/String;Ljava/lang/String;)Lxades4j/production/SignatureAlgorithms;
+     239: astore        12
+     241: aconst_null
+     242: astore        13
+     244: aconst_null
+     245: getstatic     #53                 // Field org/bol/crypto/CryptoCore.TSA_URL:Ljava/lang/String;
+     248: if_acmpeq     302
+     251: aload         10
+     253: aload         12
+     255: invokevirtual #54                 // Method xades4j/production/XadesSigningProfile.withSignatureAlgorithms:(Lxades4j/production/SignatureAlgorithms;)Lxades4j/production/XadesSigningProfile;
+     258: new           #55                 // class xades4j/providers/impl/HttpTimeStampTokenProvider
+     261: dup
+     262: new           #56                 // class xades4j/providers/impl/DefaultMessageDigestProvider
+     265: dup
+     266: invokespecial #57                 // Method xades4j/providers/impl/DefaultMessageDigestProvider."<init>":()V
+     269: new           #58                 // class xades4j/providers/impl/HttpTsaConfiguration
+     272: dup
+     273: getstatic     #53                 // Field org/bol/crypto/CryptoCore.TSA_URL:Ljava/lang/String;
+     276: invokespecial #59                 // Method xades4j/providers/impl/HttpTsaConfiguration."<init>":(Ljava/lang/String;)V
+     279: invokespecial #60                 // Method xades4j/providers/impl/HttpTimeStampTokenProvider."<init>":(Lxades4j/providers/MessageDigestEngineProvider;Lxades4j/providers/impl/HttpTsaConfiguration;)V
+     282: invokevirtual #61                 // Method xades4j/production/XadesSigningProfile.withTimeStampTokenProvider:(Lxades4j/providers/TimeStampTokenProvider;)Lxades4j/production/XadesSigningProfile;
+     285: invokevirtual #62                 // Method xades4j/production/XadesSigningProfile.newSigner:()Lxades4j/production/XadesSigner;
+     288: astore        13
+     290: aload         13
+     292: checkcast     #63                 // class xades4j/production/SignerBESDefault
+     295: iconst_1
+     296: invokevirtual #64                 // Method xades4j/production/SignerBESDefault.setWithTimeStamp:(Z)V
+     299: goto          314
+     302: aload         10
+     304: aload         12
+     306: invokevirtual #54                 // Method xades4j/production/XadesSigningProfile.withSignatureAlgorithms:(Lxades4j/production/SignatureAlgorithms;)Lxades4j/production/XadesSigningProfile;
+     309: invokevirtual #62                 // Method xades4j/production/XadesSigningProfile.newSigner:()Lxades4j/production/XadesSigner;
+     312: astore        13
+     314: aload         8
+     316: astore        14
+     318: aload         14
+     320: ldc           #65                 // String Id
+     322: invokeinterface #66,  2           // InterfaceMethod org/w3c/dom/Element.hasAttribute:(Ljava/lang/String;)Z
+     327: ifeq          349
+     330: aload         14
+     332: ldc           #65                 // String Id
+     334: invokeinterface #67,  2           // InterfaceMethod org/w3c/dom/Element.getAttribute:(Ljava/lang/String;)Ljava/lang/String;
+     339: invokedynamic #68,  0             // InvokeDynamic #2:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     344: astore        15
+     346: goto          380
+     349: aload         14
+     351: invokeinterface #69,  1           // InterfaceMethod org/w3c/dom/Element.getParentNode:()Lorg/w3c/dom/Node;
+     356: invokeinterface #70,  1           // InterfaceMethod org/w3c/dom/Node.getNodeType:()S
+     361: bipush        9
+     363: if_icmpeq     376
+     366: new           #72                 // class java/lang/IllegalArgumentException
+     369: dup
+     370: ldc           #73                 // String Element without Id must be the document root
+     372: invokespecial #74                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+     375: athrow
+     376: ldc           #75                 // String
+     378: astore        15
+     380: new           #76                 // class xades4j/production/DataObjectReference
+     383: dup
+     384: aload         15
+     386: invokespecial #77                 // Method xades4j/production/DataObjectReference."<init>":(Ljava/lang/String;)V
+     389: new           #78                 // class xades4j/algorithms/EnvelopedSignatureTransform
+     392: dup
+     393: invokespecial #79                 // Method xades4j/algorithms/EnvelopedSignatureTransform."<init>":()V
+     396: invokevirtual #80                 // Method xades4j/production/DataObjectReference.withTransform:(Lxades4j/algorithms/Algorithm;)Lxades4j/properties/DataObjectDesc;
+     399: new           #37                 // class xades4j/algorithms/ExclusiveCanonicalXMLWithoutComments
+     402: dup
+     403: iconst_0
+     404: anewarray     #38                 // class java/lang/String
+     407: invokespecial #39                 // Method xades4j/algorithms/ExclusiveCanonicalXMLWithoutComments."<init>":([Ljava/lang/String;)V
+     410: invokevirtual #81                 // Method xades4j/properties/DataObjectDesc.withTransform:(Lxades4j/algorithms/Algorithm;)Lxades4j/properties/DataObjectDesc;
+     413: astore        16
+     415: aload         7
+     417: invokestatic  #82                 // Method org/bol/crypto/xml/VerifyXmlSignature.getSignatureElementFromDocument:(Lorg/w3c/dom/Document;)Lorg/w3c/dom/Element;
+     420: astore        17
+     422: aconst_null
+     423: aload         17
+     425: if_acmpeq     438
+     428: new           #72                 // class java/lang/IllegalArgumentException
+     431: dup
+     432: ldc           #83                 // String Document already contains element Signature
+     434: invokespecial #74                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+     437: athrow
+     438: aconst_null
+     439: aload         6
+     441: if_acmpeq     499
+     444: aload_3
+     445: invokevirtual #84                 // Method java/security/cert/X509Certificate.getIssuerX500Principal:()Ljavax/security/auth/x500/X500Principal;
+     448: invokevirtual #85                 // Method javax/security/auth/x500/X500Principal.getName:()Ljava/lang/String;
+     451: ldc           #86                 // String LB-LITAS-CA
+     453: invokevirtual #87                 // Method java/lang/String.contains:(Ljava/lang/CharSequence;)Z
+     456: ifeq          499
+     459: ldc           #88                 // String SHA-1
+     461: invokestatic  #89                 // Method java/security/MessageDigest.getInstance:(Ljava/lang/String;)Ljava/security/MessageDigest;
+     464: astore        18
+     466: aload         18
+     468: aload         6
+     470: invokevirtual #90                 // Method java/security/cert/X509CRL.getEncoded:()[B
+     473: invokevirtual #91                 // Method java/security/MessageDigest.update:([B)V
+     476: aload         18
+     478: invokevirtual #92                 // Method java/security/MessageDigest.digest:()[B
+     481: astore        19
+     483: aload         13
+     485: checkcast     #63                 // class xades4j/production/SignerBESDefault
+     488: invokestatic  #93                 // Method java/util/Base64.getEncoder:()Ljava/util/Base64$Encoder;
+     491: aload         19
+     493: invokevirtual #94                 // Method java/util/Base64$Encoder.encodeToString:([B)Ljava/lang/String;
+     496: invokevirtual #95                 // Method xades4j/production/SignerBESDefault.setCrlRef:(Ljava/lang/String;)V
+     499: aload         13
+     501: new           #96                 // class xades4j/production/SignedDataObjects
+     504: dup
+     505: invokespecial #97                 // Method xades4j/production/SignedDataObjects."<init>":()V
+     508: aload         16
+     510: invokevirtual #98                 // Method xades4j/production/SignedDataObjects.withSignedDataObject:(Lxades4j/properties/DataObjectDesc;)Lxades4j/production/SignedDataObjects;
+     513: aload         8
+     515: invokeinterface #99,  3           // InterfaceMethod xades4j/production/XadesSigner.sign:(Lxades4j/production/SignedDataObjects;Lorg/w3c/dom/Node;)Lxades4j/production/XadesSignatureResult;
+     520: pop
+     521: aload         7
+     523: aload         4
+     525: iconst_1
+     526: invokestatic  #100                // Method org/apache/xml/security/utils/XMLUtils.outputDOM:(Lorg/w3c/dom/Node;Ljava/io/OutputStream;Z)V
+     529: return
+
+  public void signXadesBesT2Current(java.lang.String, java.io.DataOutputStream, java.time.LocalDateTime, java.security.cert.X509CRL) throws javax.xml.parsers.ParserConfigurationException, org.xml.sax.SAXException, java.io.IOException, xades4j.XAdES4jException, java.security.NoSuchAlgorithmException, java.security.cert.CRLException, javax.xml.xpath.XPathExpressionException, java.security.InvalidKeyException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_0
+       3: invokevirtual #2                  // Method getSignPk:()Ljava/security/PrivateKey;
+       6: aload_0
+       7: invokevirtual #3                  // Method getSignCertificate:()Ljava/security/cert/X509Certificate;
+      10: aload_2
+      11: aload_3
+      12: aload         4
+      14: invokevirtual #101                // Method signXadesBesT2:(Ljava/lang/String;Ljava/security/PrivateKey;Ljava/security/cert/X509Certificate;Ljava/io/DataOutputStream;Ljava/time/LocalDateTime;Ljava/security/cert/X509CRL;)V
+      17: return
+
+  protected void signXadesBesT2(java.lang.String, java.security.PrivateKey, java.security.cert.X509Certificate, java.io.DataOutputStream, java.time.LocalDateTime, java.security.cert.X509CRL) throws javax.xml.parsers.ParserConfigurationException, org.xml.sax.SAXException, java.io.IOException, xades4j.XAdES4jException, java.security.NoSuchAlgorithmException, java.security.cert.CRLException, javax.xml.xpath.XPathExpressionException, java.security.InvalidKeyException;
+    Code:
+       0: aconst_null
+       1: aload_3
+       2: if_acmpeq     10
+       5: aconst_null
+       6: aload_2
+       7: if_acmpne     20
+      10: new           #5                  // class java/security/InvalidKeyException
+      13: dup
+      14: ldc           #6                  // String Missing signing certificate or private key for Xades signing
+      16: invokespecial #7                  // Method java/security/InvalidKeyException."<init>":(Ljava/lang/String;)V
+      19: athrow
+      20: getstatic     #8                  // Field log:Lorg/slf4j/Logger;
+      23: getstatic     #9                  // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+      26: ldc           #10                 // String --------------------
+      28: invokestatic  #11                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      31: getstatic     #8                  // Field log:Lorg/slf4j/Logger;
+      34: getstatic     #9                  // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+      37: aload_3
+      38: invokevirtual #12                 // Method java/security/cert/X509Certificate.toString:()Ljava/lang/String;
+      41: invokestatic  #11                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      44: getstatic     #8                  // Field log:Lorg/slf4j/Logger;
+      47: getstatic     #9                  // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+      50: aload_2
+      51: invokevirtual #13                 // Method java/lang/Object.toString:()Ljava/lang/String;
+      54: invokestatic  #11                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      57: getstatic     #8                  // Field log:Lorg/slf4j/Logger;
+      60: getstatic     #9                  // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+      63: ldc           #10                 // String --------------------
+      65: invokestatic  #11                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      68: aload_1
+      69: invokestatic  #15                 // Method org/bol/xml/XmlHelper.loadDocumentFromString:(Ljava/lang/String;)Lorg/w3c/dom/Document;
+      72: astore        7
+      74: aload         7
+      76: invokeinterface #16,  1           // InterfaceMethod org/w3c/dom/Document.getDocumentElement:()Lorg/w3c/dom/Element;
+      81: astore        8
+      83: new           #17                 // class xades4j/providers/impl/DirectKeyingDataProvider
+      86: dup
+      87: aload_3
+      88: aload_2
+      89: invokespecial #18                 // Method xades4j/providers/impl/DirectKeyingDataProvider."<init>":(Ljava/security/cert/X509Certificate;Ljava/security/PrivateKey;)V
+      92: astore        9
+      94: new           #102                // class org/bol/crypto/SignCryptoCore$2
+      97: dup
+      98: aload_0
+      99: aload         9
+     101: invokespecial #103                // Method org/bol/crypto/SignCryptoCore$2."<init>":(Lorg/bol/crypto/SignCryptoCore;Lxades4j/providers/KeyingDataProvider;)V
+     104: astore        10
+     106: new           #25                 // class xades4j/production/BasicSignatureOptions
+     109: dup
+     110: invokespecial #26                 // Method xades4j/production/BasicSignatureOptions."<init>":()V
+     113: getstatic     #30                 // Field org/bol/server/ConsoleServlet.VALIDATE:Z
+     116: invokevirtual #31                 // Method xades4j/production/BasicSignatureOptions.checkCertificateValidity:(Z)Lxades4j/production/BasicSignatureOptions;
+     119: iconst_0
+     120: invokevirtual #27                 // Method xades4j/production/BasicSignatureOptions.includePublicKey:(Z)Lxades4j/production/BasicSignatureOptions;
+     123: astore        11
+     125: aload         10
+     127: aload         11
+     129: invokevirtual #32                 // Method xades4j/production/XadesSigningProfile.withBasicSignatureOptions:(Lxades4j/production/BasicSignatureOptions;)Lxades4j/production/XadesSigningProfile;
+     132: pop
+     133: aload         10
+     135: new           #104                // class org/bol/crypto/SignCryptoCore$3
+     138: dup
+     139: aload_0
+     140: aload         5
+     142: invokespecial #105                // Method org/bol/crypto/SignCryptoCore$3."<init>":(Lorg/bol/crypto/SignCryptoCore;Ljava/time/LocalDateTime;)V
+     145: invokevirtual #34                 // Method xades4j/production/XadesSigningProfile.withSignaturePropertiesProvider:(Lxades4j/providers/SignaturePropertiesProvider;)Lxades4j/production/XadesSigningProfile;
+     148: pop
+     149: new           #35                 // class xades4j/production/SignatureAlgorithms
+     152: dup
+     153: invokespecial #36                 // Method xades4j/production/SignatureAlgorithms."<init>":()V
+     156: new           #37                 // class xades4j/algorithms/ExclusiveCanonicalXMLWithoutComments
+     159: dup
+     160: iconst_0
+     161: anewarray     #38                 // class java/lang/String
+     164: invokespecial #39                 // Method xades4j/algorithms/ExclusiveCanonicalXMLWithoutComments."<init>":([Ljava/lang/String;)V
+     167: invokevirtual #40                 // Method xades4j/production/SignatureAlgorithms.withCanonicalizationAlgorithmForSignature:(Lxades4j/algorithms/Algorithm;)Lxades4j/production/SignatureAlgorithms;
+     170: new           #37                 // class xades4j/algorithms/ExclusiveCanonicalXMLWithoutComments
+     173: dup
+     174: iconst_2
+     175: anewarray     #38                 // class java/lang/String
+     178: dup
+     179: iconst_0
+     180: ldc           #41                 // String ds
+     182: aastore
+     183: dup
+     184: iconst_1
+     185: ldc           #42                 // String xades
+     187: aastore
+     188: invokespecial #39                 // Method xades4j/algorithms/ExclusiveCanonicalXMLWithoutComments."<init>":([Ljava/lang/String;)V
+     191: invokevirtual #43                 // Method xades4j/production/SignatureAlgorithms.withCanonicalizationAlgorithmForTimeStampProperties:(Lxades4j/algorithms/Algorithm;)Lxades4j/production/SignatureAlgorithms;
+     194: ldc           #45                 // String http://www.w3.org/2001/04/xmlenc#sha256
+     196: invokevirtual #46                 // Method xades4j/production/SignatureAlgorithms.withDigestAlgorithmForDataObjectReferences:(Ljava/lang/String;)Lxades4j/production/SignatureAlgorithms;
+     199: ldc           #45                 // String http://www.w3.org/2001/04/xmlenc#sha256
+     201: invokevirtual #47                 // Method xades4j/production/SignatureAlgorithms.withDigestAlgorithmForReferenceProperties:(Ljava/lang/String;)Lxades4j/production/SignatureAlgorithms;
+     204: ldc           #45                 // String http://www.w3.org/2001/04/xmlenc#sha256
+     206: invokevirtual #48                 // Method xades4j/production/SignatureAlgorithms.withDigestAlgorithmForTimeStampProperties:(Ljava/lang/String;)Lxades4j/production/SignatureAlgorithms;
+     209: ldc           #49                 // String RSA
+     211: ldc           #51                 // String http://www.w3.org/2001/04/xmldsig-more#rsa-sha256
+     213: invokevirtual #52                 // Method xades4j/production/SignatureAlgorithms.withSignatureAlgorithm:(Ljava/lang/String;Ljava/lang/String;)Lxades4j/production/SignatureAlgorithms;
+     216: astore        12
+     218: aconst_null
+     219: astore        13
+     221: aconst_null
+     222: getstatic     #53                 // Field org/bol/crypto/CryptoCore.TSA_URL:Ljava/lang/String;
+     225: if_acmpeq     279
+     228: aload         10
+     230: aload         12
+     232: invokevirtual #54                 // Method xades4j/production/XadesSigningProfile.withSignatureAlgorithms:(Lxades4j/production/SignatureAlgorithms;)Lxades4j/production/XadesSigningProfile;
+     235: new           #55                 // class xades4j/providers/impl/HttpTimeStampTokenProvider
+     238: dup
+     239: new           #56                 // class xades4j/providers/impl/DefaultMessageDigestProvider
+     242: dup
+     243: invokespecial #57                 // Method xades4j/providers/impl/DefaultMessageDigestProvider."<init>":()V
+     246: new           #58                 // class xades4j/providers/impl/HttpTsaConfiguration
+     249: dup
+     250: getstatic     #53                 // Field org/bol/crypto/CryptoCore.TSA_URL:Ljava/lang/String;
+     253: invokespecial #59                 // Method xades4j/providers/impl/HttpTsaConfiguration."<init>":(Ljava/lang/String;)V
+     256: invokespecial #60                 // Method xades4j/providers/impl/HttpTimeStampTokenProvider."<init>":(Lxades4j/providers/MessageDigestEngineProvider;Lxades4j/providers/impl/HttpTsaConfiguration;)V
+     259: invokevirtual #61                 // Method xades4j/production/XadesSigningProfile.withTimeStampTokenProvider:(Lxades4j/providers/TimeStampTokenProvider;)Lxades4j/production/XadesSigningProfile;
+     262: invokevirtual #62                 // Method xades4j/production/XadesSigningProfile.newSigner:()Lxades4j/production/XadesSigner;
+     265: astore        13
+     267: aload         13
+     269: checkcast     #63                 // class xades4j/production/SignerBESDefault
+     272: iconst_1
+     273: invokevirtual #64                 // Method xades4j/production/SignerBESDefault.setWithTimeStamp:(Z)V
+     276: goto          291
+     279: aload         10
+     281: aload         12
+     283: invokevirtual #54                 // Method xades4j/production/XadesSigningProfile.withSignatureAlgorithms:(Lxades4j/production/SignatureAlgorithms;)Lxades4j/production/XadesSigningProfile;
+     286: invokevirtual #62                 // Method xades4j/production/XadesSigningProfile.newSigner:()Lxades4j/production/XadesSigner;
+     289: astore        13
+     291: aload         8
+     293: astore        14
+     295: aload         14
+     297: ldc           #65                 // String Id
+     299: invokeinterface #66,  2           // InterfaceMethod org/w3c/dom/Element.hasAttribute:(Ljava/lang/String;)Z
+     304: ifeq          326
+     307: aload         14
+     309: ldc           #65                 // String Id
+     311: invokeinterface #67,  2           // InterfaceMethod org/w3c/dom/Element.getAttribute:(Ljava/lang/String;)Ljava/lang/String;
+     316: invokedynamic #68,  0             // InvokeDynamic #2:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     321: astore        15
+     323: goto          357
+     326: aload         14
+     328: invokeinterface #69,  1           // InterfaceMethod org/w3c/dom/Element.getParentNode:()Lorg/w3c/dom/Node;
+     333: invokeinterface #70,  1           // InterfaceMethod org/w3c/dom/Node.getNodeType:()S
+     338: bipush        9
+     340: if_icmpeq     353
+     343: new           #72                 // class java/lang/IllegalArgumentException
+     346: dup
+     347: ldc           #73                 // String Element without Id must be the document root
+     349: invokespecial #74                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+     352: athrow
+     353: ldc           #75                 // String
+     355: astore        15
+     357: new           #76                 // class xades4j/production/DataObjectReference
+     360: dup
+     361: aload         15
+     363: invokespecial #77                 // Method xades4j/production/DataObjectReference."<init>":(Ljava/lang/String;)V
+     366: new           #78                 // class xades4j/algorithms/EnvelopedSignatureTransform
+     369: dup
+     370: invokespecial #79                 // Method xades4j/algorithms/EnvelopedSignatureTransform."<init>":()V
+     373: invokevirtual #80                 // Method xades4j/production/DataObjectReference.withTransform:(Lxades4j/algorithms/Algorithm;)Lxades4j/properties/DataObjectDesc;
+     376: new           #37                 // class xades4j/algorithms/ExclusiveCanonicalXMLWithoutComments
+     379: dup
+     380: iconst_0
+     381: anewarray     #38                 // class java/lang/String
+     384: invokespecial #39                 // Method xades4j/algorithms/ExclusiveCanonicalXMLWithoutComments."<init>":([Ljava/lang/String;)V
+     387: invokevirtual #81                 // Method xades4j/properties/DataObjectDesc.withTransform:(Lxades4j/algorithms/Algorithm;)Lxades4j/properties/DataObjectDesc;
+     390: astore        16
+     392: new           #76                 // class xades4j/production/DataObjectReference
+     395: dup
+     396: ldc           #106                // String #KeyInfo
+     398: invokespecial #77                 // Method xades4j/production/DataObjectReference."<init>":(Ljava/lang/String;)V
+     401: new           #37                 // class xades4j/algorithms/ExclusiveCanonicalXMLWithoutComments
+     404: dup
+     405: iconst_0
+     406: anewarray     #38                 // class java/lang/String
+     409: invokespecial #39                 // Method xades4j/algorithms/ExclusiveCanonicalXMLWithoutComments."<init>":([Ljava/lang/String;)V
+     412: invokevirtual #80                 // Method xades4j/production/DataObjectReference.withTransform:(Lxades4j/algorithms/Algorithm;)Lxades4j/properties/DataObjectDesc;
+     415: astore        17
+     417: aload         7
+     419: invokestatic  #82                 // Method org/bol/crypto/xml/VerifyXmlSignature.getSignatureElementFromDocument:(Lorg/w3c/dom/Document;)Lorg/w3c/dom/Element;
+     422: astore        18
+     424: aconst_null
+     425: aload         18
+     427: if_acmpeq     440
+     430: new           #72                 // class java/lang/IllegalArgumentException
+     433: dup
+     434: ldc           #83                 // String Document already contains element Signature
+     436: invokespecial #74                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+     439: athrow
+     440: aload         8
+     442: ldc           #107                // String PyldDesc
+     444: invokeinterface #108,  2          // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     449: iconst_0
+     450: invokeinterface #109,  2          // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     455: checkcast     #110                // class org/w3c/dom/Element
+     458: astore        19
+     460: aconst_null
+     461: aload         19
+     463: if_acmpne     476
+     466: new           #72                 // class java/lang/IllegalArgumentException
+     469: dup
+     470: ldc           #111                // String Error locating PyldDesc in root
+     472: invokespecial #74                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+     475: athrow
+     476: aload         19
+     478: ldc           #112                // String ApplSpcfcInf
+     480: invokeinterface #108,  2          // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     485: iconst_0
+     486: invokeinterface #109,  2          // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     491: checkcast     #110                // class org/w3c/dom/Element
+     494: astore        20
+     496: aconst_null
+     497: aload         20
+     499: if_acmpne     512
+     502: new           #72                 // class java/lang/IllegalArgumentException
+     505: dup
+     506: ldc           #113                // String Error locating ApplSpcfcInf in PyldDesc
+     508: invokespecial #74                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+     511: athrow
+     512: aload         20
+     514: ldc           #114                // String Sgntr
+     516: invokeinterface #108,  2          // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     521: iconst_0
+     522: invokeinterface #109,  2          // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     527: checkcast     #110                // class org/w3c/dom/Element
+     530: astore        21
+     532: aconst_null
+     533: aload         21
+     535: if_acmpne     548
+     538: new           #72                 // class java/lang/IllegalArgumentException
+     541: dup
+     542: ldc           #115                // String Error locating Sgntr in ApplSpcfcInf
+     544: invokespecial #74                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+     547: athrow
+     548: aload         21
+     550: invokeinterface #116,  1          // InterfaceMethod org/w3c/dom/Element.hasChildNodes:()Z
+     555: ifeq          568
+     558: new           #72                 // class java/lang/IllegalArgumentException
+     561: dup
+     562: ldc           #117                // String Sgntr is not empty
+     564: invokespecial #74                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+     567: athrow
+     568: aconst_null
+     569: aload         6
+     571: if_acmpeq     642
+     574: aload_3
+     575: invokevirtual #84                 // Method java/security/cert/X509Certificate.getIssuerX500Principal:()Ljavax/security/auth/x500/X500Principal;
+     578: invokevirtual #85                 // Method javax/security/auth/x500/X500Principal.getName:()Ljava/lang/String;
+     581: ldc           #86                 // String LB-LITAS-CA
+     583: invokevirtual #87                 // Method java/lang/String.contains:(Ljava/lang/CharSequence;)Z
+     586: ifeq          632
+     589: ldc           #88                 // String SHA-1
+     591: invokestatic  #89                 // Method java/security/MessageDigest.getInstance:(Ljava/lang/String;)Ljava/security/MessageDigest;
+     594: astore        22
+     596: aload         22
+     598: aload         6
+     600: invokevirtual #90                 // Method java/security/cert/X509CRL.getEncoded:()[B
+     603: invokevirtual #91                 // Method java/security/MessageDigest.update:([B)V
+     606: aload         22
+     608: invokevirtual #92                 // Method java/security/MessageDigest.digest:()[B
+     611: astore        23
+     613: aload         13
+     615: checkcast     #63                 // class xades4j/production/SignerBESDefault
+     618: invokestatic  #93                 // Method java/util/Base64.getEncoder:()Ljava/util/Base64$Encoder;
+     621: aload         23
+     623: invokevirtual #94                 // Method java/util/Base64$Encoder.encodeToString:([B)Ljava/lang/String;
+     626: invokevirtual #95                 // Method xades4j/production/SignerBESDefault.setCrlRef:(Ljava/lang/String;)V
+     629: goto          642
+     632: aload         13
+     634: checkcast     #63                 // class xades4j/production/SignerBESDefault
+     637: aload         6
+     639: invokevirtual #118                // Method xades4j/production/SignerBESDefault.setKeyInfoCrl:(Ljava/security/cert/X509CRL;)V
+     642: aload         13
+     644: new           #96                 // class xades4j/production/SignedDataObjects
+     647: dup
+     648: invokespecial #97                 // Method xades4j/production/SignedDataObjects."<init>":()V
+     651: aload         16
+     653: invokevirtual #98                 // Method xades4j/production/SignedDataObjects.withSignedDataObject:(Lxades4j/properties/DataObjectDesc;)Lxades4j/production/SignedDataObjects;
+     656: aload         17
+     658: invokevirtual #98                 // Method xades4j/production/SignedDataObjects.withSignedDataObject:(Lxades4j/properties/DataObjectDesc;)Lxades4j/production/SignedDataObjects;
+     661: aload         21
+     663: invokeinterface #99,  3           // InterfaceMethod xades4j/production/XadesSigner.sign:(Lxades4j/production/SignedDataObjects;Lorg/w3c/dom/Node;)Lxades4j/production/XadesSignatureResult;
+     668: pop
+     669: aload         7
+     671: aload         4
+     673: iconst_1
+     674: invokestatic  #100                // Method org/apache/xml/security/utils/XMLUtils.outputDOM:(Lorg/w3c/dom/Node;Ljava/io/OutputStream;Z)V
+     677: return
+
+  private static void lambda$signXadesBes$0(java.time.LocalDateTime, xades4j.providers.SignaturePropertiesCollector);
+    Code:
+       0: invokestatic  #119                // Method java/util/Calendar.getInstance:()Ljava/util/Calendar;
+       3: astore_2
+       4: aload_2
+       5: invokevirtual #120                // Method java/util/Calendar.clear:()V
+       8: aload_2
+       9: aload_0
+      10: invokevirtual #121                // Method java/time/LocalDateTime.getYear:()I
+      13: aload_0
+      14: invokevirtual #122                // Method java/time/LocalDateTime.getMonthValue:()I
+      17: iconst_1
+      18: isub
+      19: aload_0
+      20: invokevirtual #123                // Method java/time/LocalDateTime.getDayOfMonth:()I
+      23: aload_0
+      24: invokevirtual #124                // Method java/time/LocalDateTime.getHour:()I
+      27: aload_0
+      28: invokevirtual #125                // Method java/time/LocalDateTime.getMinute:()I
+      31: aload_0
+      32: invokevirtual #126                // Method java/time/LocalDateTime.getSecond:()I
+      35: invokevirtual #127                // Method java/util/Calendar.set:(IIIIII)V
+      38: new           #128                // class xades4j/properties/SigningTimeProperty
+      41: dup
+      42: aload_2
+      43: invokespecial #129                // Method xades4j/properties/SigningTimeProperty."<init>":(Ljava/util/Calendar;)V
+      46: astore_3
+      47: aload_1
+      48: new           #130                // class xades4j/properties/SignatureProductionPlaceProperty
+      51: dup
+      52: ldc           #131                // String City
+      54: ldc           #132                // String State
+      56: ldc           #133                // String PostalCode
+      58: ldc           #134                // String Country
+      60: invokespecial #135                // Method xades4j/properties/SignatureProductionPlaceProperty."<init>":(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+      63: invokeinterface #136,  2          // InterfaceMethod xades4j/providers/SignaturePropertiesCollector.setSignatureProductionPlace:(Lxades4j/properties/SignatureProductionPlaceProperty;)V
+      68: aload_1
+      69: new           #137                // class xades4j/properties/SignerRoleProperty
+      72: dup
+      73: invokespecial #138                // Method xades4j/properties/SignerRoleProperty."<init>":()V
+      76: ldc           #139                // String Some role
+      78: invokevirtual #140                // Method xades4j/properties/SignerRoleProperty.withClaimedRole:(Ljava/lang/String;)Lxades4j/properties/SignerRoleProperty;
+      81: invokeinterface #141,  2          // InterfaceMethod xades4j/providers/SignaturePropertiesCollector.setSignerRole:(Lxades4j/properties/SignerRoleProperty;)V
+      86: aload_1
+      87: aload_3
+      88: invokeinterface #142,  2          // InterfaceMethod xades4j/providers/SignaturePropertiesCollector.setSigningTime:(Lxades4j/properties/SigningTimeProperty;)V
+      93: return
+
+  static {};
+    Code:
+       0: ldc           #143                // class org/bol/crypto/SignCryptoCore
+       2: invokestatic  #144                // Method org/slf4j/LoggerFactory.getLogger:(Ljava/lang/Class;)Lorg/slf4j/Logger;
+       5: putstatic     #8                  // Field log:Lorg/slf4j/Logger;
+       8: return
+}

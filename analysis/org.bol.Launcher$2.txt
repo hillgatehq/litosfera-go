@@ -1,0 +1,91 @@
+Compiled from "Launcher.java"
+class org.bol.Launcher$2 extends org.bol.certs.CertTrustStore {
+  org.bol.Launcher$2() throws java.security.NoSuchAlgorithmException, java.security.KeyStoreException, java.io.IOException, java.security.cert.CertStoreException, java.security.cert.CRLException, java.security.cert.CertificateException;
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method org/bol/certs/CertTrustStore."<init>":()V
+       4: return
+
+  protected void loadAndCheckCertificate(java.security.cert.X509Certificate);
+    Code:
+       0: getstatic     #2                  // Field org/bol/Launcher$SYSTEM_GROUP_TYPES.LITAS:Lorg/bol/Launcher$SYSTEM_GROUP_TYPES;
+       3: getstatic     #3                  // Field org/bol/Launcher.SYSTEM_GROUP:Lorg/bol/Launcher$SYSTEM_GROUP_TYPES;
+       6: if_acmpeq     18
+       9: getstatic     #4                  // Field org/bol/Launcher$SYSTEM_GROUP_TYPES.NEOLITAS:Lorg/bol/Launcher$SYSTEM_GROUP_TYPES;
+      12: getstatic     #3                  // Field org/bol/Launcher.SYSTEM_GROUP:Lorg/bol/Launcher$SYSTEM_GROUP_TYPES;
+      15: if_acmpne     197
+      18: getstatic     #5                  // Field org/bol/Launcher$ENVIRONMENT_TYPES.DEV:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+      21: getstatic     #6                  // Field org/bol/Launcher.ENVIRONMENT:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+      24: if_acmpne     44
+      27: aload_1
+      28: invokevirtual #7                  // Method java/security/cert/X509Certificate.getSerialNumber:()Ljava/math/BigInteger;
+      31: bipush        16
+      33: invokevirtual #8                  // Method java/math/BigInteger.toString:(I)Ljava/lang/String;
+      36: ldc           #9                  // String 499b66760000000000f5
+      38: invokevirtual #10                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      41: ifne          96
+      44: getstatic     #11                 // Field org/bol/Launcher$ENVIRONMENT_TYPES.TEST:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+      47: getstatic     #6                  // Field org/bol/Launcher.ENVIRONMENT:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+      50: if_acmpne     70
+      53: aload_1
+      54: invokevirtual #7                  // Method java/security/cert/X509Certificate.getSerialNumber:()Ljava/math/BigInteger;
+      57: bipush        16
+      59: invokevirtual #8                  // Method java/math/BigInteger.toString:(I)Ljava/lang/String;
+      62: ldc           #9                  // String 499b66760000000000f5
+      64: invokevirtual #10                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      67: ifne          96
+      70: getstatic     #12                 // Field org/bol/Launcher$ENVIRONMENT_TYPES.PROD:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+      73: getstatic     #6                  // Field org/bol/Launcher.ENVIRONMENT:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+      76: if_acmpne     101
+      79: aload_1
+      80: invokevirtual #7                  // Method java/security/cert/X509Certificate.getSerialNumber:()Ljava/math/BigInteger;
+      83: bipush        16
+      85: invokevirtual #8                  // Method java/math/BigInteger.toString:(I)Ljava/lang/String;
+      88: ldc           #13                 // String 5011d8dc0000000002b1
+      90: invokevirtual #10                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      93: ifeq          101
+      96: aload_0
+      97: aload_1
+      98: putfield      #14                 // Field verifyCert:Ljava/security/cert/X509Certificate;
+     101: aload_1
+     102: invokevirtual #7                  // Method java/security/cert/X509Certificate.getSerialNumber:()Ljava/math/BigInteger;
+     105: bipush        16
+     107: invokevirtual #8                  // Method java/math/BigInteger.toString:(I)Ljava/lang/String;
+     110: ldc           #15                 // String 330e4169000000000008
+     112: invokevirtual #10                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     115: ifne          186
+     118: aload_1
+     119: invokevirtual #7                  // Method java/security/cert/X509Certificate.getSerialNumber:()Ljava/math/BigInteger;
+     122: bipush        16
+     124: invokevirtual #8                  // Method java/math/BigInteger.toString:(I)Ljava/lang/String;
+     127: ldc           #16                 // String 499bf0a50000000000f6
+     129: invokevirtual #10                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     132: ifne          186
+     135: aload_1
+     136: invokevirtual #7                  // Method java/security/cert/X509Certificate.getSerialNumber:()Ljava/math/BigInteger;
+     139: bipush        16
+     141: invokevirtual #8                  // Method java/math/BigInteger.toString:(I)Ljava/lang/String;
+     144: ldc           #17                 // String 67a77925000000000026
+     146: invokevirtual #10                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     149: ifne          186
+     152: aload_1
+     153: invokevirtual #7                  // Method java/security/cert/X509Certificate.getSerialNumber:()Ljava/math/BigInteger;
+     156: bipush        16
+     158: invokevirtual #8                  // Method java/math/BigInteger.toString:(I)Ljava/lang/String;
+     161: ldc           #18                 // String 50113c9c0000000002b0
+     163: invokevirtual #10                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     166: ifne          186
+     169: aload_1
+     170: invokevirtual #7                  // Method java/security/cert/X509Certificate.getSerialNumber:()Ljava/math/BigInteger;
+     173: bipush        16
+     175: invokevirtual #8                  // Method java/math/BigInteger.toString:(I)Ljava/lang/String;
+     178: ldc           #19                 // String 740000000b701abaf4c31ac53a00000000000b
+     180: invokevirtual #10                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     183: ifeq          197
+     186: aload_0
+     187: getfield      #20                 // Field timeStampCerts:Ljava/util/Collection;
+     190: aload_1
+     191: invokeinterface #21,  2           // InterfaceMethod java/util/Collection.add:(Ljava/lang/Object;)Z
+     196: pop
+     197: return
+}

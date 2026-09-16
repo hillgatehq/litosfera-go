@@ -1,0 +1,72 @@
+Compiled from "SignCryptoCore.java"
+class org.bol.crypto.SignCryptoCore$3 implements xades4j.providers.SignaturePropertiesProvider {
+  final java.time.LocalDateTime val$localDateTime;
+
+  final org.bol.crypto.SignCryptoCore this$0;
+
+  org.bol.crypto.SignCryptoCore$3(org.bol.crypto.SignCryptoCore, java.time.LocalDateTime);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #1                  // Field this$0:Lorg/bol/crypto/SignCryptoCore;
+       5: aload_0
+       6: aload_2
+       7: putfield      #2                  // Field val$localDateTime:Ljava/time/LocalDateTime;
+      10: aload_0
+      11: invokespecial #3                  // Method java/lang/Object."<init>":()V
+      14: return
+
+  public void provideProperties(xades4j.providers.SignaturePropertiesCollector);
+    Code:
+       0: invokestatic  #4                  // Method java/util/Calendar.getInstance:()Ljava/util/Calendar;
+       3: astore_2
+       4: aload_2
+       5: invokevirtual #5                  // Method java/util/Calendar.clear:()V
+       8: aload_2
+       9: aload_0
+      10: getfield      #2                  // Field val$localDateTime:Ljava/time/LocalDateTime;
+      13: invokevirtual #6                  // Method java/time/LocalDateTime.getYear:()I
+      16: aload_0
+      17: getfield      #2                  // Field val$localDateTime:Ljava/time/LocalDateTime;
+      20: invokevirtual #7                  // Method java/time/LocalDateTime.getMonthValue:()I
+      23: iconst_1
+      24: isub
+      25: aload_0
+      26: getfield      #2                  // Field val$localDateTime:Ljava/time/LocalDateTime;
+      29: invokevirtual #8                  // Method java/time/LocalDateTime.getDayOfMonth:()I
+      32: aload_0
+      33: getfield      #2                  // Field val$localDateTime:Ljava/time/LocalDateTime;
+      36: invokevirtual #9                  // Method java/time/LocalDateTime.getHour:()I
+      39: aload_0
+      40: getfield      #2                  // Field val$localDateTime:Ljava/time/LocalDateTime;
+      43: invokevirtual #10                 // Method java/time/LocalDateTime.getMinute:()I
+      46: aload_0
+      47: getfield      #2                  // Field val$localDateTime:Ljava/time/LocalDateTime;
+      50: invokevirtual #11                 // Method java/time/LocalDateTime.getSecond:()I
+      53: invokevirtual #12                 // Method java/util/Calendar.set:(IIIIII)V
+      56: new           #13                 // class xades4j/properties/SigningTimeProperty
+      59: dup
+      60: aload_2
+      61: invokespecial #14                 // Method xades4j/properties/SigningTimeProperty."<init>":(Ljava/util/Calendar;)V
+      64: astore_3
+      65: aload_1
+      66: new           #15                 // class xades4j/properties/SignatureProductionPlaceProperty
+      69: dup
+      70: ldc           #16                 // String City
+      72: ldc           #17                 // String State
+      74: ldc           #18                 // String PostalCode
+      76: ldc           #19                 // String Country
+      78: invokespecial #20                 // Method xades4j/properties/SignatureProductionPlaceProperty."<init>":(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+      81: invokeinterface #21,  2           // InterfaceMethod xades4j/providers/SignaturePropertiesCollector.setSignatureProductionPlace:(Lxades4j/properties/SignatureProductionPlaceProperty;)V
+      86: aload_1
+      87: new           #22                 // class xades4j/properties/SignerRoleProperty
+      90: dup
+      91: invokespecial #23                 // Method xades4j/properties/SignerRoleProperty."<init>":()V
+      94: ldc           #24                 // String Some role
+      96: invokevirtual #25                 // Method xades4j/properties/SignerRoleProperty.withClaimedRole:(Ljava/lang/String;)Lxades4j/properties/SignerRoleProperty;
+      99: invokeinterface #26,  2           // InterfaceMethod xades4j/providers/SignaturePropertiesCollector.setSignerRole:(Lxades4j/properties/SignerRoleProperty;)V
+     104: aload_1
+     105: aload_3
+     106: invokeinterface #27,  2           // InterfaceMethod xades4j/providers/SignaturePropertiesCollector.setSigningTime:(Lxades4j/properties/SigningTimeProperty;)V
+     111: return
+}

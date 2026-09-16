@@ -1,0 +1,177 @@
+Compiled from "ReservedFile.java"
+public class org.bol.server.ReservedFile extends java.io.File {
+  private static org.slf4j.Logger log;
+
+  private static final long serialVersionUID = 1l;
+
+  private java.io.RandomAccessFile raf;
+
+  private java.nio.channels.FileLock lock;
+
+  private java.lang.String reserve_token;
+
+  private java.time.Instant taken_at;
+
+  public java.lang.String getToken();
+    Code:
+       0: aload_0
+       1: getfield      #1                  // Field reserve_token:Ljava/lang/String;
+       4: areturn
+
+  public java.time.Instant getTakenAt();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field taken_at:Ljava/time/Instant;
+       4: areturn
+
+  public java.time.Duration ElapsedSince();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field taken_at:Ljava/time/Instant;
+       4: invokestatic  #3                  // Method java/time/Instant.now:()Ljava/time/Instant;
+       7: invokestatic  #4                  // Method java/time/Duration.between:(Ljava/time/temporal/Temporal;Ljava/time/temporal/Temporal;)Ljava/time/Duration;
+      10: areturn
+
+  public boolean shouldRelease(long);
+    Code:
+       0: aload_0
+       1: invokevirtual #5                  // Method ElapsedSince:()Ljava/time/Duration;
+       4: invokevirtual #6                  // Method java/time/Duration.getSeconds:()J
+       7: lload_1
+       8: lcmp
+       9: iflt          16
+      12: iconst_1
+      13: goto          17
+      16: iconst_0
+      17: ireturn
+
+  public void clean() throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field raf:Ljava/io/RandomAccessFile;
+       4: lconst_0
+       5: invokevirtual #8                  // Method java/io/RandomAccessFile.setLength:(J)V
+       8: return
+
+  public void release() throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field lock:Ljava/nio/channels/FileLock;
+       4: invokevirtual #10                 // Method java/nio/channels/FileLock.release:()V
+       7: getstatic     #11                 // Field log:Lorg/slf4j/Logger;
+      10: getstatic     #12                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+      13: aload_0
+      14: invokevirtual #13                 // Method getAbsolutePath:()Ljava/lang/String;
+      17: invokedynamic #14,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      22: invokestatic  #15                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      25: goto          49
+      28: astore_1
+      29: getstatic     #11                 // Field log:Lorg/slf4j/Logger;
+      32: getstatic     #17                 // Field org/slf4j/event/Level.ERROR:Lorg/slf4j/event/Level;
+      35: aload_0
+      36: invokevirtual #18                 // Method getName:()Ljava/lang/String;
+      39: invokedynamic #19,  0             // InvokeDynamic #1:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      44: invokestatic  #15                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      47: aload_1
+      48: athrow
+      49: aload_0
+      50: getfield      #7                  // Field raf:Ljava/io/RandomAccessFile;
+      53: invokevirtual #20                 // Method java/io/RandomAccessFile.close:()V
+      56: return
+    Exception table:
+       from    to  target type
+           0    25    28   Class java/nio/channels/ClosedChannelException
+
+  public java.io.InputStream getInputStream();
+    Code:
+       0: new           #21                 // class org/bol/server/ChannelProtectedInputStream
+       3: dup
+       4: aload_0
+       5: getfield      #9                  // Field lock:Ljava/nio/channels/FileLock;
+       8: invokevirtual #22                 // Method java/nio/channels/FileLock.channel:()Ljava/nio/channels/FileChannel;
+      11: invokestatic  #23                 // Method java/nio/channels/Channels.newInputStream:(Ljava/nio/channels/ReadableByteChannel;)Ljava/io/InputStream;
+      14: invokespecial #24                 // Method org/bol/server/ChannelProtectedInputStream."<init>":(Ljava/io/InputStream;)V
+      17: areturn
+
+  public java.io.OutputStream getOutputStream();
+    Code:
+       0: new           #25                 // class org/bol/server/ChannelProtectedOutputStream
+       3: dup
+       4: aload_0
+       5: getfield      #9                  // Field lock:Ljava/nio/channels/FileLock;
+       8: invokevirtual #22                 // Method java/nio/channels/FileLock.channel:()Ljava/nio/channels/FileChannel;
+      11: invokestatic  #26                 // Method java/nio/channels/Channels.newOutputStream:(Ljava/nio/channels/WritableByteChannel;)Ljava/io/OutputStream;
+      14: invokespecial #27                 // Method org/bol/server/ChannelProtectedOutputStream."<init>":(Ljava/io/OutputStream;)V
+      17: areturn
+
+  protected org.bol.server.ReservedFile(java.lang.String, java.lang.String) throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #28                 // Method java/io/File."<init>":(Ljava/lang/String;)V
+       5: aload_0
+       6: aconst_null
+       7: putfield      #1                  // Field reserve_token:Ljava/lang/String;
+      10: aload_0
+      11: aconst_null
+      12: putfield      #2                  // Field taken_at:Ljava/time/Instant;
+      15: aload_0
+      16: new           #29                 // class java/io/RandomAccessFile
+      19: dup
+      20: aload_0
+      21: ldc           #30                 // String rw
+      23: invokespecial #31                 // Method java/io/RandomAccessFile."<init>":(Ljava/io/File;Ljava/lang/String;)V
+      26: putfield      #7                  // Field raf:Ljava/io/RandomAccessFile;
+      29: aload_0
+      30: aload_0
+      31: getfield      #7                  // Field raf:Ljava/io/RandomAccessFile;
+      34: invokevirtual #32                 // Method java/io/RandomAccessFile.getChannel:()Ljava/nio/channels/FileChannel;
+      37: invokevirtual #33                 // Method java/nio/channels/FileChannel.lock:()Ljava/nio/channels/FileLock;
+      40: putfield      #9                  // Field lock:Ljava/nio/channels/FileLock;
+      43: aload_0
+      44: aload_2
+      45: putfield      #1                  // Field reserve_token:Ljava/lang/String;
+      48: aload_0
+      49: invokestatic  #3                  // Method java/time/Instant.now:()Ljava/time/Instant;
+      52: putfield      #2                  // Field taken_at:Ljava/time/Instant;
+      55: getstatic     #11                 // Field log:Lorg/slf4j/Logger;
+      58: getstatic     #12                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+      61: aload_0
+      62: invokevirtual #13                 // Method getAbsolutePath:()Ljava/lang/String;
+      65: invokedynamic #34,  0             // InvokeDynamic #2:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      70: invokestatic  #15                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      73: goto          109
+      76: astore_3
+      77: getstatic     #11                 // Field log:Lorg/slf4j/Logger;
+      80: aload_3
+      81: invokestatic  #36                 // Method org/bol/server/LogWrapper.logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+      84: getstatic     #11                 // Field log:Lorg/slf4j/Logger;
+      87: getstatic     #17                 // Field org/slf4j/event/Level.ERROR:Lorg/slf4j/event/Level;
+      90: aload_2
+      91: aload_1
+      92: invokedynamic #37,  0             // InvokeDynamic #3:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      97: invokestatic  #15                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     100: aload_0
+     101: getfield      #7                  // Field raf:Ljava/io/RandomAccessFile;
+     104: invokevirtual #20                 // Method java/io/RandomAccessFile.close:()V
+     107: aload_3
+     108: athrow
+     109: return
+    Exception table:
+       from    to  target type
+          29    73    76   Class java/lang/Exception
+
+  public boolean renameTo(java.io.File);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #38                 // Method java/io/File.renameTo:(Ljava/io/File;)Z
+       5: ireturn
+
+  static {};
+    Code:
+       0: ldc           #39                 // class org/bol/server/ReservedFile
+       2: invokestatic  #40                 // Method org/slf4j/LoggerFactory.getLogger:(Ljava/lang/Class;)Lorg/slf4j/Logger;
+       5: putstatic     #11                 // Field log:Lorg/slf4j/Logger;
+       8: return
+}

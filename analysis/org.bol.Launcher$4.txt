@@ -1,0 +1,25 @@
+Compiled from "Launcher.java"
+class org.bol.Launcher$4 extends org.eclipse.jetty.server.Server {
+  org.bol.Launcher$4(org.eclipse.jetty.util.thread.ThreadPool);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #1                  // Method org/eclipse/jetty/server/Server."<init>":(Lorg/eclipse/jetty/util/thread/ThreadPool;)V
+       5: return
+
+  public void handle(org.eclipse.jetty.server.HttpChannel) throws java.io.IOException, javax.servlet.ServletException;
+    Code:
+       0: aload_1
+       1: invokevirtual #2                  // Method org/eclipse/jetty/server/HttpChannel.getResponse:()Lorg/eclipse/jetty/server/Response;
+       4: astore_2
+       5: aload_2
+       6: ldc           #3                  // String Server
+       8: getstatic     #4                  // Field org/bol/Launcher.PROJ_NAME:Ljava/lang/String;
+      11: getstatic     #5                  // Field org/bol/Launcher.PROJ_VERSION:Ljava/lang/String;
+      14: invokedynamic #6,  0              // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      19: invokevirtual #7                  // Method org/eclipse/jetty/server/Response.setHeader:(Ljava/lang/String;Ljava/lang/String;)V
+      22: aload_0
+      23: aload_1
+      24: invokespecial #8                  // Method org/eclipse/jetty/server/Server.handle:(Lorg/eclipse/jetty/server/HttpChannel;)V
+      27: return
+}

@@ -1,0 +1,3012 @@
+Compiled from "TakoDpsTransport.java"
+public class org.bol.transport.TakoDpsTransport extends org.bol.transport.DpsScheduler {
+  private static final java.lang.String RESULT_SUCCESS_TAG = "success";
+
+  private static final java.lang.String RESULT_ERROR_TAG = "error";
+
+  private java.time.Instant lastSyncTime;
+
+  private static org.slf4j.Logger log;
+
+  private final java.util.concurrent.locks.ReentrantLock receiveLock;
+
+  public org.bol.transport.TakoDpsTransport(org.bol.transport.HttpsTransport) throws javax.xml.xpath.XPathExpressionException, java.lang.NoSuchMethodException, java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException, java.lang.ClassNotFoundException, java.lang.InstantiationException, java.io.IOException, org.xml.sax.SAXException, javax.xml.parsers.ParserConfigurationException, javax.xml.crypto.MarshalException, javax.xml.crypto.dsig.XMLSignatureException, xades4j.XAdES4jException, java.text.ParseException, java.security.GeneralSecurityException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #1                  // Method org/bol/transport/DpsScheduler."<init>":(Lorg/bol/transport/HttpsTransport;)V
+       5: aload_0
+       6: aconst_null
+       7: putfield      #2                  // Field lastSyncTime:Ljava/time/Instant;
+      10: aload_0
+      11: new           #3                  // class java/util/concurrent/locks/ReentrantLock
+      14: dup
+      15: invokespecial #4                  // Method java/util/concurrent/locks/ReentrantLock."<init>":()V
+      18: putfield      #5                  // Field receiveLock:Ljava/util/concurrent/locks/ReentrantLock;
+      21: return
+
+  public java.lang.String getDpsEndpSend();
+    Code:
+       0: ldc           #6                  // String /Message/Send
+       2: areturn
+
+  public java.lang.String getDpsEndpReceive();
+    Code:
+       0: ldc           #7                  // String /Message/Receive
+       2: areturn
+
+  public java.lang.String getDefaultSignType();
+    Code:
+       0: ldc           #9                  // String xchg
+       2: areturn
+
+  protected byte[] saveReceivedSignedFile(byte[], java.lang.String, java.lang.String, java.lang.String) throws java.io.IOException, javax.xml.xpath.XPathExpressionException, java.lang.NoSuchMethodException, java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException, java.lang.ClassNotFoundException, java.lang.InstantiationException, java.lang.NoSuchFieldException, org.xml.sax.SAXException, javax.xml.parsers.ParserConfigurationException, javax.xml.crypto.MarshalException, javax.xml.crypto.dsig.XMLSignatureException, javax.xml.transform.TransformerException, xades4j.XAdES4jException, java.security.GeneralSecurityException;
+    Code:
+       0: aload_0
+       1: invokevirtual #10                 // Method getPasConfiguration:()Lorg/bol/server/PasConfiguration;
+       4: aload_3
+       5: ldc           #11                 // String ReceiveType
+       7: invokevirtual #12                 // Method org/bol/server/PasConfiguration.getSystemConfigurationValue:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;
+      10: invokevirtual #13                 // Method java/lang/Object.toString:()Ljava/lang/String;
+      13: astore        5
+      15: aload         5
+      17: ldc           #15                 // String WWW
+      19: invokevirtual #16                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      22: ifeq          35
+      25: new           #17                 // class java/lang/IllegalStateException
+      28: dup
+      29: ldc           #18                 // String WWW mode is not supported in TAKO
+      31: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      34: athrow
+      35: aload         5
+      37: ldc           #20                 // String REST
+      39: invokevirtual #16                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      42: ifeq          161
+      45: aload_0
+      46: invokevirtual #10                 // Method getPasConfiguration:()Lorg/bol/server/PasConfiguration;
+      49: aload_3
+      50: ldc           #21                 // String SaveInSignedURL
+      52: invokevirtual #12                 // Method org/bol/server/PasConfiguration.getSystemConfigurationValue:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;
+      55: invokevirtual #13                 // Method java/lang/Object.toString:()Ljava/lang/String;
+      58: astore        6
+      60: aconst_null
+      61: aload         6
+      63: if_acmpeq     143
+      66: aload         6
+      68: invokevirtual #22                 // Method java/lang/String.isEmpty:()Z
+      71: ifne          143
+      74: aload_0
+      75: invokevirtual #10                 // Method getPasConfiguration:()Lorg/bol/server/PasConfiguration;
+      78: aload_3
+      79: ldc           #23                 // String ReceiveDISTimeout
+      81: invokevirtual #12                 // Method org/bol/server/PasConfiguration.getSystemConfigurationValue:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;
+      84: checkcast     #24                 // class java/lang/Double
+      87: invokevirtual #25                 // Method java/lang/Double.intValue:()I
+      90: sipush        1000
+      93: imul
+      94: istore        7
+      96: aload_0
+      97: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+     100: aload         6
+     102: new           #27                 // class java/lang/String
+     105: dup
+     106: aload_1
+     107: getstatic     #28                 // Field java/nio/charset/StandardCharsets.UTF_8:Ljava/nio/charset/Charset;
+     110: invokespecial #29                 // Method java/lang/String."<init>":([BLjava/nio/charset/Charset;)V
+     113: aload_2
+     114: new           #30                 // class org/bol/xml/DefaultXmlContentProducer
+     117: dup
+     118: invokespecial #31                 // Method org/bol/xml/DefaultXmlContentProducer."<init>":()V
+     121: iload         7
+     123: invokevirtual #32                 // Method org/bol/transport/HttpsTransport.postXmlRestRequest:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lorg/bol/xml/XmlContentProducer;I)Ljava/net/HttpURLConnection;
+     126: astore        8
+     128: aload_0
+     129: aload         8
+     131: invokevirtual #33                 // Method checkDisResponseRest:(Ljava/net/HttpURLConnection;)Ljava/util/Map;
+     134: astore        9
+     136: aload_0
+     137: aload         9
+     139: invokevirtual #34                 // Method decodeXmlFromRestResponse:(Ljava/util/Map;)[B
+     142: areturn
+     143: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+     146: getstatic     #36                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     149: aload_3
+     150: invokedynamic #37,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     155: invokestatic  #38                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     158: goto          351
+     161: aload         5
+     163: ldc           #39                 // String FILE
+     165: invokevirtual #16                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     168: ifeq          336
+     171: aload_0
+     172: invokevirtual #10                 // Method getPasConfiguration:()Lorg/bol/server/PasConfiguration;
+     175: aload_3
+     176: ldc           #40                 // String InSignedPath
+     178: invokevirtual #12                 // Method org/bol/server/PasConfiguration.getSystemConfigurationValue:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;
+     181: invokevirtual #13                 // Method java/lang/Object.toString:()Ljava/lang/String;
+     184: astore        6
+     186: aconst_null
+     187: aload         6
+     189: if_acmpeq     318
+     192: aload         6
+     194: invokevirtual #22                 // Method java/lang/String.isEmpty:()Z
+     197: ifne          318
+     200: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+     203: getstatic     #36                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     206: aload         4
+     208: invokedynamic #41,  0             // InvokeDynamic #1:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     213: invokestatic  #38                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     216: aload_0
+     217: invokevirtual #42                 // Method getFileRepo:()Lorg/bol/server/FileRepository;
+     220: aload         6
+     222: aload         4
+     224: invokedynamic #43,  0             // InvokeDynamic #2:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     229: invokevirtual #44                 // Method org/bol/server/FileRepository.ReserveFile:(Ljava/lang/String;)Lorg/bol/server/ReservedFile;
+     232: astore        7
+     234: aload         7
+     236: invokevirtual #45                 // Method org/bol/server/ReservedFile.clean:()V
+     239: aload         7
+     241: invokevirtual #46                 // Method org/bol/server/ReservedFile.getOutputStream:()Ljava/io/OutputStream;
+     244: astore        8
+     246: aload         8
+     248: aload_1
+     249: invokevirtual #47                 // Method java/io/OutputStream.write:([B)V
+     252: aload         8
+     254: invokevirtual #48                 // Method java/io/OutputStream.flush:()V
+     257: aload         8
+     259: ifnull        297
+     262: aload         8
+     264: invokevirtual #49                 // Method java/io/OutputStream.close:()V
+     267: goto          297
+     270: astore        9
+     272: aload         8
+     274: ifnull        294
+     277: aload         8
+     279: invokevirtual #49                 // Method java/io/OutputStream.close:()V
+     282: goto          294
+     285: astore        10
+     287: aload         9
+     289: aload         10
+     291: invokevirtual #51                 // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     294: aload         9
+     296: athrow
+     297: aload         7
+     299: invokevirtual #52                 // Method org/bol/server/ReservedFile.release:()V
+     302: goto          315
+     305: astore        11
+     307: aload         7
+     309: invokevirtual #52                 // Method org/bol/server/ReservedFile.release:()V
+     312: aload         11
+     314: athrow
+     315: goto          333
+     318: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+     321: getstatic     #36                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     324: aload_3
+     325: invokedynamic #53,  0             // InvokeDynamic #3:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     330: invokestatic  #38                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     333: goto          351
+     336: new           #17                 // class java/lang/IllegalStateException
+     339: dup
+     340: aload         5
+     342: invokedynamic #54,  0             // InvokeDynamic #4:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     347: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     350: athrow
+     351: aconst_null
+     352: areturn
+    Exception table:
+       from    to  target type
+         246   257   270   Class java/lang/Throwable
+         277   282   285   Class java/lang/Throwable
+         239   297   305   any
+         305   307   305   any
+
+  public void doReceive(boolean, java.lang.String) throws javax.xml.xpath.XPathExpressionException, java.io.IOException, org.xml.sax.SAXException, javax.xml.parsers.ParserConfigurationException, javax.xml.crypto.MarshalException, javax.xml.crypto.dsig.XMLSignatureException, javax.xml.transform.TransformerException, xades4j.XAdES4jException, javax.xml.transform.TransformerFactoryConfigurationError, java.security.GeneralSecurityException, java.lang.NoSuchMethodException, java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException, java.lang.ClassNotFoundException, java.lang.InstantiationException, java.lang.NoSuchFieldException, java.text.ParseException;
+    Code:
+       0: aconst_null
+       1: astore_3
+       2: iconst_0
+       3: istore        4
+       5: aload_0
+       6: invokevirtual #10                 // Method getPasConfiguration:()Lorg/bol/server/PasConfiguration;
+       9: ldc           #55                 // String ReceivePASTimeout
+      11: invokevirtual #56                 // Method org/bol/server/PasConfiguration.getReceiveConfigurationValue:(Ljava/lang/String;)Ljava/lang/Object;
+      14: checkcast     #24                 // class java/lang/Double
+      17: invokevirtual #25                 // Method java/lang/Double.intValue:()I
+      20: sipush        1000
+      23: imul
+      24: istore        5
+      26: aload_0
+      27: invokevirtual #10                 // Method getPasConfiguration:()Lorg/bol/server/PasConfiguration;
+      30: ldc           #57                 // String SendPASTimeout
+      32: invokevirtual #58                 // Method org/bol/server/PasConfiguration.getSendConfigurationValue:(Ljava/lang/String;)Ljava/lang/Object;
+      35: checkcast     #24                 // class java/lang/Double
+      38: invokevirtual #25                 // Method java/lang/Double.intValue:()I
+      41: sipush        1000
+      44: imul
+      45: istore        6
+      47: aload_0
+      48: getfield      #5                  // Field receiveLock:Ljava/util/concurrent/locks/ReentrantLock;
+      51: invokevirtual #59                 // Method java/util/concurrent/locks/ReentrantLock.lock:()V
+      54: aload_0
+      55: aload_0
+      56: invokevirtual #60                 // Method getDpsEndpReceive:()Ljava/lang/String;
+      59: ldc           #61                 // String
+      61: aconst_null
+      62: new           #30                 // class org/bol/xml/DefaultXmlContentProducer
+      65: dup
+      66: invokespecial #31                 // Method org/bol/xml/DefaultXmlContentProducer."<init>":()V
+      69: iload         5
+      71: invokevirtual #62                 // Method sendRestRequestGetJson:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lorg/bol/xml/XmlContentProducer;I)Ljava/util/Map;
+      74: astore_3
+      75: aload_0
+      76: getfield      #5                  // Field receiveLock:Ljava/util/concurrent/locks/ReentrantLock;
+      79: invokevirtual #63                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+      82: goto          97
+      85: astore        7
+      87: aload_0
+      88: getfield      #5                  // Field receiveLock:Ljava/util/concurrent/locks/ReentrantLock;
+      91: invokevirtual #63                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+      94: aload         7
+      96: athrow
+      97: aconst_null
+      98: aload_3
+      99: if_acmpeq     3583
+     102: aload_3
+     103: ldc           #64                 // String status
+     105: invokeinterface #65,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+     110: ifeq          3573
+     113: aload_3
+     114: ldc           #66                 // String data
+     116: invokeinterface #65,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+     121: ifeq          3573
+     124: aload_3
+     125: ldc           #66                 // String data
+     127: invokeinterface #67,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     132: checkcast     #68                 // class java/util/Map
+     135: astore        7
+     137: aload_3
+     138: ldc           #64                 // String status
+     140: invokeinterface #67,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     145: ldc           #69                 // String Success
+     147: invokevirtual #70                 // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+     150: ifeq          3386
+     153: aload_0
+     154: aload_3
+     155: invokevirtual #34                 // Method decodeXmlFromRestResponse:(Ljava/util/Map;)[B
+     158: astore        8
+     160: aconst_null
+     161: aload         8
+     163: if_acmpeq     3373
+     166: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+     169: getstatic     #71                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     172: ldc           #72                 // String Received file:
+     174: aload         8
+     176: invokestatic  #73                 // Method org/bol/server/LogWrapper.dumpBytes:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;[B)V
+     179: new           #74                 // class java/io/ByteArrayInputStream
+     182: dup
+     183: aload         8
+     185: invokespecial #75                 // Method java/io/ByteArrayInputStream."<init>":([B)V
+     188: invokestatic  #76                 // Method org/bol/xml/XmlHelper.loadDocumentFromInputStream:(Ljava/io/InputStream;)Lorg/w3c/dom/Document;
+     191: astore        9
+     193: aload         9
+     195: invokeinterface #77,  1           // InterfaceMethod org/w3c/dom/Document.getDocumentElement:()Lorg/w3c/dom/Element;
+     200: astore        10
+     202: aload         10
+     204: ldc           #78                 // String PyldDesc
+     206: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     211: iconst_0
+     212: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     217: checkcast     #81                 // class org/w3c/dom/Element
+     220: astore        11
+     222: aload         11
+     224: ldc           #82                 // String ApplSpcfcInf
+     226: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     231: iconst_0
+     232: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     237: checkcast     #81                 // class org/w3c/dom/Element
+     240: astore        12
+     242: aconst_null
+     243: aload         11
+     245: if_acmpeq     3360
+     248: aconst_null
+     249: aload         12
+     251: if_acmpeq     3360
+     254: aload         11
+     256: ldc           #83                 // String PyldDtls
+     258: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     263: iconst_0
+     264: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     269: checkcast     #81                 // class org/w3c/dom/Element
+     272: astore        13
+     274: aload         13
+     276: ldc           #84                 // String CreDtAndTm
+     278: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     283: iconst_0
+     284: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     289: checkcast     #81                 // class org/w3c/dom/Element
+     292: astore        14
+     294: aload         13
+     296: ldc           #85                 // String PyldIdr
+     298: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     303: iconst_0
+     304: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     309: checkcast     #81                 // class org/w3c/dom/Element
+     312: astore        15
+     314: aload         10
+     316: ldc           #86                 // String Pyld
+     318: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     323: iconst_0
+     324: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     329: checkcast     #81                 // class org/w3c/dom/Element
+     332: astore        16
+     334: aload         16
+     336: ldc           #87                 // String BizData
+     338: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     343: iconst_0
+     344: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     349: checkcast     #81                 // class org/w3c/dom/Element
+     352: astore        17
+     354: aload         17
+     356: ldc           #88                 // String AppHdr
+     358: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     363: iconst_0
+     364: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     369: checkcast     #81                 // class org/w3c/dom/Element
+     372: astore        18
+     374: aload         18
+     376: ldc           #89                 // String Fr
+     378: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     383: iconst_0
+     384: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     389: checkcast     #81                 // class org/w3c/dom/Element
+     392: astore        19
+     394: aload         19
+     396: ldc           #90                 // String FIId
+     398: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     403: iconst_0
+     404: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     409: checkcast     #81                 // class org/w3c/dom/Element
+     412: astore        20
+     414: aload         20
+     416: ldc           #91                 // String FinInstnId
+     418: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     423: iconst_0
+     424: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     429: checkcast     #81                 // class org/w3c/dom/Element
+     432: astore        21
+     434: aload         21
+     436: ldc           #92                 // String BICFI
+     438: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     443: iconst_0
+     444: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     449: checkcast     #81                 // class org/w3c/dom/Element
+     452: astore        22
+     454: aload         18
+     456: ldc           #93                 // String Prty
+     458: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     463: iconst_0
+     464: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     469: checkcast     #81                 // class org/w3c/dom/Element
+     472: astore        23
+     474: aload         18
+     476: ldc           #94                 // String To
+     478: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     483: iconst_0
+     484: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     489: checkcast     #81                 // class org/w3c/dom/Element
+     492: astore        24
+     494: aload         24
+     496: ldc           #90                 // String FIId
+     498: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     503: iconst_0
+     504: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     509: checkcast     #81                 // class org/w3c/dom/Element
+     512: astore        25
+     514: aload         25
+     516: ldc           #91                 // String FinInstnId
+     518: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     523: iconst_0
+     524: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     529: checkcast     #81                 // class org/w3c/dom/Element
+     532: astore        26
+     534: aload         26
+     536: ldc           #92                 // String BICFI
+     538: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     543: iconst_0
+     544: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     549: checkcast     #81                 // class org/w3c/dom/Element
+     552: astore        27
+     554: aload         18
+     556: ldc           #95                 // String BizSvc
+     558: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     563: iconst_0
+     564: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     569: checkcast     #81                 // class org/w3c/dom/Element
+     572: astore        28
+     574: aload         18
+     576: ldc           #96                 // String MktPrctc
+     578: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     583: iconst_0
+     584: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     589: checkcast     #81                 // class org/w3c/dom/Element
+     592: astore        29
+     594: aload         29
+     596: ldc           #97                 // String Regy
+     598: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     603: iconst_0
+     604: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     609: checkcast     #81                 // class org/w3c/dom/Element
+     612: astore        30
+     614: aload         29
+     616: ldc           #98                 // String Id
+     618: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     623: iconst_0
+     624: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     629: checkcast     #81                 // class org/w3c/dom/Element
+     632: astore        31
+     634: aload         30
+     636: invokestatic  #99                 // Method org/bol/xml/XmlHelper.getCharacterDataFromElement:(Lorg/w3c/dom/Element;)Ljava/lang/String;
+     639: astore        32
+     641: aload         31
+     643: invokestatic  #99                 // Method org/bol/xml/XmlHelper.getCharacterDataFromElement:(Lorg/w3c/dom/Element;)Ljava/lang/String;
+     646: astore        33
+     648: aload         11
+     650: ldc           #100                // String MnfstDtls
+     652: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     657: iconst_0
+     658: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     663: checkcast     #81                 // class org/w3c/dom/Element
+     666: astore        34
+     668: aload         34
+     670: ldc           #101                // String DocTp
+     672: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     677: iconst_0
+     678: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     683: checkcast     #81                 // class org/w3c/dom/Element
+     686: astore        35
+     688: aload         15
+     690: invokestatic  #99                 // Method org/bol/xml/XmlHelper.getCharacterDataFromElement:(Lorg/w3c/dom/Element;)Ljava/lang/String;
+     693: astore        36
+     695: aload         22
+     697: invokestatic  #99                 // Method org/bol/xml/XmlHelper.getCharacterDataFromElement:(Lorg/w3c/dom/Element;)Ljava/lang/String;
+     700: astore        37
+     702: aload         27
+     704: invokestatic  #99                 // Method org/bol/xml/XmlHelper.getCharacterDataFromElement:(Lorg/w3c/dom/Element;)Ljava/lang/String;
+     707: astore        38
+     709: aload         28
+     711: invokestatic  #99                 // Method org/bol/xml/XmlHelper.getCharacterDataFromElement:(Lorg/w3c/dom/Element;)Ljava/lang/String;
+     714: astore        39
+     716: aload         23
+     718: invokestatic  #99                 // Method org/bol/xml/XmlHelper.getCharacterDataFromElement:(Lorg/w3c/dom/Element;)Ljava/lang/String;
+     721: astore        40
+     723: aload         35
+     725: invokestatic  #99                 // Method org/bol/xml/XmlHelper.getCharacterDataFromElement:(Lorg/w3c/dom/Element;)Ljava/lang/String;
+     728: astore        41
+     730: aload         14
+     732: invokestatic  #99                 // Method org/bol/xml/XmlHelper.getCharacterDataFromElement:(Lorg/w3c/dom/Element;)Ljava/lang/String;
+     735: astore        42
+     737: new           #102                // class org/bol/server/ReceivedFile
+     740: dup
+     741: aload_2
+     742: invokespecial #103                // Method org/bol/server/ReceivedFile."<init>":(Ljava/lang/String;)V
+     745: astore        43
+     747: aload         43
+     749: ldc           #104                // String id
+     751: aload         36
+     753: invokevirtual #105                // Method org/bol/server/ReceivedFile.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     756: pop
+     757: aload         18
+     759: ldc           #106                // String BizMsgIdr
+     761: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     766: iconst_0
+     767: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     772: checkcast     #81                 // class org/w3c/dom/Element
+     775: astore        44
+     777: aload         44
+     779: invokestatic  #99                 // Method org/bol/xml/XmlHelper.getCharacterDataFromElement:(Lorg/w3c/dom/Element;)Ljava/lang/String;
+     782: astore        45
+     784: aload         18
+     786: ldc           #107                // String Rltd
+     788: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     793: iconst_0
+     794: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     799: checkcast     #81                 // class org/w3c/dom/Element
+     802: astore        46
+     804: aconst_null
+     805: aload         46
+     807: if_acmpeq     847
+     810: aload         46
+     812: ldc           #106                // String BizMsgIdr
+     814: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     819: iconst_0
+     820: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     825: checkcast     #81                 // class org/w3c/dom/Element
+     828: astore        47
+     830: aload         47
+     832: invokestatic  #99                 // Method org/bol/xml/XmlHelper.getCharacterDataFromElement:(Lorg/w3c/dom/Element;)Ljava/lang/String;
+     835: astore        48
+     837: aload         43
+     839: ldc           #108                // String relatedid
+     841: aload         48
+     843: invokevirtual #105                // Method org/bol/server/ReceivedFile.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     846: pop
+     847: aconst_null
+     848: astore        47
+     850: aconst_null
+     851: aload         7
+     853: if_acmpeq     892
+     856: aload         7
+     858: ldc           #109                // String correlationId
+     860: invokeinterface #65,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+     865: ifeq          892
+     868: aload         7
+     870: ldc           #109                // String correlationId
+     872: invokeinterface #67,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     877: checkcast     #27                 // class java/lang/String
+     880: astore        47
+     882: aload         43
+     884: ldc           #109                // String correlationId
+     886: aload         47
+     888: invokevirtual #105                // Method org/bol/server/ReceivedFile.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     891: pop
+     892: aload         43
+     894: ldc           #110                // String sender
+     896: aload         37
+     898: invokevirtual #105                // Method org/bol/server/ReceivedFile.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     901: pop
+     902: aload         43
+     904: ldc           #111                // String receiver
+     906: aload         38
+     908: invokevirtual #105                // Method org/bol/server/ReceivedFile.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     911: pop
+     912: aload         43
+     914: ldc           #112                // String priority
+     916: aload         40
+     918: invokevirtual #105                // Method org/bol/server/ReceivedFile.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     921: pop
+     922: aload         43
+     924: ldc           #113                // String system
+     926: aload         39
+     928: invokevirtual #105                // Method org/bol/server/ReceivedFile.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     931: pop
+     932: aload         43
+     934: ldc           #114                // String date
+     936: aload         42
+     938: invokevirtual #105                // Method org/bol/server/ReceivedFile.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     941: pop
+     942: aload         36
+     944: aload         37
+     946: aload         38
+     948: aload         40
+     950: invokedynamic #115,  0            // InvokeDynamic #5:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     955: astore        48
+     957: aload         43
+     959: ldc           #116                // String filename
+     961: aload         48
+     963: invokevirtual #105                // Method org/bol/server/ReceivedFile.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     966: pop
+     967: aconst_null
+     968: aload         36
+     970: if_acmpeq     3347
+     973: new           #117                // class java/util/HashMap
+     976: dup
+     977: invokespecial #118                // Method java/util/HashMap."<init>":()V
+     980: astore        49
+     982: aload         49
+     984: ldc           #119                // String message
+     986: ldc           #120                // String Veryfing received file
+     988: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     991: pop
+     992: aload         49
+     994: ldc           #122                // String file
+     996: aload         43
+     998: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    1001: pop
+    1002: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+    1005: getstatic     #36                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+    1008: aload         49
+    1010: invokestatic  #123                // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+    1013: invokestatic  #38                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+    1016: aload         9
+    1018: invokestatic  #124                // Method org/bol/crypto/xml/VerifyXmlSignature.getSignatureElementFromDocument:(Lorg/w3c/dom/Document;)Lorg/w3c/dom/Element;
+    1021: astore        50
+    1023: aconst_null
+    1024: aload         50
+    1026: if_acmpne     1039
+    1029: new           #17                 // class java/lang/IllegalStateException
+    1032: dup
+    1033: ldc           #125                // String received xml is not signed!
+    1035: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+    1038: athrow
+    1039: new           #126                // class java/util/ArrayList
+    1042: dup
+    1043: invokespecial #127                // Method java/util/ArrayList."<init>":()V
+    1046: astore        51
+    1048: aload_0
+    1049: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+    1052: aload         9
+    1054: aload_0
+    1055: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+    1058: invokevirtual #128                // Method org/bol/transport/HttpsTransport.getTrustStore:()Lorg/bol/certs/CertTrustStore;
+    1061: aload_0
+    1062: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+    1065: invokevirtual #129                // Method org/bol/transport/HttpsTransport.getCryptoCore:()Lorg/bol/crypto/SignCryptoCore;
+    1068: invokevirtual #130                // Method org/bol/crypto/SignCryptoCore.getSignCertificate:()Ljava/security/cert/X509Certificate;
+    1071: aload         51
+    1073: invokevirtual #131                // Method org/bol/transport/HttpsTransport.getVerificationCertificateFromSignature:(Lorg/w3c/dom/Document;Lorg/bol/certs/CertTrustStore;Ljava/security/cert/X509Certificate;Ljava/util/Collection;)Ljava/security/cert/X509Certificate;
+    1076: astore        52
+    1078: aconst_null
+    1079: astore        53
+    1081: aconst_null
+    1082: astore        54
+    1084: aload         50
+    1086: ldc           #132                // String *
+    1088: ldc           #133                // String SignatureTimeStamp
+    1090: invokeinterface #134,  3          // InterfaceMethod org/w3c/dom/Element.getElementsByTagNameNS:(Ljava/lang/String;Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    1095: iconst_0
+    1096: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    1101: checkcast     #81                 // class org/w3c/dom/Element
+    1104: astore        55
+    1106: aconst_null
+    1107: astore        56
+    1109: aconst_null
+    1110: aload         55
+    1112: if_acmpeq     1284
+    1115: new           #117                // class java/util/HashMap
+    1118: dup
+    1119: invokespecial #118                // Method java/util/HashMap."<init>":()V
+    1122: astore        56
+    1124: aload         9
+    1126: aload_0
+    1127: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+    1130: invokevirtual #128                // Method org/bol/transport/HttpsTransport.getTrustStore:()Lorg/bol/certs/CertTrustStore;
+    1133: getstatic     #135                // Field org/bol/server/ConsoleServlet.VALIDATE:Z
+    1136: ifeq          1144
+    1139: aload         51
+    1141: goto          1145
+    1144: aconst_null
+    1145: aload         56
+    1147: invokestatic  #136                // Method org/bol/crypto/xml/VerifyXmlSignature.verifyTimeStamp:(Lorg/w3c/dom/Document;Lorg/bol/certs/CertTrustStore;Ljava/util/Collection;Ljava/util/Map;)Lorg/bouncycastle/asn1/tsp/TSTInfo;
+    1150: astore        57
+    1152: aconst_null
+    1153: aload         57
+    1155: if_acmpeq     1168
+    1158: aload         57
+    1160: invokevirtual #137                // Method org/bouncycastle/asn1/tsp/TSTInfo.getGenTime:()Lorg/bouncycastle/asn1/ASN1GeneralizedTime;
+    1163: invokevirtual #138                // Method org/bouncycastle/asn1/ASN1GeneralizedTime.getDate:()Ljava/util/Date;
+    1166: astore        53
+    1168: goto          1284
+    1171: astore        57
+    1173: new           #117                // class java/util/HashMap
+    1176: dup
+    1177: invokespecial #118                // Method java/util/HashMap."<init>":()V
+    1180: astore        54
+    1182: aconst_null
+    1183: astore        58
+    1185: aload         57
+    1187: astore        59
+    1189: new           #140                // class java/lang/StringBuilder
+    1192: dup
+    1193: aload         57
+    1195: invokevirtual #141                // Method java/lang/Exception.toString:()Ljava/lang/String;
+    1198: invokespecial #142                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+    1201: astore        60
+    1203: aconst_null
+    1204: aload         59
+    1206: invokevirtual #143                // Method java/lang/Throwable.getCause:()Ljava/lang/Throwable;
+    1209: dup
+    1210: astore        58
+    1212: if_acmpeq     1261
+    1215: aload         59
+    1217: aload         58
+    1219: if_acmpeq     1261
+    1222: aload         59
+    1224: invokevirtual #144                // Method java/lang/Throwable.toString:()Ljava/lang/String;
+    1227: aload         58
+    1229: invokevirtual #144                // Method java/lang/Throwable.toString:()Ljava/lang/String;
+    1232: invokevirtual #16                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+    1235: ifne          1254
+    1238: aload         60
+    1240: aload         58
+    1242: invokevirtual #144                // Method java/lang/Throwable.toString:()Ljava/lang/String;
+    1245: invokedynamic #145,  0            // InvokeDynamic #6:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+    1250: invokevirtual #146                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1253: pop
+    1254: aload         58
+    1256: astore        59
+    1258: goto          1203
+    1261: aload         54
+    1263: ldc           #147                // String timestamp_exception
+    1265: aload         60
+    1267: invokevirtual #148                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+    1270: invokeinterface #149,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    1275: pop
+    1276: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+    1279: aload         57
+    1281: invokestatic  #150                // Method org/bol/server/LogWrapper.logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+    1284: aconst_null
+    1285: aload         53
+    1287: if_acmpne     1342
+    1290: aload         50
+    1292: ldc           #132                // String *
+    1294: ldc           #151                // String SigningTime
+    1296: invokeinterface #134,  3          // InterfaceMethod org/w3c/dom/Element.getElementsByTagNameNS:(Ljava/lang/String;Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    1301: iconst_0
+    1302: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    1307: checkcast     #81                 // class org/w3c/dom/Element
+    1310: astore        57
+    1312: aconst_null
+    1313: aload         57
+    1315: if_acmpeq     1342
+    1318: aload         57
+    1320: invokestatic  #99                 // Method org/bol/xml/XmlHelper.getCharacterDataFromElement:(Lorg/w3c/dom/Element;)Ljava/lang/String;
+    1323: astore        58
+    1325: aload         58
+    1327: invokestatic  #152                // Method java/time/OffsetDateTime.parse:(Ljava/lang/CharSequence;)Ljava/time/OffsetDateTime;
+    1330: astore        59
+    1332: aload         59
+    1334: invokevirtual #153                // Method java/time/OffsetDateTime.toInstant:()Ljava/time/Instant;
+    1337: invokestatic  #154                // Method java/util/Date.from:(Ljava/time/Instant;)Ljava/util/Date;
+    1340: astore        53
+    1342: aload_0
+    1343: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+    1346: invokevirtual #128                // Method org/bol/transport/HttpsTransport.getTrustStore:()Lorg/bol/certs/CertTrustStore;
+    1349: aload         52
+    1351: invokevirtual #155                // Method org/bol/certs/CertTrustStore.certificateIssuedByTrustedCA:(Ljava/security/cert/X509Certificate;)Z
+    1354: ifne          1381
+    1357: new           #117                // class java/util/HashMap
+    1360: dup
+    1361: invokespecial #118                // Method java/util/HashMap."<init>":()V
+    1364: astore        54
+    1366: aload         54
+    1368: ldc           #156                // String cert_exception
+    1370: ldc           #157                // String Certificate is not issued by Litas CA
+    1372: invokeinterface #149,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    1377: pop
+    1378: goto          1617
+    1381: aload_0
+    1382: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+    1385: invokevirtual #158                // Method org/bol/transport/HttpsTransport.getRequestLock:()Ljava/util/concurrent/locks/ReentrantLock;
+    1388: invokevirtual #59                 // Method java/util/concurrent/locks/ReentrantLock.lock:()V
+    1391: aload_0
+    1392: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+    1395: invokevirtual #159                // Method org/bol/transport/HttpsTransport.retrieveCurrentTrustCrls:()V
+    1398: aload_0
+    1399: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+    1402: invokevirtual #128                // Method org/bol/transport/HttpsTransport.getTrustStore:()Lorg/bol/certs/CertTrustStore;
+    1405: aload         52
+    1407: aload         53
+    1409: getstatic     #135                // Field org/bol/server/ConsoleServlet.VALIDATE:Z
+    1412: ifeq          1420
+    1415: aload         51
+    1417: goto          1421
+    1420: aconst_null
+    1421: invokevirtual #160                // Method org/bol/certs/CertTrustStore.validateCertificate:(Ljava/security/cert/X509Certificate;Ljava/util/Date;Ljava/util/Collection;)V
+    1424: aload_0
+    1425: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+    1428: invokevirtual #158                // Method org/bol/transport/HttpsTransport.getRequestLock:()Ljava/util/concurrent/locks/ReentrantLock;
+    1431: invokevirtual #63                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+    1434: goto          1578
+    1437: astore        57
+    1439: new           #117                // class java/util/HashMap
+    1442: dup
+    1443: invokespecial #118                // Method java/util/HashMap."<init>":()V
+    1446: astore        54
+    1448: aconst_null
+    1449: astore        58
+    1451: aload         57
+    1453: astore        59
+    1455: new           #140                // class java/lang/StringBuilder
+    1458: dup
+    1459: aload         57
+    1461: invokevirtual #141                // Method java/lang/Exception.toString:()Ljava/lang/String;
+    1464: invokespecial #142                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+    1467: astore        60
+    1469: aconst_null
+    1470: aload         59
+    1472: invokevirtual #143                // Method java/lang/Throwable.getCause:()Ljava/lang/Throwable;
+    1475: dup
+    1476: astore        58
+    1478: if_acmpeq     1527
+    1481: aload         59
+    1483: aload         58
+    1485: if_acmpeq     1527
+    1488: aload         59
+    1490: invokevirtual #144                // Method java/lang/Throwable.toString:()Ljava/lang/String;
+    1493: aload         58
+    1495: invokevirtual #144                // Method java/lang/Throwable.toString:()Ljava/lang/String;
+    1498: invokevirtual #16                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+    1501: ifne          1520
+    1504: aload         60
+    1506: aload         58
+    1508: invokevirtual #144                // Method java/lang/Throwable.toString:()Ljava/lang/String;
+    1511: invokedynamic #145,  0            // InvokeDynamic #6:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+    1516: invokevirtual #146                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1519: pop
+    1520: aload         58
+    1522: astore        59
+    1524: goto          1469
+    1527: aload         54
+    1529: ldc           #156                // String cert_exception
+    1531: aload         60
+    1533: invokevirtual #148                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+    1536: invokeinterface #149,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    1541: pop
+    1542: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+    1545: aload         57
+    1547: invokestatic  #150                // Method org/bol/server/LogWrapper.logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+    1550: aload_0
+    1551: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+    1554: invokevirtual #158                // Method org/bol/transport/HttpsTransport.getRequestLock:()Ljava/util/concurrent/locks/ReentrantLock;
+    1557: invokevirtual #63                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+    1560: goto          1578
+    1563: astore        61
+    1565: aload_0
+    1566: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+    1569: invokevirtual #158                // Method org/bol/transport/HttpsTransport.getRequestLock:()Ljava/util/concurrent/locks/ReentrantLock;
+    1572: invokevirtual #63                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+    1575: aload         61
+    1577: athrow
+    1578: aconst_null
+    1579: aload         54
+    1581: if_acmpne     1617
+    1584: iconst_0
+    1585: istore        57
+    1587: aload         9
+    1589: aload         52
+    1591: iconst_1
+    1592: iload         57
+    1594: invokestatic  #161                // Method org/bol/crypto/xml/VerifyXmlSignature.verifySignature:(Lorg/w3c/dom/Document;Ljava/security/cert/X509Certificate;ZZ)Ljava/util/Map;
+    1597: astore        54
+    1599: aconst_null
+    1600: aload         54
+    1602: if_acmpeq     1617
+    1605: aload         9
+    1607: aload         52
+    1609: iconst_0
+    1610: iload         57
+    1612: invokestatic  #161                // Method org/bol/crypto/xml/VerifyXmlSignature.verifySignature:(Lorg/w3c/dom/Document;Ljava/security/cert/X509Certificate;ZZ)Ljava/util/Map;
+    1615: astore        54
+    1617: aconst_null
+    1618: aload         54
+    1620: if_acmpne     3287
+    1623: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+    1626: getstatic     #36                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+    1629: aload         39
+    1631: invokedynamic #162,  0            // InvokeDynamic #7:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+    1636: invokestatic  #38                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+    1639: new           #117                // class java/util/HashMap
+    1642: dup
+    1643: invokespecial #118                // Method java/util/HashMap."<init>":()V
+    1646: astore        57
+    1648: aload         57
+    1650: ldc           #119                // String message
+    1652: ldc           #163                // String Saving received signed file
+    1654: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    1657: pop
+    1658: aload         57
+    1660: ldc           #122                // String file
+    1662: aload         43
+    1664: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    1667: pop
+    1668: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+    1671: getstatic     #36                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+    1674: aload         57
+    1676: invokestatic  #123                // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+    1679: invokestatic  #38                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+    1682: aload_0
+    1683: aload         8
+    1685: aload         47
+    1687: aload         39
+    1689: aload         48
+    1691: invokevirtual #164                // Method saveReceivedSignedFile:([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B
+    1694: astore        58
+    1696: aconst_null
+    1697: astore        59
+    1699: aconst_null
+    1700: aload         58
+    1702: if_acmpeq     1767
+    1705: new           #27                 // class java/lang/String
+    1708: dup
+    1709: aload         58
+    1711: getstatic     #28                 // Field java/nio/charset/StandardCharsets.UTF_8:Ljava/nio/charset/Charset;
+    1714: invokespecial #29                 // Method java/lang/String."<init>":([BLjava/nio/charset/Charset;)V
+    1717: astore        59
+    1719: new           #117                // class java/util/HashMap
+    1722: dup
+    1723: invokespecial #118                // Method java/util/HashMap."<init>":()V
+    1726: astore        60
+    1728: aload         60
+    1730: ldc           #119                // String message
+    1732: ldc           #165                // String Got admi007 in response after saving received signed file
+    1734: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    1737: pop
+    1738: aload         60
+    1740: ldc           #122                // String file
+    1742: aload         43
+    1744: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    1747: pop
+    1748: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+    1751: getstatic     #71                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+    1754: aload         60
+    1756: invokestatic  #123                // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+    1759: aload         58
+    1761: invokestatic  #73                 // Method org/bol/server/LogWrapper.dumpBytes:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;[B)V
+    1764: goto          1810
+    1767: new           #117                // class java/util/HashMap
+    1770: dup
+    1771: invokespecial #118                // Method java/util/HashMap."<init>":()V
+    1774: astore        60
+    1776: aload         60
+    1778: ldc           #119                // String message
+    1780: ldc           #166                // String No admi007 in response after saving received signed file
+    1782: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    1785: pop
+    1786: aload         60
+    1788: ldc           #122                // String file
+    1790: aload         43
+    1792: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    1795: pop
+    1796: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+    1799: getstatic     #36                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+    1802: aload         60
+    1804: invokestatic  #123                // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+    1807: invokestatic  #38                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+    1810: aload_0
+    1811: invokevirtual #167                // Method getServerTime:()Ljava/time/LocalDateTime;
+    1814: astore        60
+    1816: aload_0
+    1817: invokevirtual #10                 // Method getPasConfiguration:()Lorg/bol/server/PasConfiguration;
+    1820: aload         39
+    1822: ldc           #11                 // String ReceiveType
+    1824: invokevirtual #12                 // Method org/bol/server/PasConfiguration.getSystemConfigurationValue:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;
+    1827: invokevirtual #13                 // Method java/lang/Object.toString:()Ljava/lang/String;
+    1830: astore        61
+    1832: aload         61
+    1834: ldc           #39                 // String FILE
+    1836: invokevirtual #16                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+    1839: ifeq          3029
+    1842: ldc           #61                 // String
+    1844: astore        62
+    1846: aload         41
+    1848: ldc           #168                // String admi.007_LB
+    1850: invokevirtual #16                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+    1853: ifeq          1963
+    1856: aload         17
+    1858: ldc           #169                // String Document
+    1860: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    1865: iconst_0
+    1866: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    1871: checkcast     #81                 // class org/w3c/dom/Element
+    1874: astore        63
+    1876: aload         63
+    1878: ldc           #170                // String RctAck
+    1880: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    1885: iconst_0
+    1886: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    1891: checkcast     #81                 // class org/w3c/dom/Element
+    1894: astore        64
+    1896: aload         64
+    1898: ldc           #171                // String Rpt
+    1900: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    1905: iconst_0
+    1906: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    1911: checkcast     #81                 // class org/w3c/dom/Element
+    1914: astore        65
+    1916: aload         65
+    1918: ldc           #172                // String ReqHdlg
+    1920: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    1925: iconst_0
+    1926: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    1931: checkcast     #81                 // class org/w3c/dom/Element
+    1934: astore        66
+    1936: aload         66
+    1938: ldc           #173                // String StsCd
+    1940: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    1945: iconst_0
+    1946: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    1951: checkcast     #81                 // class org/w3c/dom/Element
+    1954: astore        67
+    1956: aload         67
+    1958: invokestatic  #99                 // Method org/bol/xml/XmlHelper.getCharacterDataFromElement:(Lorg/w3c/dom/Element;)Ljava/lang/String;
+    1961: astore        62
+    1963: aload         62
+    1965: ldc           #174                // String CTRL
+    1967: invokevirtual #175                // Method java/lang/String.contentEquals:(Ljava/lang/CharSequence;)Z
+    1970: ifeq          1987
+    1973: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+    1976: getstatic     #36                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+    1979: ldc           #176                // String admi.007 CTRL received, no reply in FILE mode
+    1981: invokestatic  #38                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+    1984: goto          3029
+    1987: ldc           #177                // String cfgFiles/admi.007.empty.xml
+    1989: astore        63
+    1991: new           #178                // class java/io/File
+    1994: dup
+    1995: aload         63
+    1997: invokespecial #179                // Method java/io/File."<init>":(Ljava/lang/String;)V
+    2000: astore        64
+    2002: aload         64
+    2004: invokevirtual #180                // Method java/io/File.exists:()Z
+    2007: ifne          2020
+    2010: new           #17                 // class java/lang/IllegalStateException
+    2013: dup
+    2014: ldc           #181                // String Unable to locate admi.007 xml template
+    2016: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+    2019: athrow
+    2020: aload_0
+    2021: invokevirtual #42                 // Method getFileRepo:()Lorg/bol/server/FileRepository;
+    2024: aload         63
+    2026: invokevirtual #44                 // Method org/bol/server/FileRepository.ReserveFile:(Ljava/lang/String;)Lorg/bol/server/ReservedFile;
+    2029: astore        65
+    2031: aload         65
+    2033: invokevirtual #182                // Method org/bol/server/ReservedFile.getInputStream:()Ljava/io/InputStream;
+    2036: invokestatic  #76                 // Method org/bol/xml/XmlHelper.loadDocumentFromInputStream:(Ljava/io/InputStream;)Lorg/w3c/dom/Document;
+    2039: astore        66
+    2041: aload         66
+    2043: invokeinterface #77,  1           // InterfaceMethod org/w3c/dom/Document.getDocumentElement:()Lorg/w3c/dom/Element;
+    2048: astore        67
+    2050: aload         67
+    2052: ldc           #78                 // String PyldDesc
+    2054: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2059: iconst_0
+    2060: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2065: checkcast     #81                 // class org/w3c/dom/Element
+    2068: astore        68
+    2070: aload         68
+    2072: ldc           #82                 // String ApplSpcfcInf
+    2074: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2079: iconst_0
+    2080: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2085: checkcast     #81                 // class org/w3c/dom/Element
+    2088: astore        69
+    2090: aconst_null
+    2091: aload         68
+    2093: if_acmpeq     3019
+    2096: aconst_null
+    2097: aload         69
+    2099: if_acmpeq     3019
+    2102: aload         69
+    2104: ldc           #183                // String SysUsr
+    2106: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2111: iconst_0
+    2112: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2117: checkcast     #81                 // class org/w3c/dom/Element
+    2120: astore        70
+    2122: aconst_null
+    2123: astore        71
+    2125: iconst_0
+    2126: anewarray     #27                 // class java/lang/String
+    2129: astore        72
+    2131: aconst_null
+    2132: aload_0
+    2133: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+    2136: invokevirtual #129                // Method org/bol/transport/HttpsTransport.getCryptoCore:()Lorg/bol/crypto/SignCryptoCore;
+    2139: invokevirtual #130                // Method org/bol/crypto/SignCryptoCore.getSignCertificate:()Ljava/security/cert/X509Certificate;
+    2142: if_acmpeq     2170
+    2145: aload_0
+    2146: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+    2149: invokevirtual #129                // Method org/bol/transport/HttpsTransport.getCryptoCore:()Lorg/bol/crypto/SignCryptoCore;
+    2152: invokevirtual #130                // Method org/bol/crypto/SignCryptoCore.getSignCertificate:()Ljava/security/cert/X509Certificate;
+    2155: invokevirtual #184                // Method java/security/cert/X509Certificate.getSubjectDN:()Ljava/security/Principal;
+    2158: invokeinterface #185,  1          // InterfaceMethod java/security/Principal.toString:()Ljava/lang/String;
+    2163: ldc           #186                // String ,
+    2165: invokevirtual #187                // Method java/lang/String.split:(Ljava/lang/String;)[Ljava/lang/String;
+    2168: astore        72
+    2170: iconst_0
+    2171: istore        73
+    2173: iload         73
+    2175: aload         72
+    2177: arraylength
+    2178: if_icmpge     2251
+    2181: aload         72
+    2183: iload         73
+    2185: aaload
+    2186: bipush        61
+    2188: invokevirtual #188                // Method java/lang/String.indexOf:(I)I
+    2191: istore        74
+    2193: iload         74
+    2195: iflt          2245
+    2198: aload         72
+    2200: iload         73
+    2202: aaload
+    2203: iconst_0
+    2204: iload         74
+    2206: invokevirtual #189                // Method java/lang/String.substring:(II)Ljava/lang/String;
+    2209: astore        75
+    2211: aload         72
+    2213: iload         73
+    2215: aaload
+    2216: iload         74
+    2218: iconst_1
+    2219: iadd
+    2220: invokevirtual #190                // Method java/lang/String.substring:(I)Ljava/lang/String;
+    2223: astore        76
+    2225: aload         75
+    2227: invokevirtual #191                // Method java/lang/String.trim:()Ljava/lang/String;
+    2230: ldc           #192                // String UID
+    2232: invokevirtual #16                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+    2235: ifeq          2245
+    2238: aload         76
+    2240: invokevirtual #191                // Method java/lang/String.trim:()Ljava/lang/String;
+    2243: astore        71
+    2245: iinc          73, 1
+    2248: goto          2173
+    2251: aconst_null
+    2252: aload         71
+    2254: if_acmpne     2267
+    2257: new           #17                 // class java/lang/IllegalStateException
+    2260: dup
+    2261: ldc           #193                // String Unable to get signing certificate UID
+    2263: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+    2266: athrow
+    2267: aload         70
+    2269: aload         71
+    2271: invokeinterface #194,  2          // InterfaceMethod org/w3c/dom/Element.setTextContent:(Ljava/lang/String;)V
+    2276: ldc           #195                // String yyyy-MM-dd\'T\'HH:mm:ss
+    2278: invokestatic  #196                // Method java/time/format/DateTimeFormatter.ofPattern:(Ljava/lang/String;)Ljava/time/format/DateTimeFormatter;
+    2281: astore        73
+    2283: aload         60
+    2285: aload         73
+    2287: invokevirtual #197                // Method java/time/LocalDateTime.format:(Ljava/time/format/DateTimeFormatter;)Ljava/lang/String;
+    2290: astore        74
+    2292: aload         68
+    2294: ldc           #83                 // String PyldDtls
+    2296: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2301: iconst_0
+    2302: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2307: checkcast     #81                 // class org/w3c/dom/Element
+    2310: astore        75
+    2312: aload         75
+    2314: ldc           #84                 // String CreDtAndTm
+    2316: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2321: iconst_0
+    2322: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2327: checkcast     #81                 // class org/w3c/dom/Element
+    2330: astore        76
+    2332: aload         76
+    2334: aload         74
+    2336: invokeinterface #194,  2          // InterfaceMethod org/w3c/dom/Element.setTextContent:(Ljava/lang/String;)V
+    2341: aload         75
+    2343: ldc           #85                 // String PyldIdr
+    2345: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2350: iconst_0
+    2351: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2356: checkcast     #81                 // class org/w3c/dom/Element
+    2359: astore        77
+    2361: aload         77
+    2363: aload         36
+    2365: invokeinterface #194,  2          // InterfaceMethod org/w3c/dom/Element.setTextContent:(Ljava/lang/String;)V
+    2370: aload         67
+    2372: ldc           #86                 // String Pyld
+    2374: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2379: iconst_0
+    2380: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2385: checkcast     #81                 // class org/w3c/dom/Element
+    2388: astore        78
+    2390: aload         78
+    2392: ldc           #87                 // String BizData
+    2394: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2399: iconst_0
+    2400: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2405: checkcast     #81                 // class org/w3c/dom/Element
+    2408: astore        79
+    2410: aload         79
+    2412: ldc           #169                // String Document
+    2414: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2419: iconst_0
+    2420: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2425: checkcast     #81                 // class org/w3c/dom/Element
+    2428: astore        80
+    2430: aload         79
+    2432: ldc           #88                 // String AppHdr
+    2434: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2439: iconst_0
+    2440: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2445: checkcast     #81                 // class org/w3c/dom/Element
+    2448: astore        81
+    2450: aload         81
+    2452: ldc           #89                 // String Fr
+    2454: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2459: iconst_0
+    2460: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2465: checkcast     #81                 // class org/w3c/dom/Element
+    2468: astore        82
+    2470: aload         82
+    2472: ldc           #90                 // String FIId
+    2474: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2479: iconst_0
+    2480: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2485: checkcast     #81                 // class org/w3c/dom/Element
+    2488: astore        83
+    2490: aload         83
+    2492: ldc           #91                 // String FinInstnId
+    2494: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2499: iconst_0
+    2500: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2505: checkcast     #81                 // class org/w3c/dom/Element
+    2508: astore        84
+    2510: aload         84
+    2512: ldc           #92                 // String BICFI
+    2514: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2519: iconst_0
+    2520: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2525: checkcast     #81                 // class org/w3c/dom/Element
+    2528: astore        85
+    2530: aload         85
+    2532: aload         38
+    2534: invokeinterface #194,  2          // InterfaceMethod org/w3c/dom/Element.setTextContent:(Ljava/lang/String;)V
+    2539: aload         81
+    2541: ldc           #94                 // String To
+    2543: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2548: iconst_0
+    2549: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2554: checkcast     #81                 // class org/w3c/dom/Element
+    2557: astore        86
+    2559: aload         86
+    2561: ldc           #90                 // String FIId
+    2563: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2568: iconst_0
+    2569: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2574: checkcast     #81                 // class org/w3c/dom/Element
+    2577: astore        87
+    2579: aload         87
+    2581: ldc           #91                 // String FinInstnId
+    2583: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2588: iconst_0
+    2589: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2594: checkcast     #81                 // class org/w3c/dom/Element
+    2597: astore        88
+    2599: aload         88
+    2601: ldc           #92                 // String BICFI
+    2603: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2608: iconst_0
+    2609: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2614: checkcast     #81                 // class org/w3c/dom/Element
+    2617: astore        89
+    2619: aload         89
+    2621: aload         37
+    2623: invokeinterface #194,  2          // InterfaceMethod org/w3c/dom/Element.setTextContent:(Ljava/lang/String;)V
+    2628: aload         81
+    2630: ldc           #96                 // String MktPrctc
+    2632: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2637: iconst_0
+    2638: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2643: checkcast     #81                 // class org/w3c/dom/Element
+    2646: astore        90
+    2648: aload         90
+    2650: ldc           #97                 // String Regy
+    2652: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2657: iconst_0
+    2658: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2663: checkcast     #81                 // class org/w3c/dom/Element
+    2666: astore        91
+    2668: aload         90
+    2670: ldc           #98                 // String Id
+    2672: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2677: iconst_0
+    2678: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2683: checkcast     #81                 // class org/w3c/dom/Element
+    2686: astore        92
+    2688: aload         81
+    2690: ldc           #93                 // String Prty
+    2692: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2697: iconst_0
+    2698: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2703: checkcast     #81                 // class org/w3c/dom/Element
+    2706: astore        93
+    2708: aload         91
+    2710: aload         32
+    2712: invokeinterface #194,  2          // InterfaceMethod org/w3c/dom/Element.setTextContent:(Ljava/lang/String;)V
+    2717: aload         92
+    2719: aload         33
+    2721: invokeinterface #194,  2          // InterfaceMethod org/w3c/dom/Element.setTextContent:(Ljava/lang/String;)V
+    2726: aload         93
+    2728: aload         40
+    2730: invokeinterface #194,  2          // InterfaceMethod org/w3c/dom/Element.setTextContent:(Ljava/lang/String;)V
+    2735: aload         80
+    2737: ldc           #170                // String RctAck
+    2739: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2744: iconst_0
+    2745: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2750: checkcast     #81                 // class org/w3c/dom/Element
+    2753: astore        94
+    2755: aload         80
+    2757: ldc           #171                // String Rpt
+    2759: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2764: iconst_0
+    2765: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2770: checkcast     #81                 // class org/w3c/dom/Element
+    2773: astore        95
+    2775: aload         94
+    2777: ldc           #198                // String MsgId
+    2779: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2784: iconst_0
+    2785: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2790: checkcast     #81                 // class org/w3c/dom/Element
+    2793: astore        96
+    2795: aload         96
+    2797: ldc           #199                // String CreDtTm
+    2799: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2804: iconst_0
+    2805: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2810: checkcast     #81                 // class org/w3c/dom/Element
+    2813: astore        97
+    2815: aload         97
+    2817: aload         74
+    2819: invokeinterface #194,  2          // InterfaceMethod org/w3c/dom/Element.setTextContent:(Ljava/lang/String;)V
+    2824: aload         95
+    2826: ldc           #200                // String RltdRef
+    2828: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2833: iconst_0
+    2834: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2839: checkcast     #81                 // class org/w3c/dom/Element
+    2842: astore        98
+    2844: aload         98
+    2846: ldc           #201                // String Ref
+    2848: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2853: iconst_0
+    2854: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2859: checkcast     #81                 // class org/w3c/dom/Element
+    2862: astore        99
+    2864: aload         99
+    2866: aload         45
+    2868: invokeinterface #194,  2          // InterfaceMethod org/w3c/dom/Element.setTextContent:(Ljava/lang/String;)V
+    2873: aload         95
+    2875: ldc           #172                // String ReqHdlg
+    2877: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2882: iconst_0
+    2883: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2888: checkcast     #81                 // class org/w3c/dom/Element
+    2891: astore        100
+    2893: aload         100
+    2895: ldc           #173                // String StsCd
+    2897: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2902: iconst_0
+    2903: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2908: checkcast     #81                 // class org/w3c/dom/Element
+    2911: astore        101
+    2913: aload         101
+    2915: ldc           #174                // String CTRL
+    2917: invokeinterface #194,  2          // InterfaceMethod org/w3c/dom/Element.setTextContent:(Ljava/lang/String;)V
+    2922: aload         81
+    2924: ldc           #95                 // String BizSvc
+    2926: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2931: iconst_0
+    2932: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2937: checkcast     #81                 // class org/w3c/dom/Element
+    2940: astore        102
+    2942: aload         102
+    2944: aload         39
+    2946: invokeinterface #194,  2          // InterfaceMethod org/w3c/dom/Element.setTextContent:(Ljava/lang/String;)V
+    2951: aload         81
+    2953: ldc           #106                // String BizMsgIdr
+    2955: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2960: iconst_0
+    2961: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2966: checkcast     #81                 // class org/w3c/dom/Element
+    2969: astore        103
+    2971: aload         103
+    2973: aload         36
+    2975: invokeinterface #194,  2          // InterfaceMethod org/w3c/dom/Element.setTextContent:(Ljava/lang/String;)V
+    2980: aload         81
+    2982: ldc           #202                // String CreDt
+    2984: invokeinterface #79,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+    2989: iconst_0
+    2990: invokeinterface #80,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+    2995: checkcast     #81                 // class org/w3c/dom/Element
+    2998: astore        104
+    3000: aload         104
+    3002: aload         74
+    3004: invokeinterface #194,  2          // InterfaceMethod org/w3c/dom/Element.setTextContent:(Ljava/lang/String;)V
+    3009: aload         67
+    3011: invokestatic  #203                // Method org/bol/xml/XmlHelper.nodeToString:(Lorg/w3c/dom/Node;)Ljava/lang/String;
+    3014: astore        59
+    3016: goto          3029
+    3019: new           #17                 // class java/lang/IllegalStateException
+    3022: dup
+    3023: ldc           #204                // String Invalid admi.007 xml template structure
+    3025: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+    3028: athrow
+    3029: aconst_null
+    3030: aload         59
+    3032: if_acmpeq     3241
+    3035: new           #117                // class java/util/HashMap
+    3038: dup
+    3039: invokespecial #118                // Method java/util/HashMap."<init>":()V
+    3042: astore        62
+    3044: aload         62
+    3046: ldc           #119                // String message
+    3048: ldc           #205                // String Sending accept for file
+    3050: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    3053: pop
+    3054: aload         62
+    3056: ldc           #122                // String file
+    3058: aload         43
+    3060: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    3063: pop
+    3064: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+    3067: getstatic     #36                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+    3070: aload         62
+    3072: invokestatic  #123                // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+    3075: invokestatic  #38                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+    3078: aload_0
+    3079: aload_0
+    3080: invokevirtual #206                // Method getDpsEndpSend:()Ljava/lang/String;
+    3083: aload         59
+    3085: aload         47
+    3087: aload_0
+    3088: aload         60
+    3090: invokedynamic #207,  0            // InvokeDynamic #8:onProduceXml:(Lorg/bol/transport/TakoDpsTransport;Ljava/time/LocalDateTime;)Lorg/bol/xml/XmlContentProducer;
+    3095: iload         6
+    3097: invokevirtual #62                 // Method sendRestRequestGetJson:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lorg/bol/xml/XmlContentProducer;I)Ljava/util/Map;
+    3100: astore        63
+    3102: aload         63
+    3104: ldc           #64                 // String status
+    3106: invokeinterface #65,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+    3111: ifeq          3186
+    3114: aload         63
+    3116: ldc           #64                 // String status
+    3118: invokeinterface #67,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    3123: ldc           #69                 // String Success
+    3125: invokevirtual #70                 // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+    3128: ifeq          3186
+    3131: new           #117                // class java/util/HashMap
+    3134: dup
+    3135: invokespecial #118                // Method java/util/HashMap."<init>":()V
+    3138: astore        64
+    3140: aload         64
+    3142: ldc           #119                // String message
+    3144: ldc           #208                // String admi.007 CTRL sent for file
+    3146: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    3149: pop
+    3150: aload         64
+    3152: ldc           #122                // String file
+    3154: aload         43
+    3156: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    3159: pop
+    3160: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+    3163: getstatic     #36                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+    3166: aload         64
+    3168: invokestatic  #123                // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+    3171: invokestatic  #38                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+    3174: aload_0
+    3175: invokevirtual #42                 // Method getFileRepo:()Lorg/bol/server/FileRepository;
+    3178: aload         43
+    3180: invokevirtual #209                // Method org/bol/server/FileRepository.registerReceivedFile:(Lorg/bol/server/ReceivedFile;)V
+    3183: goto          3238
+    3186: new           #117                // class java/util/HashMap
+    3189: dup
+    3190: invokespecial #118                // Method java/util/HashMap."<init>":()V
+    3193: astore        64
+    3195: aload         64
+    3197: ldc           #119                // String message
+    3199: ldc           #210                // String Got Invalid response sending admi.007 CTRL
+    3201: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    3204: pop
+    3205: aload         64
+    3207: ldc           #211                // String response
+    3209: aload         63
+    3211: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    3214: pop
+    3215: aload         64
+    3217: ldc           #122                // String file
+    3219: aload         43
+    3221: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    3224: pop
+    3225: new           #17                 // class java/lang/IllegalStateException
+    3228: dup
+    3229: aload         64
+    3231: invokestatic  #123                // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+    3234: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+    3237: athrow
+    3238: goto          3284
+    3241: new           #117                // class java/util/HashMap
+    3244: dup
+    3245: invokespecial #118                // Method java/util/HashMap."<init>":()V
+    3248: astore        62
+    3250: aload         62
+    3252: ldc           #119                // String message
+    3254: ldc           #212                // String Cannot send accept for file
+    3256: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    3259: pop
+    3260: aload         62
+    3262: ldc           #122                // String file
+    3264: aload         43
+    3266: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    3269: pop
+    3270: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+    3273: getstatic     #36                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+    3276: aload         62
+    3278: invokestatic  #123                // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+    3281: invokestatic  #38                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+    3284: goto          3344
+    3287: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+    3290: getstatic     #213                // Field org/slf4j/event/Level.ERROR:Lorg/slf4j/event/Level;
+    3293: aload         54
+    3295: invokestatic  #123                // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+    3298: invokestatic  #38                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+    3301: new           #117                // class java/util/HashMap
+    3304: dup
+    3305: invokespecial #118                // Method java/util/HashMap."<init>":()V
+    3308: astore        57
+    3310: aload         57
+    3312: ldc           #119                // String message
+    3314: ldc           #214                // String Signature verification failed for file
+    3316: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    3319: pop
+    3320: aload         57
+    3322: ldc           #122                // String file
+    3324: aload         43
+    3326: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    3329: pop
+    3330: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+    3333: getstatic     #213                // Field org/slf4j/event/Level.ERROR:Lorg/slf4j/event/Level;
+    3336: aload         57
+    3338: invokestatic  #123                // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+    3341: invokestatic  #38                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+    3344: goto          3357
+    3347: new           #17                 // class java/lang/IllegalStateException
+    3350: dup
+    3351: ldc           #215                // String Invalid received xml structure in response json
+    3353: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+    3356: athrow
+    3357: goto          3370
+    3360: new           #17                 // class java/lang/IllegalStateException
+    3363: dup
+    3364: ldc           #215                // String Invalid received xml structure in response json
+    3366: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+    3369: athrow
+    3370: goto          3383
+    3373: new           #17                 // class java/lang/IllegalStateException
+    3376: dup
+    3377: ldc           #216                // String There is no xml in response json
+    3379: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+    3382: athrow
+    3383: goto          3570
+    3386: aload_3
+    3387: astore        8
+    3389: aload_3
+    3390: ldc           #64                 // String status
+    3392: invokeinterface #65,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+    3397: ifeq          3434
+    3400: aload_3
+    3401: ldc           #64                 // String status
+    3403: invokeinterface #67,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    3408: ldc           #217                // String Done
+    3410: invokevirtual #70                 // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+    3413: ifeq          3434
+    3416: iload_1
+    3417: ifeq          3617
+    3420: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+    3423: getstatic     #36                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+    3426: ldc           #218                // String No More files
+    3428: invokestatic  #38                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+    3431: goto          3617
+    3434: aload_3
+    3435: ldc           #64                 // String status
+    3437: invokeinterface #65,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+    3442: ifeq          3507
+    3445: aload_3
+    3446: ldc           #64                 // String status
+    3448: invokeinterface #67,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    3453: ldc           #219                // String Error
+    3455: invokevirtual #70                 // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+    3458: ifeq          3507
+    3461: new           #117                // class java/util/HashMap
+    3464: dup
+    3465: invokespecial #118                // Method java/util/HashMap."<init>":()V
+    3468: astore        9
+    3470: aload         9
+    3472: ldc           #119                // String message
+    3474: ldc           #220                // String Received Error in response
+    3476: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    3479: pop
+    3480: aload         9
+    3482: ldc           #211                // String response
+    3484: aload         8
+    3486: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    3489: pop
+    3490: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+    3493: getstatic     #36                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+    3496: aload         9
+    3498: invokestatic  #123                // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+    3501: invokestatic  #38                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+    3504: goto          3570
+    3507: aload_3
+    3508: ldc           #64                 // String status
+    3510: invokeinterface #65,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+    3515: ifeq          3560
+    3518: new           #117                // class java/util/HashMap
+    3521: dup
+    3522: invokespecial #118                // Method java/util/HashMap."<init>":()V
+    3525: astore        9
+    3527: aload         9
+    3529: ldc           #119                // String message
+    3531: ldc           #221                // String Invalid Receive status
+    3533: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    3536: pop
+    3537: aload         9
+    3539: ldc           #211                // String response
+    3541: aload         8
+    3543: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    3546: pop
+    3547: new           #17                 // class java/lang/IllegalStateException
+    3550: dup
+    3551: aload         9
+    3553: invokestatic  #123                // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+    3556: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+    3559: athrow
+    3560: new           #17                 // class java/lang/IllegalStateException
+    3563: dup
+    3564: ldc           #222                // String Unknown error response json structure
+    3566: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+    3569: athrow
+    3570: goto          3593
+    3573: new           #17                 // class java/lang/IllegalStateException
+    3576: dup
+    3577: ldc           #223                // String Invalid response json structure
+    3579: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+    3582: athrow
+    3583: new           #17                 // class java/lang/IllegalStateException
+    3586: dup
+    3587: ldc           #224                // String Empty response, instead of expected Xml Document
+    3589: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+    3592: athrow
+    3593: iinc          4, 1
+    3596: iload         4
+    3598: bipush        10
+    3600: if_icmplt     3613
+    3603: new           #225                // class org/bol/exceptions/LimitReachedException
+    3606: dup
+    3607: ldc           #226                // String Reached a limit of number of processed files
+    3609: invokespecial #227                // Method org/bol/exceptions/LimitReachedException."<init>":(Ljava/lang/String;)V
+    3612: athrow
+    3613: iload_1
+    3614: ifne          47
+    3617: return
+    Exception table:
+       from    to  target type
+          47    75    85   any
+          85    87    85   any
+        1115  1168  1171   Class java/lang/Exception
+        1381  1424  1437   Class java/lang/Exception
+        1381  1424  1563   any
+        1437  1550  1563   any
+        1563  1565  1563   any
+
+  protected void doSendWww(java.lang.String, java.lang.String);
+    Code:
+       0: new           #17                 // class java/lang/IllegalStateException
+       3: dup
+       4: ldc           #18                 // String WWW mode is not supported in TAKO
+       6: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+       9: athrow
+
+  protected org.w3c.dom.Document getNextMsgWWW() throws java.io.IOException, org.xml.sax.SAXException, javax.xml.parsers.ParserConfigurationException;
+    Code:
+       0: new           #17                 // class java/lang/IllegalStateException
+       3: dup
+       4: ldc           #18                 // String WWW mode is not supported in TAKO
+       6: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+       9: athrow
+
+  protected void doSendFile(java.lang.String, java.lang.String) throws java.io.IOException, javax.xml.xpath.XPathExpressionException, java.lang.NoSuchMethodException, java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException, java.lang.ClassNotFoundException, java.lang.InstantiationException, java.lang.NoSuchFieldException, org.xml.sax.SAXException, javax.xml.parsers.ParserConfigurationException, javax.xml.crypto.MarshalException, javax.xml.crypto.dsig.XMLSignatureException, javax.xml.transform.TransformerException, xades4j.XAdES4jException, java.security.GeneralSecurityException;
+    Code:
+       0: iconst_0
+       1: istore_3
+       2: aconst_null
+       3: astore        4
+       5: aload_0
+       6: invokevirtual #42                 // Method getFileRepo:()Lorg/bol/server/FileRepository;
+       9: aload_0
+      10: invokevirtual #10                 // Method getPasConfiguration:()Lorg/bol/server/PasConfiguration;
+      13: ldc           #228                // String OutPath
+      15: invokevirtual #58                 // Method org/bol/server/PasConfiguration.getSendConfigurationValue:(Ljava/lang/String;)Ljava/lang/Object;
+      18: invokevirtual #13                 // Method java/lang/Object.toString:()Ljava/lang/String;
+      21: aload_2
+      22: aload_1
+      23: invokevirtual #229                // Method org/bol/server/FileRepository.reserveFileForSending:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lorg/bol/server/ReservedFile;
+      26: astore        4
+      28: aconst_null
+      29: aload         4
+      31: if_acmpeq     67
+      34: aload_0
+      35: aload         4
+      37: invokevirtual #230                // Method dispatchReserved:(Lorg/bol/server/ReservedFile;)V
+      40: aconst_null
+      41: aload_1
+      42: if_acmpeq     48
+      45: goto          98
+      48: iinc          3, 1
+      51: iload_3
+      52: bipush        10
+      54: if_icmplt     86
+      57: new           #225                // class org/bol/exceptions/LimitReachedException
+      60: dup
+      61: ldc           #226                // String Reached a limit of number of processed files
+      63: invokespecial #227                // Method org/bol/exceptions/LimitReachedException."<init>":(Ljava/lang/String;)V
+      66: athrow
+      67: aconst_null
+      68: aload_1
+      69: if_acmpeq     86
+      72: new           #17                 // class java/lang/IllegalStateException
+      75: dup
+      76: aload_1
+      77: invokedynamic #231,  0            // InvokeDynamic #9:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      82: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      85: athrow
+      86: aconst_null
+      87: aload         4
+      89: if_acmpeq     98
+      92: iload_3
+      93: bipush        10
+      95: if_icmplt     5
+      98: return
+
+  public boolean parseDpsResponseSaveResultRest(java.util.Map<java.lang.String, java.lang.Object>, java.lang.String) throws org.xml.sax.SAXException, java.io.IOException, javax.xml.parsers.ParserConfigurationException, javax.xml.transform.TransformerException, javax.xml.xpath.XPathExpressionException, java.lang.NoSuchMethodException, java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException, java.lang.ClassNotFoundException, java.lang.InstantiationException, java.lang.NoSuchFieldException, javax.xml.crypto.MarshalException, javax.xml.crypto.dsig.XMLSignatureException, xades4j.XAdES4jException, java.security.GeneralSecurityException;
+    Code:
+       0: aconst_null
+       1: aload_1
+       2: if_acmpeq     366
+       5: aload_1
+       6: ldc           #64                 // String status
+       8: invokeinterface #65,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+      13: ifeq          366
+      16: aload_1
+      17: ldc           #66                 // String data
+      19: invokeinterface #65,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+      24: ifeq          366
+      27: aload_1
+      28: ldc           #64                 // String status
+      30: invokeinterface #67,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      35: checkcast     #27                 // class java/lang/String
+      38: astore_3
+      39: aload_1
+      40: ldc           #66                 // String data
+      42: invokeinterface #67,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      47: checkcast     #68                 // class java/util/Map
+      50: astore        4
+      52: aconst_null
+      53: aload_3
+      54: if_acmpeq     66
+      57: aload_3
+      58: ldc           #69                 // String Success
+      60: invokevirtual #16                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      63: ifne          68
+      66: iconst_0
+      67: ireturn
+      68: aload_1
+      69: ldc           #119                // String message
+      71: invokeinterface #65,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+      76: ifeq          356
+      79: aload         4
+      81: ldc           #109                // String correlationId
+      83: invokeinterface #65,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+      88: ifeq          356
+      91: aload         4
+      93: ldc           #109                // String correlationId
+      95: invokeinterface #67,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     100: checkcast     #27                 // class java/lang/String
+     103: astore        5
+     105: new           #232                // class org/bol/server/SentFile
+     108: dup
+     109: aload_2
+     110: invokespecial #233                // Method org/bol/server/SentFile."<init>":(Ljava/lang/String;)V
+     113: astore        6
+     115: aload         6
+     117: ldc           #109                // String correlationId
+     119: aload         5
+     121: invokevirtual #234                // Method org/bol/server/SentFile.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     124: pop
+     125: aload         6
+     127: ldc           #119                // String message
+     129: aload_1
+     130: ldc           #119                // String message
+     132: invokeinterface #67,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     137: invokevirtual #234                // Method org/bol/server/SentFile.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     140: pop
+     141: aload_0
+     142: invokevirtual #42                 // Method getFileRepo:()Lorg/bol/server/FileRepository;
+     145: aload         6
+     147: invokevirtual #235                // Method org/bol/server/FileRepository.registerSentFile:(Lorg/bol/server/SentFile;)V
+     150: aload_0
+     151: invokevirtual #10                 // Method getPasConfiguration:()Lorg/bol/server/PasConfiguration;
+     154: ldc           #236                // String SendResultURL
+     156: invokevirtual #58                 // Method org/bol/server/PasConfiguration.getSendConfigurationValue:(Ljava/lang/String;)Ljava/lang/Object;
+     159: invokevirtual #13                 // Method java/lang/Object.toString:()Ljava/lang/String;
+     162: astore        7
+     164: aload_0
+     165: invokevirtual #10                 // Method getPasConfiguration:()Lorg/bol/server/PasConfiguration;
+     168: ldc           #237                // String SendDISTimeout
+     170: invokevirtual #58                 // Method org/bol/server/PasConfiguration.getSendConfigurationValue:(Ljava/lang/String;)Ljava/lang/Object;
+     173: checkcast     #24                 // class java/lang/Double
+     176: invokevirtual #25                 // Method java/lang/Double.intValue:()I
+     179: sipush        1000
+     182: imul
+     183: istore        8
+     185: ldc           #61                 // String
+     187: astore        9
+     189: aload_0
+     190: aload_1
+     191: invokevirtual #34                 // Method decodeXmlFromRestResponse:(Ljava/util/Map;)[B
+     194: astore        10
+     196: aconst_null
+     197: aload         10
+     199: if_acmpeq     264
+     202: new           #27                 // class java/lang/String
+     205: dup
+     206: aload         10
+     208: getstatic     #28                 // Field java/nio/charset/StandardCharsets.UTF_8:Ljava/nio/charset/Charset;
+     211: invokespecial #29                 // Method java/lang/String."<init>":([BLjava/nio/charset/Charset;)V
+     214: astore        9
+     216: new           #117                // class java/util/HashMap
+     219: dup
+     220: invokespecial #118                // Method java/util/HashMap."<init>":()V
+     223: astore        11
+     225: aload         11
+     227: ldc           #119                // String message
+     229: ldc           #238                // String Received result to a sent file
+     231: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     234: pop
+     235: aload         11
+     237: ldc           #122                // String file
+     239: aload         6
+     241: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     244: pop
+     245: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+     248: getstatic     #71                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     251: aload         11
+     253: invokestatic  #123                // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+     256: aload         10
+     258: invokestatic  #73                 // Method org/bol/server/LogWrapper.dumpBytes:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;[B)V
+     261: goto          307
+     264: new           #117                // class java/util/HashMap
+     267: dup
+     268: invokespecial #118                // Method java/util/HashMap."<init>":()V
+     271: astore        11
+     273: aload         11
+     275: ldc           #119                // String message
+     277: ldc           #239                // String No result received for sent file
+     279: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     282: pop
+     283: aload         11
+     285: ldc           #122                // String file
+     287: aload         6
+     289: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     292: pop
+     293: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+     296: getstatic     #71                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     299: aload         11
+     301: invokestatic  #123                // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+     304: invokestatic  #38                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     307: aload         7
+     309: invokevirtual #22                 // Method java/lang/String.isEmpty:()Z
+     312: ifne          354
+     315: aload         9
+     317: invokevirtual #22                 // Method java/lang/String.isEmpty:()Z
+     320: ifne          354
+     323: aload_0
+     324: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+     327: aload         7
+     329: aload         9
+     331: aload         5
+     333: new           #30                 // class org/bol/xml/DefaultXmlContentProducer
+     336: dup
+     337: invokespecial #31                 // Method org/bol/xml/DefaultXmlContentProducer."<init>":()V
+     340: iload         8
+     342: invokevirtual #32                 // Method org/bol/transport/HttpsTransport.postXmlRestRequest:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lorg/bol/xml/XmlContentProducer;I)Ljava/net/HttpURLConnection;
+     345: astore        11
+     347: aload_0
+     348: aload         11
+     350: invokevirtual #33                 // Method checkDisResponseRest:(Ljava/net/HttpURLConnection;)Ljava/util/Map;
+     353: pop
+     354: iconst_1
+     355: ireturn
+     356: new           #17                 // class java/lang/IllegalStateException
+     359: dup
+     360: ldc           #240                // String Missing required fields in response
+     362: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     365: athrow
+     366: new           #17                 // class java/lang/IllegalStateException
+     369: dup
+     370: ldc           #240                // String Missing required fields in response
+     372: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     375: athrow
+
+  public void handleRequest(java.lang.String, java.lang.String, java.util.Map<java.lang.String, java.lang.Object>) throws java.io.IOException, javax.xml.xpath.XPathExpressionException, java.lang.NoSuchMethodException, java.lang.SecurityException, java.lang.IllegalAccessException, java.lang.IllegalArgumentException, java.lang.reflect.InvocationTargetException, java.lang.ClassNotFoundException, java.lang.InstantiationException, java.lang.NoSuchFieldException, org.xml.sax.SAXException, javax.xml.parsers.ParserConfigurationException, javax.xml.crypto.MarshalException, javax.xml.crypto.dsig.XMLSignatureException, javax.xml.transform.TransformerException, xades4j.XAdES4jException, java.security.GeneralSecurityException;
+    Code:
+       0: aload_2
+       1: ldc           #241                // String GET
+       3: invokevirtual #175                // Method java/lang/String.contentEquals:(Ljava/lang/CharSequence;)Z
+       6: ifeq          79
+       9: aload_0
+      10: aload_1
+      11: sipush        30000
+      14: invokevirtual #242                // Method getDpsRequest:(Ljava/lang/String;I)Ljava/lang/String;
+      17: astore        4
+      19: aload         4
+      21: ldc           #243                // String <span id=\"lblMessage\">
+      23: invokevirtual #244                // Method java/lang/String.contains:(Ljava/lang/CharSequence;)Z
+      26: ifeq          65
+      29: aload         4
+      31: ldc           #245                // String sesija nebegalioja
+      33: invokevirtual #244                // Method java/lang/String.contains:(Ljava/lang/CharSequence;)Z
+      36: ifeq          65
+      39: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+      42: getstatic     #36                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      45: ldc           #246                // String Refreshing registration due to expiration
+      47: invokestatic  #38                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      50: aload_0
+      51: invokevirtual #247                // Method doRegister:()Ljava/lang/String;
+      54: pop
+      55: aload_0
+      56: aload_1
+      57: sipush        30000
+      60: invokevirtual #242                // Method getDpsRequest:(Ljava/lang/String;I)Ljava/lang/String;
+      63: astore        4
+      65: aload_3
+      66: ldc           #211                // String response
+      68: aload         4
+      70: invokeinterface #149,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      75: pop
+      76: goto          109
+      79: aload_0
+      80: aload_1
+      81: aload_2
+      82: aconst_null
+      83: new           #30                 // class org/bol/xml/DefaultXmlContentProducer
+      86: dup
+      87: invokespecial #31                 // Method org/bol/xml/DefaultXmlContentProducer."<init>":()V
+      90: sipush        30000
+      93: invokevirtual #62                 // Method sendRestRequestGetJson:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lorg/bol/xml/XmlContentProducer;I)Ljava/util/Map;
+      96: astore        4
+      98: aload_3
+      99: ldc           #211                // String response
+     101: aload         4
+     103: invokeinterface #149,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     108: pop
+     109: return
+
+  public java.lang.String doCreateSession();
+    Code:
+       0: aconst_null
+       1: areturn
+
+  public boolean doAddEvent(java.lang.String, java.lang.String);
+    Code:
+       0: iconst_1
+       1: ireturn
+
+  public java.time.LocalDateTime getServerTime() throws javax.xml.xpath.XPathExpressionException, java.lang.NoSuchMethodException, java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException, java.lang.ClassNotFoundException, java.lang.InstantiationException, java.lang.NoSuchFieldException, java.io.IOException, org.xml.sax.SAXException, javax.xml.parsers.ParserConfigurationException, javax.xml.crypto.MarshalException, javax.xml.crypto.dsig.XMLSignatureException, javax.xml.transform.TransformerException, xades4j.XAdES4jException, java.security.GeneralSecurityException;
+    Code:
+       0: getstatic     #248                // Field org/bol/crypto/CryptoCore$PROVIDER_TYPES.DEMO:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+       3: getstatic     #249                // Field org/bol/crypto/CryptoCore.PROVIDER_TYPE:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+       6: if_acmpne     13
+       9: invokestatic  #250                // Method java/time/LocalDateTime.now:()Ljava/time/LocalDateTime;
+      12: areturn
+      13: getstatic     #251                // Field org/bol/crypto/CryptoCore$PROVIDER_TYPES.TEST:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+      16: getstatic     #249                // Field org/bol/crypto/CryptoCore.PROVIDER_TYPE:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+      19: if_acmpeq     48
+      22: aconst_null
+      23: aload_0
+      24: getfield      #2                  // Field lastSyncTime:Ljava/time/Instant;
+      27: if_acmpeq     48
+      30: aload_0
+      31: getfield      #2                  // Field lastSyncTime:Ljava/time/Instant;
+      34: invokestatic  #252                // Method java/time/Instant.now:()Ljava/time/Instant;
+      37: invokestatic  #253                // Method java/time/Duration.between:(Ljava/time/temporal/Temporal;Ljava/time/temporal/Temporal;)Ljava/time/Duration;
+      40: invokevirtual #254                // Method java/time/Duration.toHours:()J
+      43: lconst_1
+      44: lcmp
+      45: iflt          215
+      48: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+      51: getstatic     #36                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      54: ldc           #255                // String Synchronizing time
+      56: invokestatic  #38                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      59: aload_0
+      60: ldc_w         #256                // String Time
+      63: sipush        30000
+      66: invokevirtual #242                // Method getDpsRequest:(Ljava/lang/String;I)Ljava/lang/String;
+      69: astore_2
+      70: aload_2
+      71: invokestatic  #257                // Method org/eclipse/jetty/util/ajax/JSON.parse:(Ljava/lang/String;)Ljava/lang/Object;
+      74: checkcast     #27                 // class java/lang/String
+      77: astore_1
+      78: goto          99
+      81: astore_2
+      82: new           #17                 // class java/lang/IllegalStateException
+      85: dup
+      86: aload_2
+      87: invokevirtual #258                // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+      90: invokedynamic #259,  0            // InvokeDynamic #10:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      95: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      98: athrow
+      99: aload_1
+     100: invokestatic  #152                // Method java/time/OffsetDateTime.parse:(Ljava/lang/CharSequence;)Ljava/time/OffsetDateTime;
+     103: astore_2
+     104: aload_2
+     105: invokevirtual #153                // Method java/time/OffsetDateTime.toInstant:()Ljava/time/Instant;
+     108: invokestatic  #154                // Method java/util/Date.from:(Ljava/time/Instant;)Ljava/util/Date;
+     111: astore_3
+     112: aload_3
+     113: invokevirtual #260                // Method java/util/Date.toInstant:()Ljava/time/Instant;
+     116: ldc_w         #261                // String Europe/Vilnius
+     119: invokestatic  #262                // Method java/time/ZoneId.of:(Ljava/lang/String;)Ljava/time/ZoneId;
+     122: invokestatic  #263                // Method java/time/LocalDateTime.ofInstant:(Ljava/time/Instant;Ljava/time/ZoneId;)Ljava/time/LocalDateTime;
+     125: astore        4
+     127: aload_3
+     128: invokevirtual #260                // Method java/util/Date.toInstant:()Ljava/time/Instant;
+     131: astore        5
+     133: invokestatic  #252                // Method java/time/Instant.now:()Ljava/time/Instant;
+     136: astore        6
+     138: aload         5
+     140: aload         6
+     142: invokestatic  #253                // Method java/time/Duration.between:(Ljava/time/temporal/Temporal;Ljava/time/temporal/Temporal;)Ljava/time/Duration;
+     145: astore        7
+     147: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+     150: getstatic     #36                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     153: aload         5
+     155: aload         6
+     157: aload         7
+     159: invokevirtual #264                // Method java/time/Duration.toString:()Ljava/lang/String;
+     162: invokedynamic #265,  0            // InvokeDynamic #11:makeConcatWithConstants:(Ljava/time/Instant;Ljava/time/Instant;Ljava/lang/String;)Ljava/lang/String;
+     167: invokestatic  #38                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     170: getstatic     #251                // Field org/bol/crypto/CryptoCore$PROVIDER_TYPES.TEST:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+     173: getstatic     #249                // Field org/bol/crypto/CryptoCore.PROVIDER_TYPE:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+     176: if_acmpeq     205
+     179: aload         7
+     181: invokevirtual #266                // Method java/time/Duration.abs:()Ljava/time/Duration;
+     184: invokevirtual #267                // Method java/time/Duration.getSeconds:()J
+     187: ldc2_w        #268                // long 60l
+     190: lcmp
+     191: iflt          205
+     194: new           #17                 // class java/lang/IllegalStateException
+     197: dup
+     198: ldc_w         #270                // String Server Clock difference of more than one minute detected
+     201: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     204: athrow
+     205: aload_0
+     206: invokestatic  #252                // Method java/time/Instant.now:()Ljava/time/Instant;
+     209: putfield      #2                  // Field lastSyncTime:Ljava/time/Instant;
+     212: aload         4
+     214: areturn
+     215: invokestatic  #250                // Method java/time/LocalDateTime.now:()Ljava/time/LocalDateTime;
+     218: areturn
+    Exception table:
+       from    to  target type
+          59    78    81   Class java/lang/Exception
+
+  protected boolean parseDpsResponseSaveResultWWW(byte[], java.lang.String) throws java.io.IOException, javax.xml.transform.TransformerException, org.xml.sax.SAXException, javax.xml.parsers.ParserConfigurationException;
+    Code:
+       0: iconst_0
+       1: ireturn
+
+  public java.lang.String doRegister() throws javax.xml.xpath.XPathExpressionException, java.lang.NoSuchMethodException, java.lang.SecurityException, java.lang.IllegalAccessException, java.lang.IllegalArgumentException, java.lang.reflect.InvocationTargetException, java.lang.ClassNotFoundException, java.lang.InstantiationException, java.lang.NoSuchFieldException, java.io.IOException, org.xml.sax.SAXException, javax.xml.parsers.ParserConfigurationException, javax.xml.crypto.MarshalException, javax.xml.crypto.dsig.XMLSignatureException, javax.xml.transform.TransformerException, xades4j.XAdES4jException, java.security.GeneralSecurityException;
+    Code:
+       0: aload_0
+       1: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+       4: invokevirtual #271                // Method org/bol/transport/HttpsTransport.loginToXenolitasRepo:()V
+       7: aload_0
+       8: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+      11: invokevirtual #272                // Method org/bol/transport/HttpsTransport.getXenolitasRepo:()Lorg/bol/server/XenolitasToken;
+      14: invokevirtual #273                // Method org/bol/server/XenolitasToken.getAccessToken:()Ljava/lang/String;
+      17: areturn
+
+  public java.lang.String doLogout() throws java.io.IOException, javax.xml.xpath.XPathExpressionException, java.lang.NoSuchMethodException, java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException, java.lang.ClassNotFoundException, java.lang.InstantiationException, java.lang.NoSuchFieldException, javax.xml.parsers.ParserConfigurationException, org.xml.sax.SAXException, xades4j.XAdES4jException, javax.xml.crypto.MarshalException, javax.xml.crypto.dsig.XMLSignatureException, javax.xml.transform.TransformerException, java.security.GeneralSecurityException;
+    Code:
+       0: aconst_null
+       1: aload_0
+       2: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+       5: invokevirtual #272                // Method org/bol/transport/HttpsTransport.getXenolitasRepo:()Lorg/bol/server/XenolitasToken;
+       8: invokevirtual #273                // Method org/bol/server/XenolitasToken.getAccessToken:()Ljava/lang/String;
+      11: if_acmpeq     45
+      14: aload_0
+      15: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+      18: invokevirtual #272                // Method org/bol/transport/HttpsTransport.getXenolitasRepo:()Lorg/bol/server/XenolitasToken;
+      21: aload_0
+      22: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+      25: invokevirtual #272                // Method org/bol/transport/HttpsTransport.getXenolitasRepo:()Lorg/bol/server/XenolitasToken;
+      28: invokevirtual #273                // Method org/bol/server/XenolitasToken.getAccessToken:()Ljava/lang/String;
+      31: invokevirtual #274                // Method org/bol/server/XenolitasToken.retractToken:(Ljava/lang/String;)V
+      34: goto          45
+      37: astore_1
+      38: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+      41: aload_1
+      42: invokestatic  #150                // Method org/bol/server/LogWrapper.logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+      45: aload_0
+      46: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+      49: invokevirtual #272                // Method org/bol/transport/HttpsTransport.getXenolitasRepo:()Lorg/bol/server/XenolitasToken;
+      52: invokevirtual #273                // Method org/bol/server/XenolitasToken.getAccessToken:()Ljava/lang/String;
+      55: areturn
+    Exception table:
+       from    to  target type
+          14    34    37   Class java/lang/SecurityException
+
+  public java.util.Map<java.lang.String, java.lang.Object> doGetSendConfig() throws java.io.IOException, javax.xml.xpath.XPathExpressionException, java.lang.NoSuchMethodException, java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException, java.lang.ClassNotFoundException, java.lang.InstantiationException, java.lang.NoSuchFieldException, org.xml.sax.SAXException, javax.xml.parsers.ParserConfigurationException, javax.xml.crypto.MarshalException, javax.xml.crypto.dsig.XMLSignatureException, javax.xml.transform.TransformerException, xades4j.XAdES4jException, java.security.GeneralSecurityException;
+    Code:
+       0: aload_0
+       1: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+       4: getstatic     #276                // Field DPS_CONFIG_URL:Ljava/lang/String;
+       7: invokedynamic #277,  0            // InvokeDynamic #12:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      12: sipush        30000
+      15: invokevirtual #278                // Method org/bol/transport/HttpsTransport.getRestRequest:(Ljava/lang/String;I)Ljava/net/HttpURLConnection;
+      18: astore_1
+      19: aload_0
+      20: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+      23: aload_1
+      24: invokevirtual #279                // Method org/bol/transport/HttpsTransport.getResponseAsString:(Ljava/net/HttpURLConnection;)Ljava/lang/String;
+      27: astore_2
+      28: aload_2
+      29: invokestatic  #257                // Method org/eclipse/jetty/util/ajax/JSON.parse:(Ljava/lang/String;)Ljava/lang/Object;
+      32: checkcast     #68                 // class java/util/Map
+      35: astore_3
+      36: aload_3
+      37: ldc_w         #281                // String success
+      40: invokeinterface #65,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+      45: ifeq          99
+      48: aload_3
+      49: ldc_w         #281                // String success
+      52: invokeinterface #67,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      57: iconst_0
+      58: invokestatic  #282                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+      61: invokevirtual #70                 // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+      64: ifeq          99
+      67: aload_3
+      68: ldc_w         #283                // String error
+      71: invokeinterface #65,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+      76: ifeq          99
+      79: new           #17                 // class java/lang/IllegalStateException
+      82: dup
+      83: aload_3
+      84: ldc_w         #283                // String error
+      87: invokeinterface #67,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      92: checkcast     #27                 // class java/lang/String
+      95: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      98: athrow
+      99: aload_3
+     100: ldc_w         #281                // String success
+     103: invokeinterface #65,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+     108: ifeq          240
+     111: aload_3
+     112: ldc_w         #281                // String success
+     115: invokeinterface #67,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     120: iconst_1
+     121: invokestatic  #282                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+     124: invokevirtual #70                 // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+     127: ifeq          240
+     130: aload_3
+     131: ldc_w         #285                // String config
+     134: invokeinterface #65,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+     139: ifeq          240
+     142: aload_3
+     143: ldc_w         #285                // String config
+     146: invokeinterface #67,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     151: checkcast     #68                 // class java/util/Map
+     154: astore        4
+     156: new           #117                // class java/util/HashMap
+     159: dup
+     160: invokespecial #118                // Method java/util/HashMap."<init>":()V
+     163: astore        5
+     165: aload         4
+     167: invokeinterface #286,  1          // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+     172: invokeinterface #287,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+     177: astore        6
+     179: aload         6
+     181: invokeinterface #288,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     186: ifeq          229
+     189: aload         6
+     191: invokeinterface #289,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     196: checkcast     #290                // class java/util/Map$Entry
+     199: astore        7
+     201: aload         5
+     203: aload         7
+     205: invokeinterface #291,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+     210: invokevirtual #13                 // Method java/lang/Object.toString:()Ljava/lang/String;
+     213: aload         7
+     215: invokeinterface #292,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+     220: invokeinterface #149,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     225: pop
+     226: goto          179
+     229: aload_0
+     230: invokevirtual #10                 // Method getPasConfiguration:()Lorg/bol/server/PasConfiguration;
+     233: aload         5
+     235: invokevirtual #293                // Method org/bol/server/PasConfiguration.setSendConfiguration:(Ljava/util/Map;)V
+     238: aload_3
+     239: areturn
+     240: new           #17                 // class java/lang/IllegalStateException
+     243: dup
+     244: ldc_w         #294                // String Invalid configuration received
+     247: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     250: athrow
+
+  public java.util.Map<java.lang.String, java.lang.Object> doGetReceiveConfig() throws java.io.IOException, javax.xml.xpath.XPathExpressionException, java.lang.NoSuchMethodException, java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException, java.lang.ClassNotFoundException, java.lang.InstantiationException, java.lang.NoSuchFieldException, org.xml.sax.SAXException, javax.xml.parsers.ParserConfigurationException, javax.xml.crypto.MarshalException, javax.xml.crypto.dsig.XMLSignatureException, javax.xml.transform.TransformerException, xades4j.XAdES4jException, java.security.GeneralSecurityException;
+    Code:
+       0: aload_0
+       1: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+       4: getstatic     #276                // Field DPS_CONFIG_URL:Ljava/lang/String;
+       7: invokedynamic #295,  0            // InvokeDynamic #13:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      12: sipush        30000
+      15: invokevirtual #278                // Method org/bol/transport/HttpsTransport.getRestRequest:(Ljava/lang/String;I)Ljava/net/HttpURLConnection;
+      18: astore_1
+      19: aload_0
+      20: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+      23: aload_1
+      24: invokevirtual #279                // Method org/bol/transport/HttpsTransport.getResponseAsString:(Ljava/net/HttpURLConnection;)Ljava/lang/String;
+      27: astore_2
+      28: aload_2
+      29: invokestatic  #257                // Method org/eclipse/jetty/util/ajax/JSON.parse:(Ljava/lang/String;)Ljava/lang/Object;
+      32: checkcast     #68                 // class java/util/Map
+      35: astore_3
+      36: aload_3
+      37: ldc_w         #281                // String success
+      40: invokeinterface #65,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+      45: ifeq          99
+      48: aload_3
+      49: ldc_w         #281                // String success
+      52: invokeinterface #67,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      57: iconst_0
+      58: invokestatic  #282                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+      61: invokevirtual #70                 // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+      64: ifeq          99
+      67: aload_3
+      68: ldc_w         #283                // String error
+      71: invokeinterface #65,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+      76: ifeq          99
+      79: new           #17                 // class java/lang/IllegalStateException
+      82: dup
+      83: aload_3
+      84: ldc_w         #283                // String error
+      87: invokeinterface #67,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      92: checkcast     #27                 // class java/lang/String
+      95: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      98: athrow
+      99: aload_3
+     100: ldc_w         #281                // String success
+     103: invokeinterface #65,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+     108: ifeq          414
+     111: aload_3
+     112: ldc_w         #281                // String success
+     115: invokeinterface #67,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     120: iconst_1
+     121: invokestatic  #282                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+     124: invokevirtual #70                 // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+     127: ifeq          414
+     130: aload_3
+     131: ldc_w         #285                // String config
+     134: invokeinterface #65,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+     139: ifeq          414
+     142: aload_3
+     143: ldc_w         #296                // String systems
+     146: invokeinterface #65,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+     151: ifeq          414
+     154: aload_3
+     155: ldc_w         #285                // String config
+     158: invokeinterface #67,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     163: checkcast     #68                 // class java/util/Map
+     166: astore        4
+     168: new           #117                // class java/util/HashMap
+     171: dup
+     172: invokespecial #118                // Method java/util/HashMap."<init>":()V
+     175: astore        5
+     177: aload         4
+     179: invokeinterface #286,  1          // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+     184: invokeinterface #287,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+     189: astore        6
+     191: aload         6
+     193: invokeinterface #288,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     198: ifeq          241
+     201: aload         6
+     203: invokeinterface #289,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     208: checkcast     #290                // class java/util/Map$Entry
+     211: astore        7
+     213: aload         5
+     215: aload         7
+     217: invokeinterface #291,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+     222: invokevirtual #13                 // Method java/lang/Object.toString:()Ljava/lang/String;
+     225: aload         7
+     227: invokeinterface #292,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+     232: invokeinterface #149,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     237: pop
+     238: goto          191
+     241: aload_3
+     242: ldc_w         #296                // String systems
+     245: invokeinterface #67,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     250: astore        6
+     252: aload         6
+     254: checkcast     #297                // class "[Ljava/lang/Object;"
+     257: astore        7
+     259: new           #117                // class java/util/HashMap
+     262: dup
+     263: invokespecial #118                // Method java/util/HashMap."<init>":()V
+     266: astore        8
+     268: aload         7
+     270: astore        9
+     272: aload         9
+     274: arraylength
+     275: istore        10
+     277: iconst_0
+     278: istore        11
+     280: iload         11
+     282: iload         10
+     284: if_icmpge     403
+     287: aload         9
+     289: iload         11
+     291: aaload
+     292: astore        12
+     294: aload         12
+     296: checkcast     #68                 // class java/util/Map
+     299: astore        13
+     301: new           #117                // class java/util/HashMap
+     304: dup
+     305: invokespecial #118                // Method java/util/HashMap."<init>":()V
+     308: astore        14
+     310: aload         13
+     312: invokeinterface #286,  1          // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+     317: invokeinterface #287,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+     322: astore        15
+     324: aload         15
+     326: invokeinterface #288,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     331: ifeq          374
+     334: aload         15
+     336: invokeinterface #289,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     341: checkcast     #290                // class java/util/Map$Entry
+     344: astore        16
+     346: aload         14
+     348: aload         16
+     350: invokeinterface #291,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+     355: invokevirtual #13                 // Method java/lang/Object.toString:()Ljava/lang/String;
+     358: aload         16
+     360: invokeinterface #292,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+     365: invokeinterface #149,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     370: pop
+     371: goto          324
+     374: aload         8
+     376: aload         14
+     378: ldc_w         #298                // String System
+     381: invokeinterface #67,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     386: invokevirtual #13                 // Method java/lang/Object.toString:()Ljava/lang/String;
+     389: aload         14
+     391: invokeinterface #149,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     396: pop
+     397: iinc          11, 1
+     400: goto          280
+     403: aload_0
+     404: invokevirtual #10                 // Method getPasConfiguration:()Lorg/bol/server/PasConfiguration;
+     407: aload         5
+     409: aload         8
+     411: invokevirtual #299                // Method org/bol/server/PasConfiguration.setReceiveConfiguration:(Ljava/util/Map;Ljava/util/Map;)V
+     414: aload_3
+     415: areturn
+
+  public java.util.Map<java.lang.String, java.lang.Object> sendReservedFile(org.bol.server.ReservedFile, int) throws javax.xml.xpath.XPathExpressionException, java.io.IOException, org.xml.sax.SAXException, javax.xml.parsers.ParserConfigurationException, javax.xml.crypto.MarshalException, javax.xml.crypto.dsig.XMLSignatureException, javax.xml.transform.TransformerException, xades4j.XAdES4jException, java.security.GeneralSecurityException, java.lang.NoSuchMethodException, java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException, java.lang.ClassNotFoundException, java.lang.InstantiationException, java.lang.NoSuchFieldException;
+    Code:
+       0: aload_0
+       1: invokevirtual #167                // Method getServerTime:()Ljava/time/LocalDateTime;
+       4: astore_3
+       5: aload_0
+       6: aload_0
+       7: invokevirtual #206                // Method getDpsEndpSend:()Ljava/lang/String;
+      10: aload_1
+      11: invokevirtual #182                // Method org/bol/server/ReservedFile.getInputStream:()Ljava/io/InputStream;
+      14: invokestatic  #300                // Method org/bol/xml/XmlHelper.loadXmlFromInputStreamOmmitDeclaration:(Ljava/io/InputStream;)Ljava/lang/String;
+      17: aconst_null
+      18: aload_0
+      19: aload_3
+      20: aload_1
+      21: invokedynamic #301,  0            // InvokeDynamic #14:onProduceXml:(Lorg/bol/transport/TakoDpsTransport;Ljava/time/LocalDateTime;Lorg/bol/server/ReservedFile;)Lorg/bol/xml/XmlContentProducer;
+      26: iload_2
+      27: invokevirtual #62                 // Method sendRestRequestGetJson:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lorg/bol/xml/XmlContentProducer;I)Ljava/util/Map;
+      30: areturn
+
+  protected void saveSendResultFile(org.w3c.dom.Document, java.lang.String) throws javax.xml.transform.TransformerException, java.io.IOException;
+    Code:
+       0: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+       3: getstatic     #36                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+       6: aload_2
+       7: invokedynamic #302,  0            // InvokeDynamic #15:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      12: invokestatic  #38                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      15: aload_0
+      16: invokevirtual #42                 // Method getFileRepo:()Lorg/bol/server/FileRepository;
+      19: aload_0
+      20: invokevirtual #10                 // Method getPasConfiguration:()Lorg/bol/server/PasConfiguration;
+      23: ldc_w         #303                // String SendResultPath
+      26: invokevirtual #58                 // Method org/bol/server/PasConfiguration.getSendConfigurationValue:(Ljava/lang/String;)Ljava/lang/Object;
+      29: invokevirtual #13                 // Method java/lang/Object.toString:()Ljava/lang/String;
+      32: aload_2
+      33: invokedynamic #43,  0             // InvokeDynamic #2:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      38: invokevirtual #44                 // Method org/bol/server/FileRepository.ReserveFile:(Ljava/lang/String;)Lorg/bol/server/ReservedFile;
+      41: astore_3
+      42: aload_3
+      43: invokevirtual #45                 // Method org/bol/server/ReservedFile.clean:()V
+      46: aload_3
+      47: invokevirtual #46                 // Method org/bol/server/ReservedFile.getOutputStream:()Ljava/io/OutputStream;
+      50: astore        4
+      52: new           #304                // class java/io/OutputStreamWriter
+      55: dup
+      56: aload         4
+      58: getstatic     #28                 // Field java/nio/charset/StandardCharsets.UTF_8:Ljava/nio/charset/Charset;
+      61: invokespecial #305                // Method java/io/OutputStreamWriter."<init>":(Ljava/io/OutputStream;Ljava/nio/charset/Charset;)V
+      64: astore        5
+      66: invokestatic  #306                // Method javax/xml/transform/TransformerFactory.newInstance:()Ljavax/xml/transform/TransformerFactory;
+      69: astore        6
+      71: aload         6
+      73: ldc_w         #308                // String http://javax.xml.XMLConstants/feature/secure-processing
+      76: iconst_1
+      77: invokevirtual #309                // Method javax/xml/transform/TransformerFactory.setFeature:(Ljava/lang/String;Z)V
+      80: aload         6
+      82: ldc_w         #310                // String indent-number
+      85: iconst_2
+      86: invokestatic  #311                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+      89: invokevirtual #312                // Method javax/xml/transform/TransformerFactory.setAttribute:(Ljava/lang/String;Ljava/lang/Object;)V
+      92: aload         6
+      94: invokevirtual #313                // Method javax/xml/transform/TransformerFactory.newTransformer:()Ljavax/xml/transform/Transformer;
+      97: astore        7
+      99: aload         7
+     101: ldc_w         #315                // String omit-xml-declaration
+     104: ldc_w         #316                // String no
+     107: invokevirtual #317                // Method javax/xml/transform/Transformer.setOutputProperty:(Ljava/lang/String;Ljava/lang/String;)V
+     110: aload         7
+     112: ldc_w         #318                // String method
+     115: ldc_w         #319                // String xml
+     118: invokevirtual #317                // Method javax/xml/transform/Transformer.setOutputProperty:(Ljava/lang/String;Ljava/lang/String;)V
+     121: aload         7
+     123: ldc_w         #320                // String indent
+     126: ldc_w         #321                // String yes
+     129: invokevirtual #317                // Method javax/xml/transform/Transformer.setOutputProperty:(Ljava/lang/String;Ljava/lang/String;)V
+     132: aload         7
+     134: ldc_w         #322                // String doctype-public
+     137: ldc_w         #321                // String yes
+     140: invokevirtual #317                // Method javax/xml/transform/Transformer.setOutputProperty:(Ljava/lang/String;Ljava/lang/String;)V
+     143: aload         7
+     145: ldc_w         #323                // String encoding
+     148: getstatic     #28                 // Field java/nio/charset/StandardCharsets.UTF_8:Ljava/nio/charset/Charset;
+     151: invokevirtual #324                // Method java/nio/charset/Charset.name:()Ljava/lang/String;
+     154: invokevirtual #317                // Method javax/xml/transform/Transformer.setOutputProperty:(Ljava/lang/String;Ljava/lang/String;)V
+     157: aload         7
+     159: new           #325                // class javax/xml/transform/dom/DOMSource
+     162: dup
+     163: aload_1
+     164: invokeinterface #77,  1           // InterfaceMethod org/w3c/dom/Document.getDocumentElement:()Lorg/w3c/dom/Element;
+     169: invokespecial #326                // Method javax/xml/transform/dom/DOMSource."<init>":(Lorg/w3c/dom/Node;)V
+     172: new           #327                // class javax/xml/transform/stream/StreamResult
+     175: dup
+     176: aload         5
+     178: invokespecial #328                // Method javax/xml/transform/stream/StreamResult."<init>":(Ljava/io/Writer;)V
+     181: invokevirtual #329                // Method javax/xml/transform/Transformer.transform:(Ljavax/xml/transform/Source;Ljavax/xml/transform/Result;)V
+     184: aload         4
+     186: invokevirtual #48                 // Method java/io/OutputStream.flush:()V
+     189: aload         5
+     191: invokevirtual #330                // Method java/io/OutputStreamWriter.close:()V
+     194: goto          219
+     197: astore        6
+     199: aload         5
+     201: invokevirtual #330                // Method java/io/OutputStreamWriter.close:()V
+     204: goto          216
+     207: astore        7
+     209: aload         6
+     211: aload         7
+     213: invokevirtual #51                 // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     216: aload         6
+     218: athrow
+     219: aload         4
+     221: ifnull        259
+     224: aload         4
+     226: invokevirtual #49                 // Method java/io/OutputStream.close:()V
+     229: goto          259
+     232: astore        5
+     234: aload         4
+     236: ifnull        256
+     239: aload         4
+     241: invokevirtual #49                 // Method java/io/OutputStream.close:()V
+     244: goto          256
+     247: astore        6
+     249: aload         5
+     251: aload         6
+     253: invokevirtual #51                 // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     256: aload         5
+     258: athrow
+     259: aload_3
+     260: invokevirtual #52                 // Method org/bol/server/ReservedFile.release:()V
+     263: goto          275
+     266: astore        8
+     268: aload_3
+     269: invokevirtual #52                 // Method org/bol/server/ReservedFile.release:()V
+     272: aload         8
+     274: athrow
+     275: return
+    Exception table:
+       from    to  target type
+          66   189   197   Class java/lang/Throwable
+         199   204   207   Class java/lang/Throwable
+          52   219   232   Class java/lang/Throwable
+         239   244   247   Class java/lang/Throwable
+          46   259   266   any
+         266   268   266   any
+
+  public void dispatchReserved(org.bol.server.ReservedFile) throws javax.xml.xpath.XPathExpressionException, java.io.IOException, org.xml.sax.SAXException, javax.xml.parsers.ParserConfigurationException, javax.xml.crypto.MarshalException, javax.xml.crypto.dsig.XMLSignatureException, javax.xml.transform.TransformerException, xades4j.XAdES4jException, java.security.GeneralSecurityException, java.lang.NoSuchMethodException, java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException, java.lang.ClassNotFoundException, java.lang.InstantiationException, java.lang.NoSuchFieldException;
+    Code:
+       0: aload_0
+       1: invokevirtual #10                 // Method getPasConfiguration:()Lorg/bol/server/PasConfiguration;
+       4: ldc           #57                 // String SendPASTimeout
+       6: invokevirtual #58                 // Method org/bol/server/PasConfiguration.getSendConfigurationValue:(Ljava/lang/String;)Ljava/lang/Object;
+       9: checkcast     #24                 // class java/lang/Double
+      12: invokevirtual #25                 // Method java/lang/Double.intValue:()I
+      15: sipush        1000
+      18: imul
+      19: istore_2
+      20: new           #232                // class org/bol/server/SentFile
+      23: dup
+      24: aload_1
+      25: invokevirtual #331                // Method org/bol/server/ReservedFile.getToken:()Ljava/lang/String;
+      28: invokespecial #233                // Method org/bol/server/SentFile."<init>":(Ljava/lang/String;)V
+      31: astore_3
+      32: aload_0
+      33: aload_1
+      34: iload_2
+      35: invokevirtual #332                // Method sendReservedFile:(Lorg/bol/server/ReservedFile;I)Ljava/util/Map;
+      38: astore        4
+      40: aconst_null
+      41: aload         4
+      43: if_acmpeq     313
+      46: aload         4
+      48: ldc           #119                // String message
+      50: invokeinterface #65,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+      55: ifeq          313
+      58: aload         4
+      60: ldc           #66                 // String data
+      62: invokeinterface #65,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+      67: ifeq          313
+      70: aload         4
+      72: ldc           #66                 // String data
+      74: invokeinterface #67,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      79: checkcast     #68                 // class java/util/Map
+      82: astore        5
+      84: aload         5
+      86: ldc           #109                // String correlationId
+      88: invokeinterface #65,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+      93: ifeq          299
+      96: aload_3
+      97: ldc           #116                // String filename
+      99: aload_1
+     100: invokevirtual #333                // Method org/bol/server/ReservedFile.getName:()Ljava/lang/String;
+     103: invokevirtual #234                // Method org/bol/server/SentFile.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     106: pop
+     107: aload_3
+     108: ldc           #109                // String correlationId
+     110: aload         5
+     112: ldc           #109                // String correlationId
+     114: invokeinterface #67,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     119: invokevirtual #234                // Method org/bol/server/SentFile.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     122: pop
+     123: aload_3
+     124: ldc           #119                // String message
+     126: aload         4
+     128: ldc           #119                // String message
+     130: invokeinterface #67,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     135: invokevirtual #234                // Method org/bol/server/SentFile.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     138: pop
+     139: ldc           #61                 // String
+     141: astore        6
+     143: aload_0
+     144: aload         4
+     146: invokevirtual #34                 // Method decodeXmlFromRestResponse:(Ljava/util/Map;)[B
+     149: astore        7
+     151: aconst_null
+     152: aload         7
+     154: if_acmpeq     218
+     157: new           #27                 // class java/lang/String
+     160: dup
+     161: aload         7
+     163: getstatic     #28                 // Field java/nio/charset/StandardCharsets.UTF_8:Ljava/nio/charset/Charset;
+     166: invokespecial #29                 // Method java/lang/String."<init>":([BLjava/nio/charset/Charset;)V
+     169: astore        6
+     171: new           #117                // class java/util/HashMap
+     174: dup
+     175: invokespecial #118                // Method java/util/HashMap."<init>":()V
+     178: astore        8
+     180: aload         8
+     182: ldc           #119                // String message
+     184: ldc           #238                // String Received result to a sent file
+     186: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     189: pop
+     190: aload         8
+     192: ldc           #122                // String file
+     194: aload_3
+     195: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     198: pop
+     199: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+     202: getstatic     #71                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     205: aload         8
+     207: invokestatic  #123                // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+     210: aload         7
+     212: invokestatic  #73                 // Method org/bol/server/LogWrapper.dumpBytes:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;[B)V
+     215: goto          260
+     218: new           #117                // class java/util/HashMap
+     221: dup
+     222: invokespecial #118                // Method java/util/HashMap."<init>":()V
+     225: astore        8
+     227: aload         8
+     229: ldc           #119                // String message
+     231: ldc           #239                // String No result received for sent file
+     233: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     236: pop
+     237: aload         8
+     239: ldc           #122                // String file
+     241: aload_3
+     242: invokevirtual #121                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     245: pop
+     246: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+     249: getstatic     #71                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     252: aload         8
+     254: invokestatic  #123                // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+     257: invokestatic  #38                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     260: aload         6
+     262: invokevirtual #22                 // Method java/lang/String.isEmpty:()Z
+     265: ifne          296
+     268: aload_0
+     269: new           #74                 // class java/io/ByteArrayInputStream
+     272: dup
+     273: aload         7
+     275: invokespecial #75                 // Method java/io/ByteArrayInputStream."<init>":([B)V
+     278: invokestatic  #76                 // Method org/bol/xml/XmlHelper.loadDocumentFromInputStream:(Ljava/io/InputStream;)Lorg/w3c/dom/Document;
+     281: aload         4
+     283: ldc           #109                // String correlationId
+     285: invokeinterface #67,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     290: checkcast     #27                 // class java/lang/String
+     293: invokevirtual #334                // Method saveSendResultFile:(Lorg/w3c/dom/Document;Ljava/lang/String;)V
+     296: goto          310
+     299: new           #17                 // class java/lang/IllegalStateException
+     302: dup
+     303: ldc_w         #335                // String Missing correlationId field in response
+     306: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     309: athrow
+     310: goto          324
+     313: new           #17                 // class java/lang/IllegalStateException
+     316: dup
+     317: ldc_w         #336                // String Missing data field in response
+     320: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     323: athrow
+     324: aload_0
+     325: invokevirtual #42                 // Method getFileRepo:()Lorg/bol/server/FileRepository;
+     328: aload_3
+     329: invokevirtual #235                // Method org/bol/server/FileRepository.registerSentFile:(Lorg/bol/server/SentFile;)V
+     332: aload_0
+     333: invokevirtual #42                 // Method getFileRepo:()Lorg/bol/server/FileRepository;
+     336: aload_1
+     337: aload_0
+     338: invokevirtual #10                 // Method getPasConfiguration:()Lorg/bol/server/PasConfiguration;
+     341: ldc_w         #337                // String SentPath
+     344: invokevirtual #58                 // Method org/bol/server/PasConfiguration.getSendConfigurationValue:(Ljava/lang/String;)Ljava/lang/Object;
+     347: invokevirtual #13                 // Method java/lang/Object.toString:()Ljava/lang/String;
+     350: invokevirtual #338                // Method org/bol/server/FileRepository.remReservedFileAndMove:(Lorg/bol/server/ReservedFile;Ljava/lang/String;)Z
+     353: pop
+     354: aload_1
+     355: invokevirtual #52                 // Method org/bol/server/ReservedFile.release:()V
+     358: return
+
+  protected java.util.Map<java.lang.String, java.lang.Object> getNextMsgRest() throws javax.xml.xpath.XPathExpressionException, java.lang.NoSuchMethodException, java.lang.SecurityException, java.lang.IllegalAccessException, java.lang.IllegalArgumentException, java.lang.reflect.InvocationTargetException, java.lang.ClassNotFoundException, java.lang.InstantiationException, java.lang.NoSuchFieldException, java.io.IOException, org.xml.sax.SAXException, javax.xml.parsers.ParserConfigurationException, javax.xml.crypto.MarshalException, javax.xml.crypto.dsig.XMLSignatureException, javax.xml.transform.TransformerException, xades4j.XAdES4jException, java.security.GeneralSecurityException;
+    Code:
+       0: aload_0
+       1: invokevirtual #10                 // Method getPasConfiguration:()Lorg/bol/server/PasConfiguration;
+       4: ldc_w         #339                // String NextMsgURL
+       7: invokevirtual #58                 // Method org/bol/server/PasConfiguration.getSendConfigurationValue:(Ljava/lang/String;)Ljava/lang/Object;
+      10: invokevirtual #13                 // Method java/lang/Object.toString:()Ljava/lang/String;
+      13: astore_1
+      14: aload_0
+      15: invokevirtual #10                 // Method getPasConfiguration:()Lorg/bol/server/PasConfiguration;
+      18: ldc           #57                 // String SendPASTimeout
+      20: invokevirtual #58                 // Method org/bol/server/PasConfiguration.getSendConfigurationValue:(Ljava/lang/String;)Ljava/lang/Object;
+      23: checkcast     #24                 // class java/lang/Double
+      26: invokevirtual #25                 // Method java/lang/Double.intValue:()I
+      29: sipush        1000
+      32: imul
+      33: istore_2
+      34: aload_0
+      35: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+      38: aload_1
+      39: ldc           #61                 // String
+      41: aconst_null
+      42: new           #30                 // class org/bol/xml/DefaultXmlContentProducer
+      45: dup
+      46: invokespecial #31                 // Method org/bol/xml/DefaultXmlContentProducer."<init>":()V
+      49: iload_2
+      50: invokevirtual #32                 // Method org/bol/transport/HttpsTransport.postXmlRestRequest:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lorg/bol/xml/XmlContentProducer;I)Ljava/net/HttpURLConnection;
+      53: astore_3
+      54: aload_0
+      55: aload_3
+      56: invokevirtual #33                 // Method checkDisResponseRest:(Ljava/net/HttpURLConnection;)Ljava/util/Map;
+      59: astore        4
+      61: aconst_null
+      62: aload         4
+      64: if_acmpne     78
+      67: new           #17                 // class java/lang/IllegalStateException
+      70: dup
+      71: ldc_w         #336                // String Missing data field in response
+      74: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      77: athrow
+      78: aload         4
+      80: areturn
+
+  protected void doSendRest(java.lang.String, java.lang.String) throws java.lang.Exception;
+    Code:
+       0: aconst_null
+       1: aload_1
+       2: if_acmpne     9
+       5: iconst_1
+       6: goto          10
+       9: iconst_0
+      10: istore_3
+      11: iconst_0
+      12: istore        4
+      14: aload_0
+      15: invokevirtual #340                // Method getNextMsgRest:()Ljava/util/Map;
+      18: astore        5
+      20: aload_0
+      21: aload         5
+      23: invokevirtual #34                 // Method decodeXmlFromRestResponse:(Ljava/util/Map;)[B
+      26: astore        6
+      28: aload         5
+      30: ldc           #66                 // String data
+      32: invokeinterface #67,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      37: checkcast     #68                 // class java/util/Map
+      40: astore        7
+      42: aconst_null
+      43: aload         6
+      45: if_acmpne     66
+      48: iload_3
+      49: ifeq          222
+      52: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+      55: getstatic     #36                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      58: ldc           #218                // String No More files
+      60: invokestatic  #38                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      63: goto          222
+      66: aconst_null
+      67: aload         7
+      69: if_acmpeq     201
+      72: aload         7
+      74: ldc           #109                // String correlationId
+      76: invokeinterface #65,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+      81: ifeq          201
+      84: aload         7
+      86: ldc           #109                // String correlationId
+      88: invokeinterface #67,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      93: checkcast     #27                 // class java/lang/String
+      96: astore        8
+      98: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+     101: getstatic     #71                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     104: ldc_w         #341                // String Sending file:
+     107: aload         6
+     109: invokestatic  #73                 // Method org/bol/server/LogWrapper.dumpBytes:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;[B)V
+     112: new           #27                 // class java/lang/String
+     115: dup
+     116: aload         6
+     118: getstatic     #28                 // Field java/nio/charset/StandardCharsets.UTF_8:Ljava/nio/charset/Charset;
+     121: invokespecial #29                 // Method java/lang/String."<init>":([BLjava/nio/charset/Charset;)V
+     124: astore        9
+     126: aload_0
+     127: aload         9
+     129: aload         8
+     131: invokevirtual #342                // Method sendMessageToDpsSaveSignedResultRest:(Ljava/lang/String;Ljava/lang/String;)Ljava/util/Map;
+     134: astore        10
+     136: aconst_null
+     137: aload         10
+     139: if_acmpeq     187
+     142: aload_0
+     143: aload         10
+     145: aload_2
+     146: invokevirtual #343                // Method parseDpsResponseSaveResultRest:(Ljava/util/Map;Ljava/lang/String;)Z
+     149: ifne          167
+     152: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+     155: getstatic     #36                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     158: ldc_w         #344                // String Finish processing due to response error
+     161: invokestatic  #38                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     164: goto          222
+     167: iinc          4, 1
+     170: iload         4
+     172: bipush        10
+     174: if_icmplt     198
+     177: new           #225                // class org/bol/exceptions/LimitReachedException
+     180: dup
+     181: ldc           #226                // String Reached a limit of number of processed files
+     183: invokespecial #227                // Method org/bol/exceptions/LimitReachedException."<init>":(Ljava/lang/String;)V
+     186: athrow
+     187: new           #17                 // class java/lang/IllegalStateException
+     190: dup
+     191: ldc_w         #345                // String Empty response, instead of expected Format
+     194: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     197: athrow
+     198: goto          211
+     201: new           #17                 // class java/lang/IllegalStateException
+     204: dup
+     205: ldc           #240                // String Missing required fields in response
+     207: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     210: athrow
+     211: iload_3
+     212: ifeq          222
+     215: iload         4
+     217: bipush        10
+     219: if_icmplt     14
+     222: return
+
+  protected java.util.Map<java.lang.String, java.lang.Object> sendMessageToDpsSaveSignedResultRest(java.lang.String, java.lang.String) throws javax.xml.xpath.XPathExpressionException, java.io.IOException, org.xml.sax.SAXException, javax.xml.parsers.ParserConfigurationException, javax.xml.crypto.MarshalException, javax.xml.crypto.dsig.XMLSignatureException, javax.xml.transform.TransformerException, xades4j.XAdES4jException, java.security.GeneralSecurityException, java.lang.NoSuchMethodException, java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException, java.lang.ClassNotFoundException, java.lang.InstantiationException, java.lang.NoSuchFieldException;
+    Code:
+       0: aload_0
+       1: invokevirtual #167                // Method getServerTime:()Ljava/time/LocalDateTime;
+       4: astore_3
+       5: aload_0
+       6: invokevirtual #10                 // Method getPasConfiguration:()Lorg/bol/server/PasConfiguration;
+       9: ldc           #57                 // String SendPASTimeout
+      11: invokevirtual #58                 // Method org/bol/server/PasConfiguration.getSendConfigurationValue:(Ljava/lang/String;)Ljava/lang/Object;
+      14: checkcast     #24                 // class java/lang/Double
+      17: invokevirtual #25                 // Method java/lang/Double.intValue:()I
+      20: sipush        1000
+      23: imul
+      24: istore        4
+      26: aload_0
+      27: aload_0
+      28: invokevirtual #206                // Method getDpsEndpSend:()Ljava/lang/String;
+      31: aload_1
+      32: aload_2
+      33: aload_0
+      34: aload_3
+      35: aload_2
+      36: invokedynamic #346,  0            // InvokeDynamic #16:onProduceXml:(Lorg/bol/transport/TakoDpsTransport;Ljava/time/LocalDateTime;Ljava/lang/String;)Lorg/bol/xml/XmlContentProducer;
+      41: iload         4
+      43: invokevirtual #62                 // Method sendRestRequestGetJson:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lorg/bol/xml/XmlContentProducer;I)Ljava/util/Map;
+      46: areturn
+
+  private byte[] lambda$sendMessageToDpsSaveSignedResultRest$2(java.time.LocalDateTime, java.lang.String, java.lang.String) throws java.io.IOException, javax.xml.xpath.XPathExpressionException, org.xml.sax.SAXException, javax.xml.parsers.ParserConfigurationException, javax.xml.crypto.MarshalException, javax.xml.crypto.dsig.XMLSignatureException, javax.xml.transform.TransformerException, xades4j.XAdES4jException, java.security.GeneralSecurityException, java.lang.NoSuchMethodException, java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException, java.lang.ClassNotFoundException, java.lang.InstantiationException, java.lang.NoSuchFieldException;
+    Code:
+       0: aload_0
+       1: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+       4: aload_3
+       5: aload_0
+       6: invokevirtual #347                // Method getDefaultSignType:()Ljava/lang/String;
+       9: aload_1
+      10: invokevirtual #348                // Method org/bol/transport/HttpsTransport.signXmlByType:(Ljava/lang/String;Ljava/lang/String;Ljava/time/LocalDateTime;)[B
+      13: astore        4
+      15: aload_0
+      16: invokevirtual #10                 // Method getPasConfiguration:()Lorg/bol/server/PasConfiguration;
+      19: ldc_w         #349                // String SaveOutSignedURL
+      22: invokevirtual #58                 // Method org/bol/server/PasConfiguration.getSendConfigurationValue:(Ljava/lang/String;)Ljava/lang/Object;
+      25: invokevirtual #13                 // Method java/lang/Object.toString:()Ljava/lang/String;
+      28: astore        5
+      30: aconst_null
+      31: aload         5
+      33: if_acmpeq     108
+      36: aload         5
+      38: invokevirtual #22                 // Method java/lang/String.isEmpty:()Z
+      41: ifne          108
+      44: aload_0
+      45: invokevirtual #10                 // Method getPasConfiguration:()Lorg/bol/server/PasConfiguration;
+      48: ldc           #237                // String SendDISTimeout
+      50: invokevirtual #58                 // Method org/bol/server/PasConfiguration.getSendConfigurationValue:(Ljava/lang/String;)Ljava/lang/Object;
+      53: checkcast     #24                 // class java/lang/Double
+      56: invokevirtual #25                 // Method java/lang/Double.intValue:()I
+      59: sipush        1000
+      62: imul
+      63: istore        6
+      65: aload_0
+      66: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+      69: aload         5
+      71: new           #27                 // class java/lang/String
+      74: dup
+      75: aload         4
+      77: getstatic     #28                 // Field java/nio/charset/StandardCharsets.UTF_8:Ljava/nio/charset/Charset;
+      80: invokespecial #29                 // Method java/lang/String."<init>":([BLjava/nio/charset/Charset;)V
+      83: aload_2
+      84: new           #30                 // class org/bol/xml/DefaultXmlContentProducer
+      87: dup
+      88: invokespecial #31                 // Method org/bol/xml/DefaultXmlContentProducer."<init>":()V
+      91: iload         6
+      93: invokevirtual #32                 // Method org/bol/transport/HttpsTransport.postXmlRestRequest:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lorg/bol/xml/XmlContentProducer;I)Ljava/net/HttpURLConnection;
+      96: astore        7
+      98: aload_0
+      99: aload         7
+     101: invokevirtual #33                 // Method checkDisResponseRest:(Ljava/net/HttpURLConnection;)Ljava/util/Map;
+     104: pop
+     105: goto          120
+     108: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+     111: getstatic     #36                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     114: ldc_w         #350                // String SaveOutSignedURL is not provided
+     117: invokestatic  #38                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     120: aload         4
+     122: areturn
+
+  private byte[] lambda$sendReservedFile$1(java.time.LocalDateTime, org.bol.server.ReservedFile, java.lang.String) throws java.io.IOException, javax.xml.xpath.XPathExpressionException, org.xml.sax.SAXException, javax.xml.parsers.ParserConfigurationException, javax.xml.crypto.MarshalException, javax.xml.crypto.dsig.XMLSignatureException, javax.xml.transform.TransformerException, xades4j.XAdES4jException, java.security.GeneralSecurityException, java.lang.NoSuchMethodException, java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException, java.lang.ClassNotFoundException, java.lang.InstantiationException, java.lang.NoSuchFieldException;
+    Code:
+       0: aload_0
+       1: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+       4: aload_3
+       5: aload_0
+       6: invokevirtual #347                // Method getDefaultSignType:()Ljava/lang/String;
+       9: aload_1
+      10: invokevirtual #348                // Method org/bol/transport/HttpsTransport.signXmlByType:(Ljava/lang/String;Ljava/lang/String;Ljava/time/LocalDateTime;)[B
+      13: astore        4
+      15: aconst_null
+      16: aload_2
+      17: invokevirtual #333                // Method org/bol/server/ReservedFile.getName:()Ljava/lang/String;
+      20: if_acmpeq     154
+      23: getstatic     #35                 // Field log:Lorg/slf4j/Logger;
+      26: getstatic     #36                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      29: aload_2
+      30: invokevirtual #333                // Method org/bol/server/ReservedFile.getName:()Ljava/lang/String;
+      33: invokedynamic #351,  0            // InvokeDynamic #17:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      38: invokestatic  #38                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      41: aload_0
+      42: invokevirtual #42                 // Method getFileRepo:()Lorg/bol/server/FileRepository;
+      45: aload_0
+      46: invokevirtual #10                 // Method getPasConfiguration:()Lorg/bol/server/PasConfiguration;
+      49: ldc_w         #352                // String OutSignedPath
+      52: invokevirtual #58                 // Method org/bol/server/PasConfiguration.getSendConfigurationValue:(Ljava/lang/String;)Ljava/lang/Object;
+      55: invokevirtual #13                 // Method java/lang/Object.toString:()Ljava/lang/String;
+      58: aload_2
+      59: invokevirtual #333                // Method org/bol/server/ReservedFile.getName:()Ljava/lang/String;
+      62: invokedynamic #43,  0             // InvokeDynamic #2:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      67: invokevirtual #44                 // Method org/bol/server/FileRepository.ReserveFile:(Ljava/lang/String;)Lorg/bol/server/ReservedFile;
+      70: astore        5
+      72: aload         5
+      74: invokevirtual #45                 // Method org/bol/server/ReservedFile.clean:()V
+      77: aload         5
+      79: invokevirtual #46                 // Method org/bol/server/ReservedFile.getOutputStream:()Ljava/io/OutputStream;
+      82: astore        6
+      84: aload         6
+      86: aload         4
+      88: invokevirtual #47                 // Method java/io/OutputStream.write:([B)V
+      91: aload         6
+      93: invokevirtual #48                 // Method java/io/OutputStream.flush:()V
+      96: aload         6
+      98: ifnull        136
+     101: aload         6
+     103: invokevirtual #49                 // Method java/io/OutputStream.close:()V
+     106: goto          136
+     109: astore        7
+     111: aload         6
+     113: ifnull        133
+     116: aload         6
+     118: invokevirtual #49                 // Method java/io/OutputStream.close:()V
+     121: goto          133
+     124: astore        8
+     126: aload         7
+     128: aload         8
+     130: invokevirtual #51                 // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     133: aload         7
+     135: athrow
+     136: aload         5
+     138: invokevirtual #52                 // Method org/bol/server/ReservedFile.release:()V
+     141: goto          154
+     144: astore        9
+     146: aload         5
+     148: invokevirtual #52                 // Method org/bol/server/ReservedFile.release:()V
+     151: aload         9
+     153: athrow
+     154: aload         4
+     156: areturn
+    Exception table:
+       from    to  target type
+          84    96   109   Class java/lang/Throwable
+         116   121   124   Class java/lang/Throwable
+          77   136   144   any
+         144   146   144   any
+
+  private byte[] lambda$doReceive$0(java.time.LocalDateTime, java.lang.String) throws java.io.IOException, javax.xml.xpath.XPathExpressionException, org.xml.sax.SAXException, javax.xml.parsers.ParserConfigurationException, javax.xml.crypto.MarshalException, javax.xml.crypto.dsig.XMLSignatureException, javax.xml.transform.TransformerException, xades4j.XAdES4jException, java.security.GeneralSecurityException, java.lang.NoSuchMethodException, java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException, java.lang.ClassNotFoundException, java.lang.InstantiationException, java.lang.NoSuchFieldException;
+    Code:
+       0: aload_0
+       1: invokevirtual #26                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+       4: aload_2
+       5: aload_0
+       6: invokevirtual #347                // Method getDefaultSignType:()Ljava/lang/String;
+       9: aload_1
+      10: invokevirtual #348                // Method org/bol/transport/HttpsTransport.signXmlByType:(Ljava/lang/String;Ljava/lang/String;Ljava/time/LocalDateTime;)[B
+      13: astore_3
+      14: aload_3
+      15: areturn
+
+  static {};
+    Code:
+       0: ldc_w         #280                // class org/bol/transport/TakoDpsTransport
+       3: invokestatic  #353                // Method org/slf4j/LoggerFactory.getLogger:(Ljava/lang/Class;)Lorg/slf4j/Logger;
+       6: putstatic     #35                 // Field log:Lorg/slf4j/Logger;
+       9: return
+}

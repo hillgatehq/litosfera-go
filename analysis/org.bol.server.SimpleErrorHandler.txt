@@ -1,0 +1,35 @@
+Compiled from "SimpleErrorHandler.java"
+public class org.bol.server.SimpleErrorHandler implements org.xml.sax.ErrorHandler {
+  public org.bol.server.SimpleErrorHandler();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public void warning(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException;
+    Code:
+       0: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+       3: aload_1
+       4: invokevirtual #3                  // Method org/xml/sax/SAXParseException.getMessage:()Ljava/lang/String;
+       7: invokedynamic #4,  0              // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      12: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+      15: return
+
+  public void error(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException;
+    Code:
+       0: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+       3: aload_1
+       4: invokevirtual #3                  // Method org/xml/sax/SAXParseException.getMessage:()Ljava/lang/String;
+       7: invokedynamic #6,  0              // InvokeDynamic #1:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      12: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+      15: return
+
+  public void fatalError(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException;
+    Code:
+       0: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+       3: aload_1
+       4: invokevirtual #3                  // Method org/xml/sax/SAXParseException.getMessage:()Ljava/lang/String;
+       7: invokedynamic #7,  0              // InvokeDynamic #2:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      12: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+      15: return
+}

@@ -1,0 +1,115 @@
+Compiled from "Launcher.java"
+class org.bol.Launcher$5 extends org.eclipse.jetty.server.handler.ErrorHandler {
+  org.bol.Launcher$5();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method org/eclipse/jetty/server/handler/ErrorHandler."<init>":()V
+       4: return
+
+  protected void generateAcceptableResponse(org.eclipse.jetty.server.Request, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, int, java.lang.String, java.lang.String) throws java.io.IOException;
+    Code:
+       0: aconst_null
+       1: aload         5
+       3: if_acmpeq     11
+       6: aload         5
+       8: goto          16
+      11: iload         4
+      13: invokestatic  #2                  // Method org/eclipse/jetty/http/HttpStatus.getMessage:(I)Ljava/lang/String;
+      16: astore        7
+      18: aload_2
+      19: invokeinterface #3,  1            // InterfaceMethod javax/servlet/http/HttpServletRequest.getRemoteAddr:()Ljava/lang/String;
+      24: astore        8
+      26: aload_2
+      27: invokeinterface #4,  1            // InterfaceMethod javax/servlet/http/HttpServletRequest.getRequestURL:()Ljava/lang/StringBuffer;
+      32: invokevirtual #5                  // Method java/lang/StringBuffer.toString:()Ljava/lang/String;
+      35: astore        9
+      37: getstatic     #6                  // Field org/bol/Launcher.log:Lorg/slf4j/Logger;
+      40: getstatic     #7                  // Field org/slf4j/event/Level.ERROR:Lorg/slf4j/event/Level;
+      43: aload         8
+      45: iload         4
+      47: aload         7
+      49: aload_2
+      50: invokeinterface #8,  1            // InterfaceMethod javax/servlet/http/HttpServletRequest.getMethod:()Ljava/lang/String;
+      55: aload         9
+      57: invokedynamic #9,  0              // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      62: invokestatic  #10                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      65: aload         6
+      67: astore        10
+      69: iconst_m1
+      70: istore        11
+      72: aload         10
+      74: invokevirtual #11                 // Method java/lang/String.hashCode:()I
+      77: lookupswitch  { // 2
+           -1082184566: 104
+             -43840953: 120
+               default: 133
+          }
+     104: aload         10
+     106: ldc           #12                 // String text/json
+     108: invokevirtual #13                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     111: ifeq          133
+     114: iconst_0
+     115: istore        11
+     117: goto          133
+     120: aload         10
+     122: ldc           #14                 // String application/json
+     124: invokevirtual #13                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     127: ifeq          133
+     130: iconst_1
+     131: istore        11
+     133: iload         11
+     135: lookupswitch  { // 2
+                     0: 160
+                     1: 160
+               default: 260
+          }
+     160: aload_1
+     161: iconst_1
+     162: invokevirtual #15                 // Method org/eclipse/jetty/server/Request.setHandled:(Z)V
+     165: aload_3
+     166: aload         6
+     168: invokeinterface #16,  2           // InterfaceMethod javax/servlet/http/HttpServletResponse.setContentType:(Ljava/lang/String;)V
+     173: aload_3
+     174: iload         4
+     176: invokeinterface #17,  2           // InterfaceMethod javax/servlet/http/HttpServletResponse.setStatus:(I)V
+     181: aload_3
+     182: getstatic     #18                 // Field java/nio/charset/StandardCharsets.UTF_8:Ljava/nio/charset/Charset;
+     185: invokevirtual #19                 // Method java/nio/charset/Charset.name:()Ljava/lang/String;
+     188: invokeinterface #20,  2           // InterfaceMethod javax/servlet/http/HttpServletResponse.setCharacterEncoding:(Ljava/lang/String;)V
+     193: new           #21                 // class java/util/HashMap
+     196: dup
+     197: invokespecial #22                 // Method java/util/HashMap."<init>":()V
+     200: astore        12
+     202: aload         12
+     204: ldc           #23                 // String success
+     206: iconst_0
+     207: invokestatic  #24                 // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+     210: invokeinterface #25,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     215: pop
+     216: aload         12
+     218: ldc           #26                 // String code
+     220: iload         4
+     222: invokestatic  #27                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+     225: invokeinterface #25,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     230: pop
+     231: aload         12
+     233: ldc           #28                 // String message
+     235: aload         7
+     237: invokeinterface #25,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     242: pop
+     243: aload_3
+     244: invokeinterface #29,  1           // InterfaceMethod javax/servlet/http/HttpServletResponse.getWriter:()Ljava/io/PrintWriter;
+     249: aload         12
+     251: invokestatic  #30                 // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+     254: invokevirtual #31                 // Method java/io/PrintWriter.print:(Ljava/lang/String;)V
+     257: goto          273
+     260: aload_0
+     261: aload_1
+     262: aload_2
+     263: aload_3
+     264: iload         4
+     266: aload         5
+     268: aload         6
+     270: invokespecial #32                 // Method org/eclipse/jetty/server/handler/ErrorHandler.generateAcceptableResponse:(Lorg/eclipse/jetty/server/Request;Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;ILjava/lang/String;Ljava/lang/String;)V
+     273: return
+}

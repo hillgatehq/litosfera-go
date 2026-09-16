@@ -1,0 +1,62 @@
+Compiled from "Launcher.java"
+class org.bol.Launcher$StdinListenerThread extends java.lang.Thread {
+  private org.bol.Launcher$StdinListenerThread();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Thread."<init>":()V
+       4: return
+
+  public void run();
+    Code:
+       0: sipush        8192
+       3: newarray       byte
+       5: astore_1
+       6: getstatic     #2                  // Field java/lang/System.in:Ljava/io/InputStream;
+       9: aload_1
+      10: invokevirtual #3                  // Method java/io/InputStream.read:([B)I
+      13: dup
+      14: istore_2
+      15: iconst_m1
+      16: if_icmpeq     24
+      19: iconst_0
+      20: istore_2
+      21: goto          6
+      24: getstatic     #4                  // Field org/bol/Launcher.log:Lorg/slf4j/Logger;
+      27: getstatic     #5                  // Field org/slf4j/event/Level.ERROR:Lorg/slf4j/event/Level;
+      30: ldc           #6                  // String Parent process has terminated (stdin EOF). Shutting down...
+      32: invokestatic  #7                  // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      35: iconst_0
+      36: anewarray     #8                  // class java/lang/String
+      39: invokestatic  #9                  // Method org/bol/Launcher.stop:([Ljava/lang/String;)V
+      42: goto          53
+      45: astore_3
+      46: getstatic     #4                  // Field org/bol/Launcher.log:Lorg/slf4j/Logger;
+      49: aload_3
+      50: invokestatic  #11                 // Method org/bol/server/LogWrapper.logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+      53: goto          94
+      56: astore_1
+      57: getstatic     #4                  // Field org/bol/Launcher.log:Lorg/slf4j/Logger;
+      60: getstatic     #5                  // Field org/slf4j/event/Level.ERROR:Lorg/slf4j/event/Level;
+      63: ldc           #13                 // String Stdin pipe broken ? assuming parent terminated.
+      65: iconst_1
+      66: anewarray     #14                 // class java/lang/Object
+      69: dup
+      70: iconst_0
+      71: aload_1
+      72: aastore
+      73: invokestatic  #15                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;[Ljava/lang/Object;)V
+      76: iconst_0
+      77: anewarray     #8                  // class java/lang/String
+      80: invokestatic  #9                  // Method org/bol/Launcher.stop:([Ljava/lang/String;)V
+      83: goto          94
+      86: astore_2
+      87: getstatic     #4                  // Field org/bol/Launcher.log:Lorg/slf4j/Logger;
+      90: aload_2
+      91: invokestatic  #11                 // Method org/bol/server/LogWrapper.logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+      94: return
+    Exception table:
+       from    to  target type
+          35    42    45   Class java/lang/Exception
+           0    53    56   Class java/io/IOException
+          76    83    86   Class java/lang/Exception
+}

@@ -1,0 +1,833 @@
+Compiled from "XenolitasToken.java"
+public class org.bol.server.XenolitasToken {
+  private static org.slf4j.Logger log;
+
+  private final java.util.concurrent.locks.ReentrantLock tokenLock;
+
+  private static final java.lang.String CONTENT_TYPE_HEADER = "Content-Type";
+
+  private static final java.lang.String AUTHORIZATION_HEADER = "Authorization";
+
+  protected static final java.lang.String ACCEPT_HEADER = "Accept";
+
+  protected static final java.lang.String ACCEPT_CHARSET_HEADER = "Accept-Charset";
+
+  private static final java.lang.String AUTHORIZATION_SCHEMA_BASIC = "Basic";
+
+  private static final java.lang.String RESULT_SUCCESS_TAG = "success";
+
+  private static final java.lang.String CT_APPLICATION_JSON = "application/json";
+
+  private static final java.lang.String CT_CHARSET_UTF8;
+
+  public static java.lang.String IDENTITY_SERVER;
+
+  public static java.lang.String IDENTITY_SERVER_USER;
+
+  public static java.lang.String IDENTITY_SERVER_PASS;
+
+  private java.lang.String accessToken;
+
+  private final java.util.concurrent.locks.ReentrantLock initLock;
+
+  private org.bol.transport.HttpsTransport httpsTransport;
+
+  private java.lang.String refreshToken;
+
+  public org.bol.transport.HttpsTransport getHttpsTransport();
+    Code:
+       0: aload_0
+       1: getfield      #1                  // Field httpsTransport:Lorg/bol/transport/HttpsTransport;
+       4: areturn
+
+  public org.bol.server.XenolitasToken(org.bol.transport.HttpsTransport);
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #3                  // class java/util/concurrent/locks/ReentrantLock
+       8: dup
+       9: invokespecial #4                  // Method java/util/concurrent/locks/ReentrantLock."<init>":()V
+      12: putfield      #5                  // Field tokenLock:Ljava/util/concurrent/locks/ReentrantLock;
+      15: aload_0
+      16: aconst_null
+      17: putfield      #6                  // Field accessToken:Ljava/lang/String;
+      20: aload_0
+      21: new           #3                  // class java/util/concurrent/locks/ReentrantLock
+      24: dup
+      25: invokespecial #4                  // Method java/util/concurrent/locks/ReentrantLock."<init>":()V
+      28: putfield      #7                  // Field initLock:Ljava/util/concurrent/locks/ReentrantLock;
+      31: aload_0
+      32: aconst_null
+      33: putfield      #1                  // Field httpsTransport:Lorg/bol/transport/HttpsTransport;
+      36: aload_0
+      37: aconst_null
+      38: putfield      #8                  // Field refreshToken:Ljava/lang/String;
+      41: aload_0
+      42: aload_1
+      43: putfield      #1                  // Field httpsTransport:Lorg/bol/transport/HttpsTransport;
+      46: return
+
+  public java.lang.String getAccessToken();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field accessToken:Ljava/lang/String;
+       4: areturn
+
+  public void setAccessToken(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field tokenLock:Ljava/util/concurrent/locks/ReentrantLock;
+       4: invokevirtual #9                  // Method java/util/concurrent/locks/ReentrantLock.lock:()V
+       7: aload_0
+       8: aload_1
+       9: putfield      #6                  // Field accessToken:Ljava/lang/String;
+      12: aload_0
+      13: getfield      #5                  // Field tokenLock:Ljava/util/concurrent/locks/ReentrantLock;
+      16: invokevirtual #10                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+      19: goto          32
+      22: astore_2
+      23: aload_0
+      24: getfield      #5                  // Field tokenLock:Ljava/util/concurrent/locks/ReentrantLock;
+      27: invokevirtual #10                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+      30: aload_2
+      31: athrow
+      32: return
+    Exception table:
+       from    to  target type
+           0    12    22   any
+
+  public java.lang.String getRefreshToken();
+    Code:
+       0: aload_0
+       1: getfield      #8                  // Field refreshToken:Ljava/lang/String;
+       4: areturn
+
+  public void setRefreshToken(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field tokenLock:Ljava/util/concurrent/locks/ReentrantLock;
+       4: invokevirtual #9                  // Method java/util/concurrent/locks/ReentrantLock.lock:()V
+       7: aload_0
+       8: aload_1
+       9: putfield      #8                  // Field refreshToken:Ljava/lang/String;
+      12: aload_0
+      13: getfield      #5                  // Field tokenLock:Ljava/util/concurrent/locks/ReentrantLock;
+      16: invokevirtual #10                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+      19: goto          32
+      22: astore_2
+      23: aload_0
+      24: getfield      #5                  // Field tokenLock:Ljava/util/concurrent/locks/ReentrantLock;
+      27: invokevirtual #10                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+      30: aload_2
+      31: athrow
+      32: return
+    Exception table:
+       from    to  target type
+           0    12    22   any
+
+  private java.util.Map<?, ?> sendXenolitasRequest(java.lang.String, java.lang.String, int) throws java.io.IOException, javax.xml.xpath.XPathExpressionException, java.lang.NoSuchMethodException, java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException, java.lang.ClassNotFoundException, java.lang.InstantiationException, java.lang.NoSuchFieldException, javax.xml.parsers.ParserConfigurationException, org.xml.sax.SAXException, xades4j.XAdES4jException, javax.xml.crypto.MarshalException, javax.xml.crypto.dsig.XMLSignatureException, javax.xml.transform.TransformerException, java.security.GeneralSecurityException;
+    Code:
+       0: aconst_null
+       1: astore        4
+       3: aconst_null
+       4: astore        5
+       6: aload_0
+       7: getfield      #7                  // Field initLock:Ljava/util/concurrent/locks/ReentrantLock;
+      10: invokevirtual #9                  // Method java/util/concurrent/locks/ReentrantLock.lock:()V
+      13: aload_0
+      14: invokevirtual #11                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+      17: invokevirtual #12                 // Method org/bol/transport/HttpsTransport.getCryptoCore:()Lorg/bol/crypto/SignCryptoCore;
+      20: invokevirtual #13                 // Method org/bol/crypto/SignCryptoCore.getProvider:()Ljava/security/Provider;
+      23: astore        4
+      25: aload_0
+      26: getfield      #7                  // Field initLock:Ljava/util/concurrent/locks/ReentrantLock;
+      29: invokevirtual #10                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+      32: goto          47
+      35: astore        6
+      37: aload_0
+      38: getfield      #7                  // Field initLock:Ljava/util/concurrent/locks/ReentrantLock;
+      41: invokevirtual #10                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+      44: aload         6
+      46: athrow
+      47: aload_0
+      48: getfield      #1                  // Field httpsTransport:Lorg/bol/transport/HttpsTransport;
+      51: ldc           #14                 // String POST
+      53: getstatic     #15                 // Field IDENTITY_SERVER:Ljava/lang/String;
+      56: aload_1
+      57: invokedynamic #16,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      62: iload_3
+      63: aload_0
+      64: getfield      #1                  // Field httpsTransport:Lorg/bol/transport/HttpsTransport;
+      67: invokevirtual #12                 // Method org/bol/transport/HttpsTransport.getCryptoCore:()Lorg/bol/crypto/SignCryptoCore;
+      70: invokevirtual #17                 // Method org/bol/crypto/SignCryptoCore.getSslFactory:()Ljavax/net/ssl/SSLSocketFactory;
+      73: invokevirtual #18                 // Method org/bol/transport/HttpsTransport.createHttpRequest:(Ljava/lang/String;Ljava/lang/String;ILjavax/net/ssl/SSLSocketFactory;)Ljava/net/HttpURLConnection;
+      76: astore        5
+      78: aload         5
+      80: ldc           #20                 // String Content-Type
+      82: getstatic     #21                 // Field CT_CHARSET_UTF8:Ljava/lang/String;
+      85: invokedynamic #22,  0             // InvokeDynamic #1:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      90: invokevirtual #23                 // Method java/net/HttpURLConnection.setRequestProperty:(Ljava/lang/String;Ljava/lang/String;)V
+      93: aload         5
+      95: ldc           #24                 // String Accept
+      97: ldc           #25                 // String application/json
+      99: invokevirtual #23                 // Method java/net/HttpURLConnection.setRequestProperty:(Ljava/lang/String;Ljava/lang/String;)V
+     102: aload         5
+     104: ldc           #26                 // String Accept-Charset
+     106: getstatic     #27                 // Field java/nio/charset/StandardCharsets.UTF_8:Ljava/nio/charset/Charset;
+     109: invokevirtual #28                 // Method java/nio/charset/Charset.toString:()Ljava/lang/String;
+     112: invokevirtual #23                 // Method java/net/HttpURLConnection.setRequestProperty:(Ljava/lang/String;Ljava/lang/String;)V
+     115: aload         5
+     117: ldc           #29                 // String Authorization
+     119: invokestatic  #30                 // Method java/util/Base64.getEncoder:()Ljava/util/Base64$Encoder;
+     122: getstatic     #31                 // Field IDENTITY_SERVER_USER:Ljava/lang/String;
+     125: getstatic     #32                 // Field IDENTITY_SERVER_PASS:Ljava/lang/String;
+     128: invokedynamic #33,  0             // InvokeDynamic #2:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     133: invokevirtual #34                 // Method java/lang/String.getBytes:()[B
+     136: invokevirtual #35                 // Method java/util/Base64$Encoder.encodeToString:([B)Ljava/lang/String;
+     139: invokedynamic #36,  0             // InvokeDynamic #3:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     144: invokevirtual #23                 // Method java/net/HttpURLConnection.setRequestProperty:(Ljava/lang/String;Ljava/lang/String;)V
+     147: getstatic     #37                 // Field log:Lorg/slf4j/Logger;
+     150: aload         5
+     152: invokestatic  #38                 // Method org/bol/server/LogWrapper.logRequest:(Lorg/slf4j/Logger;Ljava/net/HttpURLConnection;)V
+     155: aload         5
+     157: iconst_1
+     158: invokevirtual #39                 // Method java/net/HttpURLConnection.setDoOutput:(Z)V
+     161: aload_2
+     162: getstatic     #27                 // Field java/nio/charset/StandardCharsets.UTF_8:Ljava/nio/charset/Charset;
+     165: invokevirtual #40                 // Method java/lang/String.getBytes:(Ljava/nio/charset/Charset;)[B
+     168: astore        6
+     170: getstatic     #37                 // Field log:Lorg/slf4j/Logger;
+     173: getstatic     #41                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     176: ldc           #42                 // String Request Json
+     178: aload         6
+     180: invokestatic  #43                 // Method org/bol/server/LogWrapper.dumpBytes:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;[B)V
+     183: aload         5
+     185: invokevirtual #44                 // Method java/net/HttpURLConnection.getOutputStream:()Ljava/io/OutputStream;
+     188: aload         6
+     190: invokevirtual #45                 // Method java/io/OutputStream.write:([B)V
+     193: aload         5
+     195: invokevirtual #46                 // Method java/net/HttpURLConnection.getResponseCode:()I
+     198: istore        7
+     200: getstatic     #37                 // Field log:Lorg/slf4j/Logger;
+     203: getstatic     #47                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     206: aload         5
+     208: invokevirtual #48                 // Method java/net/HttpURLConnection.getURL:()Ljava/net/URL;
+     211: invokevirtual #49                 // Method java/net/URL.toString:()Ljava/lang/String;
+     214: iload         7
+     216: invokedynamic #50,  0             // InvokeDynamic #4:makeConcatWithConstants:(Ljava/lang/String;I)Ljava/lang/String;
+     221: invokestatic  #51                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     224: getstatic     #37                 // Field log:Lorg/slf4j/Logger;
+     227: aload         5
+     229: invokestatic  #52                 // Method org/bol/server/LogWrapper.logRequestResponse:(Lorg/slf4j/Logger;Ljava/net/HttpURLConnection;)V
+     232: aload_0
+     233: getfield      #1                  // Field httpsTransport:Lorg/bol/transport/HttpsTransport;
+     236: aload         5
+     238: invokevirtual #53                 // Method org/bol/transport/HttpsTransport.getResponseAsByteArray:(Ljava/net/HttpURLConnection;)[B
+     241: astore        8
+     243: aconst_null
+     244: aload         8
+     246: if_acmpeq     322
+     249: getstatic     #37                 // Field log:Lorg/slf4j/Logger;
+     252: getstatic     #41                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     255: aload         5
+     257: invokevirtual #48                 // Method java/net/HttpURLConnection.getURL:()Ljava/net/URL;
+     260: invokedynamic #54,  0             // InvokeDynamic #5:makeConcatWithConstants:(Ljava/net/URL;)Ljava/lang/String;
+     265: aload         8
+     267: invokestatic  #43                 // Method org/bol/server/LogWrapper.dumpBytes:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;[B)V
+     270: sipush        401
+     273: iload         7
+     275: if_icmpne     288
+     278: new           #55                 // class java/lang/SecurityException
+     281: dup
+     282: ldc           #56                 // String Access denied for Xenolitas request
+     284: invokespecial #57                 // Method java/lang/SecurityException."<init>":(Ljava/lang/String;)V
+     287: athrow
+     288: aload         5
+     290: ldc           #20                 // String Content-Type
+     292: invokevirtual #58                 // Method java/net/HttpURLConnection.getHeaderField:(Ljava/lang/String;)Ljava/lang/String;
+     295: ldc           #25                 // String application/json
+     297: invokevirtual #59                 // Method java/lang/String.contains:(Ljava/lang/CharSequence;)Z
+     300: ifeq          322
+     303: new           #60                 // class java/lang/String
+     306: dup
+     307: aload         8
+     309: getstatic     #27                 // Field java/nio/charset/StandardCharsets.UTF_8:Ljava/nio/charset/Charset;
+     312: invokespecial #61                 // Method java/lang/String."<init>":([BLjava/nio/charset/Charset;)V
+     315: invokestatic  #62                 // Method org/eclipse/jetty/util/ajax/JSON.parse:(Ljava/lang/String;)Ljava/lang/Object;
+     318: checkcast     #63                 // class java/util/Map
+     321: areturn
+     322: new           #64                 // class java/lang/IllegalStateException
+     325: dup
+     326: ldc           #65                 // String Unexpected Empty Xenolitas response
+     328: invokespecial #66                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     331: athrow
+     332: astore        6
+     334: aload         6
+     336: athrow
+     337: astore        6
+     339: getstatic     #37                 // Field log:Lorg/slf4j/Logger;
+     342: aload         6
+     344: invokestatic  #68                 // Method org/bol/server/LogWrapper.logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+     347: getstatic     #37                 // Field log:Lorg/slf4j/Logger;
+     350: getstatic     #47                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     353: aconst_null
+     354: aload_0
+     355: invokevirtual #11                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+     358: invokevirtual #12                 // Method org/bol/transport/HttpsTransport.getCryptoCore:()Lorg/bol/crypto/SignCryptoCore;
+     361: invokevirtual #13                 // Method org/bol/crypto/SignCryptoCore.getProvider:()Ljava/security/Provider;
+     364: if_acmpeq     372
+     367: ldc           #69                 // String Provider exists
+     369: goto          374
+     372: ldc           #70                 // String no provider present
+     374: invokestatic  #51                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     377: aconst_null
+     378: aload_0
+     379: invokevirtual #11                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+     382: invokevirtual #12                 // Method org/bol/transport/HttpsTransport.getCryptoCore:()Lorg/bol/crypto/SignCryptoCore;
+     385: invokevirtual #13                 // Method org/bol/crypto/SignCryptoCore.getProvider:()Ljava/security/Provider;
+     388: if_acmpeq     445
+     391: getstatic     #37                 // Field log:Lorg/slf4j/Logger;
+     394: getstatic     #47                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     397: aload_0
+     398: invokevirtual #11                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+     401: invokevirtual #12                 // Method org/bol/transport/HttpsTransport.getCryptoCore:()Lorg/bol/crypto/SignCryptoCore;
+     404: invokevirtual #13                 // Method org/bol/crypto/SignCryptoCore.getProvider:()Ljava/security/Provider;
+     407: invokevirtual #71                 // Method java/security/Provider.getName:()Ljava/lang/String;
+     410: aconst_null
+     411: aload_0
+     412: invokevirtual #11                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+     415: invokevirtual #12                 // Method org/bol/transport/HttpsTransport.getCryptoCore:()Lorg/bol/crypto/SignCryptoCore;
+     418: invokevirtual #13                 // Method org/bol/crypto/SignCryptoCore.getProvider:()Ljava/security/Provider;
+     421: invokevirtual #71                 // Method java/security/Provider.getName:()Ljava/lang/String;
+     424: invokestatic  #72                 // Method java/security/Security.getProvider:(Ljava/lang/String;)Ljava/security/Provider;
+     427: if_acmpeq     435
+     430: ldc           #73                 // String succeeded
+     432: goto          437
+     435: ldc           #74                 // String failed
+     437: invokedynamic #75,  0             // InvokeDynamic #6:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     442: invokestatic  #51                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     445: aconst_null
+     446: aload_0
+     447: invokevirtual #11                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+     450: invokevirtual #12                 // Method org/bol/transport/HttpsTransport.getCryptoCore:()Lorg/bol/crypto/SignCryptoCore;
+     453: invokevirtual #13                 // Method org/bol/crypto/SignCryptoCore.getProvider:()Ljava/security/Provider;
+     456: if_acmpeq     479
+     459: aconst_null
+     460: aload_0
+     461: invokevirtual #11                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+     464: invokevirtual #12                 // Method org/bol/transport/HttpsTransport.getCryptoCore:()Lorg/bol/crypto/SignCryptoCore;
+     467: invokevirtual #13                 // Method org/bol/crypto/SignCryptoCore.getProvider:()Ljava/security/Provider;
+     470: invokevirtual #71                 // Method java/security/Provider.getName:()Ljava/lang/String;
+     473: invokestatic  #72                 // Method java/security/Security.getProvider:(Ljava/lang/String;)Ljava/security/Provider;
+     476: if_acmpeq     491
+     479: aload_0
+     480: invokevirtual #11                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+     483: aload         6
+     485: invokevirtual #76                 // Method org/bol/transport/HttpsTransport.isSigningKeyExceptionCause:(Ljava/lang/Throwable;)Z
+     488: ifeq          702
+     491: invokestatic  #77                 // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+     494: invokevirtual #78                 // Method java/lang/Thread.getStackTrace:()[Ljava/lang/StackTraceElement;
+     497: astore        7
+     499: iconst_2
+     500: istore        8
+     502: iload         8
+     504: aload         7
+     506: arraylength
+     507: iconst_1
+     508: isub
+     509: if_icmpge     572
+     512: aload         7
+     514: iload         8
+     516: aaload
+     517: invokevirtual #79                 // Method java/lang/StackTraceElement.getClassName:()Ljava/lang/String;
+     520: aload         7
+     522: iconst_1
+     523: aaload
+     524: invokevirtual #79                 // Method java/lang/StackTraceElement.getClassName:()Ljava/lang/String;
+     527: invokevirtual #80                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     530: ifeq          566
+     533: aload         7
+     535: iload         8
+     537: aaload
+     538: invokevirtual #81                 // Method java/lang/StackTraceElement.getMethodName:()Ljava/lang/String;
+     541: aload         7
+     543: iconst_1
+     544: aaload
+     545: invokevirtual #81                 // Method java/lang/StackTraceElement.getMethodName:()Ljava/lang/String;
+     548: invokevirtual #80                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     551: ifeq          566
+     554: new           #64                 // class java/lang/IllegalStateException
+     557: dup
+     558: ldc           #82                 // String Reinitializing provider failed
+     560: aload         6
+     562: invokespecial #83                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     565: athrow
+     566: iinc          8, 1
+     569: goto          502
+     572: aload_0
+     573: getfield      #7                  // Field initLock:Ljava/util/concurrent/locks/ReentrantLock;
+     576: invokevirtual #9                  // Method java/util/concurrent/locks/ReentrantLock.lock:()V
+     579: aconst_null
+     580: aload_0
+     581: invokevirtual #11                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+     584: invokevirtual #12                 // Method org/bol/transport/HttpsTransport.getCryptoCore:()Lorg/bol/crypto/SignCryptoCore;
+     587: invokevirtual #13                 // Method org/bol/crypto/SignCryptoCore.getProvider:()Ljava/security/Provider;
+     590: if_acmpeq     611
+     593: aload_0
+     594: invokevirtual #11                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+     597: invokevirtual #12                 // Method org/bol/transport/HttpsTransport.getCryptoCore:()Lorg/bol/crypto/SignCryptoCore;
+     600: invokevirtual #13                 // Method org/bol/crypto/SignCryptoCore.getProvider:()Ljava/security/Provider;
+     603: aload         4
+     605: invokevirtual #84                 // Method java/security/Provider.equals:(Ljava/lang/Object;)Z
+     608: ifeq          626
+     611: aload_0
+     612: invokevirtual #11                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+     615: invokevirtual #12                 // Method org/bol/transport/HttpsTransport.getCryptoCore:()Lorg/bol/crypto/SignCryptoCore;
+     618: aload         6
+     620: invokevirtual #85                 // Method java/lang/Exception.toString:()Ljava/lang/String;
+     623: invokevirtual #86                 // Method org/bol/crypto/SignCryptoCore.initialize:(Ljava/lang/String;)V
+     626: aload_0
+     627: getfield      #7                  // Field initLock:Ljava/util/concurrent/locks/ReentrantLock;
+     630: invokevirtual #10                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     633: aload_0
+     634: invokevirtual #11                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+     637: invokevirtual #87                 // Method org/bol/transport/HttpsTransport.performSigningVerificationTest:()V
+     640: goto          694
+     643: astore        8
+     645: getstatic     #37                 // Field log:Lorg/slf4j/Logger;
+     648: aload         8
+     650: invokestatic  #68                 // Method org/bol/server/LogWrapper.logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+     653: aload_0
+     654: invokevirtual #11                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+     657: invokevirtual #12                 // Method org/bol/transport/HttpsTransport.getCryptoCore:()Lorg/bol/crypto/SignCryptoCore;
+     660: invokevirtual #88                 // Method org/bol/crypto/SignCryptoCore.cleanupProvider:()V
+     663: new           #64                 // class java/lang/IllegalStateException
+     666: dup
+     667: ldc           #82                 // String Reinitializing provider failed
+     669: aload         8
+     671: invokespecial #83                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     674: athrow
+     675: astore        9
+     677: aload_0
+     678: getfield      #7                  // Field initLock:Ljava/util/concurrent/locks/ReentrantLock;
+     681: invokevirtual #10                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     684: aload_0
+     685: invokevirtual #11                 // Method getHttpsTransport:()Lorg/bol/transport/HttpsTransport;
+     688: invokevirtual #87                 // Method org/bol/transport/HttpsTransport.performSigningVerificationTest:()V
+     691: aload         9
+     693: athrow
+     694: aload_0
+     695: aload_1
+     696: aload_2
+     697: iload_3
+     698: invokevirtual #89                 // Method sendXenolitasRequest:(Ljava/lang/String;Ljava/lang/String;I)Ljava/util/Map;
+     701: areturn
+     702: aconst_null
+     703: aload         5
+     705: if_acmpeq     728
+     708: new           #90                 // class org/bol/exceptions/RethrowAnException
+     711: dup
+     712: aload         5
+     714: invokevirtual #48                 // Method java/net/HttpURLConnection.getURL:()Ljava/net/URL;
+     717: invokedynamic #91,  0             // InvokeDynamic #7:makeConcatWithConstants:(Ljava/net/URL;)Ljava/lang/String;
+     722: aload         6
+     724: invokespecial #92                 // Method org/bol/exceptions/RethrowAnException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     727: athrow
+     728: new           #90                 // class org/bol/exceptions/RethrowAnException
+     731: dup
+     732: ldc           #93                 // String Unhandled exception
+     734: aload         6
+     736: invokespecial #92                 // Method org/bol/exceptions/RethrowAnException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     739: athrow
+    Exception table:
+       from    to  target type
+           6    25    35   any
+          35    37    35   any
+           6   321   332   Class java/lang/SecurityException
+         322   332   332   Class java/lang/SecurityException
+           6   321   337   Class java/lang/Exception
+         322   332   337   Class java/lang/Exception
+         572   626   643   Class java/lang/Exception
+         572   626   675   any
+         643   677   675   any
+
+  public void generateToken(java.lang.String) throws java.io.IOException, javax.xml.xpath.XPathExpressionException, java.lang.NoSuchMethodException, java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException, java.lang.ClassNotFoundException, java.lang.InstantiationException, java.lang.NoSuchFieldException, javax.xml.parsers.ParserConfigurationException, org.xml.sax.SAXException, xades4j.XAdES4jException, javax.xml.crypto.MarshalException, javax.xml.crypto.dsig.XMLSignatureException, javax.xml.transform.TransformerException, java.security.GeneralSecurityException;
+    Code:
+       0: aload_1
+       1: getstatic     #27                 // Field java/nio/charset/StandardCharsets.UTF_8:Ljava/nio/charset/Charset;
+       4: invokevirtual #40                 // Method java/lang/String.getBytes:(Ljava/nio/charset/Charset;)[B
+       7: astore_2
+       8: getstatic     #37                 // Field log:Lorg/slf4j/Logger;
+      11: getstatic     #41                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+      14: ldc           #94                 // String Token Request Xml
+      16: aload_2
+      17: invokestatic  #43                 // Method org/bol/server/LogWrapper.dumpBytes:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;[B)V
+      20: new           #95                 // class java/util/HashMap
+      23: dup
+      24: invokespecial #96                 // Method java/util/HashMap."<init>":()V
+      27: astore_3
+      28: aload_3
+      29: ldc           #97                 // String xml
+      31: invokestatic  #30                 // Method java/util/Base64.getEncoder:()Ljava/util/Base64$Encoder;
+      34: aload_2
+      35: invokevirtual #35                 // Method java/util/Base64$Encoder.encodeToString:([B)Ljava/lang/String;
+      38: invokeinterface #98,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      43: pop
+      44: aload_0
+      45: getfield      #5                  // Field tokenLock:Ljava/util/concurrent/locks/ReentrantLock;
+      48: invokevirtual #9                  // Method java/util/concurrent/locks/ReentrantLock.lock:()V
+      51: aload_0
+      52: aconst_null
+      53: putfield      #6                  // Field accessToken:Ljava/lang/String;
+      56: aload_0
+      57: aconst_null
+      58: putfield      #8                  // Field refreshToken:Ljava/lang/String;
+      61: aload_0
+      62: ldc           #99                 // String /login
+      64: aload_3
+      65: invokestatic  #100                // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+      68: sipush        20000
+      71: invokevirtual #89                 // Method sendXenolitasRequest:(Ljava/lang/String;Ljava/lang/String;I)Ljava/util/Map;
+      74: astore        4
+      76: aconst_null
+      77: aload         4
+      79: if_acmpeq     172
+      82: aload         4
+      84: ldc           #101                // String success
+      86: invokeinterface #102,  2          // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+      91: ifeq          172
+      94: aload         4
+      96: ldc           #101                // String success
+      98: invokeinterface #103,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     103: iconst_1
+     104: invokestatic  #104                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+     107: invokevirtual #105                // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+     110: ifeq          172
+     113: aload         4
+     115: ldc           #106                // String token
+     117: invokeinterface #102,  2          // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+     122: ifeq          172
+     125: aload         4
+     127: ldc           #107                // String refresh
+     129: invokeinterface #102,  2          // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+     134: ifeq          172
+     137: aload_0
+     138: aload         4
+     140: ldc           #106                // String token
+     142: invokeinterface #103,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     147: checkcast     #60                 // class java/lang/String
+     150: putfield      #6                  // Field accessToken:Ljava/lang/String;
+     153: aload_0
+     154: aload         4
+     156: ldc           #107                // String refresh
+     158: invokeinterface #103,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     163: checkcast     #60                 // class java/lang/String
+     166: putfield      #8                  // Field refreshToken:Ljava/lang/String;
+     169: goto          214
+     172: new           #95                 // class java/util/HashMap
+     175: dup
+     176: invokespecial #96                 // Method java/util/HashMap."<init>":()V
+     179: astore        5
+     181: aload         5
+     183: ldc           #108                // String message
+     185: ldc           #109                // String Invalid Xenolitas response
+     187: invokevirtual #110                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     190: pop
+     191: aload         5
+     193: ldc           #111                // String response
+     195: aload         4
+     197: invokevirtual #110                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     200: pop
+     201: new           #64                 // class java/lang/IllegalStateException
+     204: dup
+     205: aload         5
+     207: invokestatic  #100                // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+     210: invokespecial #66                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     213: athrow
+     214: aload_0
+     215: getfield      #5                  // Field tokenLock:Ljava/util/concurrent/locks/ReentrantLock;
+     218: invokevirtual #10                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     221: goto          236
+     224: astore        6
+     226: aload_0
+     227: getfield      #5                  // Field tokenLock:Ljava/util/concurrent/locks/ReentrantLock;
+     230: invokevirtual #10                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     233: aload         6
+     235: athrow
+     236: return
+    Exception table:
+       from    to  target type
+          44   214   224   any
+         224   226   224   any
+
+  public void refreshAccessToken() throws java.io.IOException, javax.xml.xpath.XPathExpressionException, java.lang.NoSuchMethodException, java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException, java.lang.ClassNotFoundException, java.lang.InstantiationException, java.lang.NoSuchFieldException, javax.xml.parsers.ParserConfigurationException, org.xml.sax.SAXException, xades4j.XAdES4jException, javax.xml.crypto.MarshalException, javax.xml.crypto.dsig.XMLSignatureException, javax.xml.transform.TransformerException, java.security.GeneralSecurityException;
+    Code:
+       0: new           #95                 // class java/util/HashMap
+       3: dup
+       4: invokespecial #96                 // Method java/util/HashMap."<init>":()V
+       7: astore_1
+       8: aload_1
+       9: ldc           #107                // String refresh
+      11: aload_0
+      12: getfield      #8                  // Field refreshToken:Ljava/lang/String;
+      15: invokeinterface #98,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      20: pop
+      21: aload_0
+      22: getfield      #5                  // Field tokenLock:Ljava/util/concurrent/locks/ReentrantLock;
+      25: invokevirtual #9                  // Method java/util/concurrent/locks/ReentrantLock.lock:()V
+      28: aload_0
+      29: aconst_null
+      30: putfield      #6                  // Field accessToken:Ljava/lang/String;
+      33: aload_0
+      34: aconst_null
+      35: putfield      #8                  // Field refreshToken:Ljava/lang/String;
+      38: aload_0
+      39: ldc           #112                // String /refresh
+      41: aload_1
+      42: invokestatic  #100                // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+      45: sipush        20000
+      48: invokevirtual #89                 // Method sendXenolitasRequest:(Ljava/lang/String;Ljava/lang/String;I)Ljava/util/Map;
+      51: astore_2
+      52: aconst_null
+      53: aload_2
+      54: if_acmpeq     141
+      57: aload_2
+      58: ldc           #101                // String success
+      60: invokeinterface #102,  2          // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+      65: ifeq          141
+      68: aload_2
+      69: ldc           #101                // String success
+      71: invokeinterface #103,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      76: iconst_1
+      77: invokestatic  #104                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+      80: invokevirtual #105                // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+      83: ifeq          141
+      86: aload_2
+      87: ldc           #106                // String token
+      89: invokeinterface #102,  2          // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+      94: ifeq          141
+      97: aload_2
+      98: ldc           #107                // String refresh
+     100: invokeinterface #102,  2          // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+     105: ifeq          141
+     108: aload_0
+     109: aload_2
+     110: ldc           #106                // String token
+     112: invokeinterface #103,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     117: checkcast     #60                 // class java/lang/String
+     120: putfield      #6                  // Field accessToken:Ljava/lang/String;
+     123: aload_0
+     124: aload_2
+     125: ldc           #107                // String refresh
+     127: invokeinterface #103,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     132: checkcast     #60                 // class java/lang/String
+     135: putfield      #8                  // Field refreshToken:Ljava/lang/String;
+     138: goto          178
+     141: new           #95                 // class java/util/HashMap
+     144: dup
+     145: invokespecial #96                 // Method java/util/HashMap."<init>":()V
+     148: astore_3
+     149: aload_3
+     150: ldc           #108                // String message
+     152: ldc           #109                // String Invalid Xenolitas response
+     154: invokevirtual #110                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     157: pop
+     158: aload_3
+     159: ldc           #111                // String response
+     161: aload_2
+     162: invokevirtual #110                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     165: pop
+     166: new           #64                 // class java/lang/IllegalStateException
+     169: dup
+     170: aload_3
+     171: invokestatic  #100                // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+     174: invokespecial #66                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     177: athrow
+     178: aload_0
+     179: getfield      #5                  // Field tokenLock:Ljava/util/concurrent/locks/ReentrantLock;
+     182: invokevirtual #10                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     185: goto          200
+     188: astore        4
+     190: aload_0
+     191: getfield      #5                  // Field tokenLock:Ljava/util/concurrent/locks/ReentrantLock;
+     194: invokevirtual #10                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     197: aload         4
+     199: athrow
+     200: return
+    Exception table:
+       from    to  target type
+          21   178   188   any
+         188   190   188   any
+
+  public void verifyToken(java.lang.String) throws java.io.IOException, javax.xml.xpath.XPathExpressionException, java.lang.NoSuchMethodException, java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException, java.lang.ClassNotFoundException, java.lang.InstantiationException, java.lang.NoSuchFieldException, javax.xml.parsers.ParserConfigurationException, org.xml.sax.SAXException, xades4j.XAdES4jException, javax.xml.crypto.MarshalException, javax.xml.crypto.dsig.XMLSignatureException, javax.xml.transform.TransformerException, java.security.GeneralSecurityException;
+    Code:
+       0: new           #95                 // class java/util/HashMap
+       3: dup
+       4: invokespecial #96                 // Method java/util/HashMap."<init>":()V
+       7: astore_2
+       8: aload_2
+       9: ldc           #106                // String token
+      11: aload_1
+      12: invokeinterface #98,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      17: pop
+      18: aload_0
+      19: getfield      #5                  // Field tokenLock:Ljava/util/concurrent/locks/ReentrantLock;
+      22: invokevirtual #9                  // Method java/util/concurrent/locks/ReentrantLock.lock:()V
+      25: aload_0
+      26: ldc           #113                // String /verify
+      28: aload_2
+      29: invokestatic  #100                // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+      32: sipush        20000
+      35: invokevirtual #89                 // Method sendXenolitasRequest:(Ljava/lang/String;Ljava/lang/String;I)Ljava/util/Map;
+      38: astore_3
+      39: aconst_null
+      40: aload_3
+      41: if_acmpeq     76
+      44: aload_3
+      45: ldc           #101                // String success
+      47: invokeinterface #102,  2          // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+      52: ifeq          76
+      55: aload_3
+      56: ldc           #101                // String success
+      58: invokeinterface #103,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      63: iconst_1
+      64: invokestatic  #104                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+      67: invokevirtual #105                // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+      70: ifeq          76
+      73: goto          117
+      76: new           #95                 // class java/util/HashMap
+      79: dup
+      80: invokespecial #96                 // Method java/util/HashMap."<init>":()V
+      83: astore        4
+      85: aload         4
+      87: ldc           #108                // String message
+      89: ldc           #109                // String Invalid Xenolitas response
+      91: invokevirtual #110                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      94: pop
+      95: aload         4
+      97: ldc           #111                // String response
+      99: aload_3
+     100: invokevirtual #110                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     103: pop
+     104: new           #64                 // class java/lang/IllegalStateException
+     107: dup
+     108: aload         4
+     110: invokestatic  #100                // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+     113: invokespecial #66                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     116: athrow
+     117: aload_0
+     118: getfield      #5                  // Field tokenLock:Ljava/util/concurrent/locks/ReentrantLock;
+     121: invokevirtual #10                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     124: goto          139
+     127: astore        5
+     129: aload_0
+     130: getfield      #5                  // Field tokenLock:Ljava/util/concurrent/locks/ReentrantLock;
+     133: invokevirtual #10                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     136: aload         5
+     138: athrow
+     139: return
+    Exception table:
+       from    to  target type
+          18   117   127   any
+         127   129   127   any
+
+  public void retractToken(java.lang.String) throws java.io.IOException, javax.xml.xpath.XPathExpressionException, java.lang.NoSuchMethodException, java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException, java.lang.ClassNotFoundException, java.lang.InstantiationException, java.lang.NoSuchFieldException, javax.xml.parsers.ParserConfigurationException, org.xml.sax.SAXException, xades4j.XAdES4jException, javax.xml.crypto.MarshalException, javax.xml.crypto.dsig.XMLSignatureException, javax.xml.transform.TransformerException, java.security.GeneralSecurityException;
+    Code:
+       0: getstatic     #37                 // Field log:Lorg/slf4j/Logger;
+       3: getstatic     #47                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+       6: ldc           #114                // String Releasing identity token
+       8: invokestatic  #51                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      11: new           #95                 // class java/util/HashMap
+      14: dup
+      15: invokespecial #96                 // Method java/util/HashMap."<init>":()V
+      18: astore_2
+      19: aload_2
+      20: ldc           #106                // String token
+      22: aload_1
+      23: invokeinterface #98,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      28: pop
+      29: aload_0
+      30: getfield      #5                  // Field tokenLock:Ljava/util/concurrent/locks/ReentrantLock;
+      33: invokevirtual #9                  // Method java/util/concurrent/locks/ReentrantLock.lock:()V
+      36: aload_0
+      37: aconst_null
+      38: putfield      #6                  // Field accessToken:Ljava/lang/String;
+      41: aload_0
+      42: aconst_null
+      43: putfield      #8                  // Field refreshToken:Ljava/lang/String;
+      46: aload_0
+      47: ldc           #115                // String /retract
+      49: aload_2
+      50: invokestatic  #100                // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+      53: sipush        20000
+      56: invokevirtual #89                 // Method sendXenolitasRequest:(Ljava/lang/String;Ljava/lang/String;I)Ljava/util/Map;
+      59: astore_3
+      60: aconst_null
+      61: aload_3
+      62: if_acmpeq     97
+      65: aload_3
+      66: ldc           #101                // String success
+      68: invokeinterface #102,  2          // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+      73: ifeq          97
+      76: aload_3
+      77: ldc           #101                // String success
+      79: invokeinterface #103,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      84: iconst_1
+      85: invokestatic  #104                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+      88: invokevirtual #105                // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+      91: ifeq          97
+      94: goto          138
+      97: new           #95                 // class java/util/HashMap
+     100: dup
+     101: invokespecial #96                 // Method java/util/HashMap."<init>":()V
+     104: astore        4
+     106: aload         4
+     108: ldc           #108                // String message
+     110: ldc           #109                // String Invalid Xenolitas response
+     112: invokevirtual #110                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     115: pop
+     116: aload         4
+     118: ldc           #111                // String response
+     120: aload_3
+     121: invokevirtual #110                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     124: pop
+     125: new           #64                 // class java/lang/IllegalStateException
+     128: dup
+     129: aload         4
+     131: invokestatic  #100                // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+     134: invokespecial #66                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     137: athrow
+     138: aload_0
+     139: getfield      #5                  // Field tokenLock:Ljava/util/concurrent/locks/ReentrantLock;
+     142: invokevirtual #10                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     145: goto          160
+     148: astore        5
+     150: aload_0
+     151: getfield      #5                  // Field tokenLock:Ljava/util/concurrent/locks/ReentrantLock;
+     154: invokevirtual #10                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     157: aload         5
+     159: athrow
+     160: return
+    Exception table:
+       from    to  target type
+          29   138   148   any
+         148   150   148   any
+
+  static {};
+    Code:
+       0: ldc           #19                 // class org/bol/server/XenolitasToken
+       2: invokestatic  #116                // Method org/slf4j/LoggerFactory.getLogger:(Ljava/lang/Class;)Lorg/slf4j/Logger;
+       5: putstatic     #37                 // Field log:Lorg/slf4j/Logger;
+       8: getstatic     #27                 // Field java/nio/charset/StandardCharsets.UTF_8:Ljava/nio/charset/Charset;
+      11: invokevirtual #28                 // Method java/nio/charset/Charset.toString:()Ljava/lang/String;
+      14: invokedynamic #117,  0            // InvokeDynamic #8:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      19: putstatic     #21                 // Field CT_CHARSET_UTF8:Ljava/lang/String;
+      22: aconst_null
+      23: putstatic     #15                 // Field IDENTITY_SERVER:Ljava/lang/String;
+      26: ldc           #118                // String user1
+      28: putstatic     #31                 // Field IDENTITY_SERVER_USER:Ljava/lang/String;
+      31: ldc           #119                // String pass1
+      33: putstatic     #32                 // Field IDENTITY_SERVER_PASS:Ljava/lang/String;
+      36: return
+}

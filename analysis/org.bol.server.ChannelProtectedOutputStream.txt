@@ -1,0 +1,90 @@
+Compiled from "ChannelProtectedOutputStream.java"
+public class org.bol.server.ChannelProtectedOutputStream extends java.io.OutputStream {
+  private final java.io.OutputStream delegate;
+
+  private volatile boolean streamClosed;
+
+  public org.bol.server.ChannelProtectedOutputStream(java.io.OutputStream);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/io/OutputStream."<init>":()V
+       4: aload_0
+       5: iconst_0
+       6: putfield      #2                  // Field streamClosed:Z
+       9: aload_0
+      10: aload_1
+      11: putfield      #3                  // Field delegate:Ljava/io/OutputStream;
+      14: return
+
+  public void write(int) throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field streamClosed:Z
+       4: ifeq          17
+       7: new           #4                  // class java/io/IOException
+      10: dup
+      11: ldc           #5                  // String Stream closed
+      13: invokespecial #6                  // Method java/io/IOException."<init>":(Ljava/lang/String;)V
+      16: athrow
+      17: aload_0
+      18: getfield      #3                  // Field delegate:Ljava/io/OutputStream;
+      21: iload_1
+      22: invokevirtual #7                  // Method java/io/OutputStream.write:(I)V
+      25: return
+
+  public void write(byte[]) throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field streamClosed:Z
+       4: ifeq          17
+       7: new           #4                  // class java/io/IOException
+      10: dup
+      11: ldc           #5                  // String Stream closed
+      13: invokespecial #6                  // Method java/io/IOException."<init>":(Ljava/lang/String;)V
+      16: athrow
+      17: aload_0
+      18: getfield      #3                  // Field delegate:Ljava/io/OutputStream;
+      21: aload_1
+      22: invokevirtual #8                  // Method java/io/OutputStream.write:([B)V
+      25: return
+
+  public void flush() throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field streamClosed:Z
+       4: ifeq          17
+       7: new           #4                  // class java/io/IOException
+      10: dup
+      11: ldc           #5                  // String Stream closed
+      13: invokespecial #6                  // Method java/io/IOException."<init>":(Ljava/lang/String;)V
+      16: athrow
+      17: aload_0
+      18: getfield      #3                  // Field delegate:Ljava/io/OutputStream;
+      21: invokevirtual #9                  // Method java/io/OutputStream.flush:()V
+      24: return
+
+  public void write(byte[], int, int) throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field streamClosed:Z
+       4: ifeq          17
+       7: new           #4                  // class java/io/IOException
+      10: dup
+      11: ldc           #5                  // String Stream closed
+      13: invokespecial #6                  // Method java/io/IOException."<init>":(Ljava/lang/String;)V
+      16: athrow
+      17: aload_0
+      18: getfield      #3                  // Field delegate:Ljava/io/OutputStream;
+      21: aload_1
+      22: iload_2
+      23: iload_3
+      24: invokevirtual #10                 // Method java/io/OutputStream.write:([BII)V
+      27: return
+
+  public void close() throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: putfield      #2                  // Field streamClosed:Z
+       5: return
+}

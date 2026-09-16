@@ -1,0 +1,110 @@
+Compiled from "BolFileCacheStore.java"
+public class org.bol.certs.BolFileCacheStore {
+  public org.bol.certs.BolFileCacheStore();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public java.lang.String getFileFromCache(java.lang.String) throws java.io.IOException;
+    Code:
+       0: invokestatic  #2                  // Method org/cacheonix/Cacheonix.getInstance:()Lorg/cacheonix/Cacheonix;
+       3: astore_2
+       4: aload_2
+       5: ldc           #3                  // String bol.file.cache
+       7: invokevirtual #4                  // Method org/cacheonix/Cacheonix.getCache:(Ljava/lang/String;)Lorg/cacheonix/cache/Cache;
+      10: astore_3
+      11: new           #5                  // class java/io/File
+      14: dup
+      15: aload_1
+      16: invokespecial #6                  // Method java/io/File."<init>":(Ljava/lang/String;)V
+      19: astore        4
+      21: aload         4
+      23: invokevirtual #7                  // Method java/io/File.exists:()Z
+      26: ifne          39
+      29: aload_3
+      30: aload_1
+      31: invokeinterface #8,  2            // InterfaceMethod org/cacheonix/cache/Cache.remove:(Ljava/lang/Object;)Ljava/io/Serializable;
+      36: pop
+      37: aconst_null
+      38: areturn
+      39: aload_3
+      40: aload_1
+      41: invokeinterface #9,  2            // InterfaceMethod org/cacheonix/cache/Cache.get:(Ljava/lang/Object;)Ljava/io/Serializable;
+      46: checkcast     #10                 // class org/bol/certs/BolCachedFile
+      49: astore        5
+      51: aload         5
+      53: ifnonnull     76
+      56: aload         4
+      58: invokestatic  #11                 // Method readFile:(Ljava/io/File;)Lorg/bol/certs/BolCachedFile;
+      61: astore        5
+      63: aload_3
+      64: aload_1
+      65: aload         5
+      67: invokeinterface #12,  3           // InterfaceMethod org/cacheonix/cache/Cache.put:(Ljava/io/Serializable;Ljava/io/Serializable;)Ljava/io/Serializable;
+      72: pop
+      73: goto          107
+      76: aload         5
+      78: invokevirtual #13                 // Method org/bol/certs/BolCachedFile.getLastModified:()J
+      81: aload         4
+      83: invokevirtual #14                 // Method java/io/File.lastModified:()J
+      86: lcmp
+      87: ifeq          107
+      90: aload         4
+      92: invokestatic  #11                 // Method readFile:(Ljava/io/File;)Lorg/bol/certs/BolCachedFile;
+      95: astore        5
+      97: aload_3
+      98: aload_1
+      99: aload         5
+     101: invokeinterface #12,  3           // InterfaceMethod org/cacheonix/cache/Cache.put:(Ljava/io/Serializable;Ljava/io/Serializable;)Ljava/io/Serializable;
+     106: pop
+     107: aconst_null
+     108: aload         5
+     110: if_acmpeq     119
+     113: aload         5
+     115: invokevirtual #15                 // Method org/bol/certs/BolCachedFile.getContent:()Ljava/lang/String;
+     118: areturn
+     119: aconst_null
+     120: areturn
+
+  private static org.bol.certs.BolCachedFile readFile(java.io.File) throws java.io.IOException;
+    Code:
+       0: aconst_null
+       1: astore_1
+       2: new           #16                 // class java/io/FileInputStream
+       5: dup
+       6: aload_0
+       7: invokespecial #17                 // Method java/io/FileInputStream."<init>":(Ljava/io/File;)V
+      10: astore_2
+      11: new           #18                 // class java/io/ObjectInputStream
+      14: dup
+      15: aload_2
+      16: invokespecial #19                 // Method java/io/ObjectInputStream."<init>":(Ljava/io/InputStream;)V
+      19: astore_3
+      20: aload_3
+      21: invokevirtual #20                 // Method java/io/ObjectInputStream.readObject:()Ljava/lang/Object;
+      24: checkcast     #10                 // class org/bol/certs/BolCachedFile
+      27: astore_1
+      28: aload_2
+      29: invokevirtual #21                 // Method java/io/FileInputStream.close:()V
+      32: goto          53
+      35: astore_3
+      36: aload_2
+      37: invokevirtual #21                 // Method java/io/FileInputStream.close:()V
+      40: goto          51
+      43: astore        4
+      45: aload_3
+      46: aload         4
+      48: invokevirtual #23                 // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+      51: aload_3
+      52: athrow
+      53: goto          57
+      56: astore_2
+      57: aload_1
+      58: areturn
+    Exception table:
+       from    to  target type
+          11    28    35   Class java/lang/Throwable
+          36    40    43   Class java/lang/Throwable
+           2    53    56   Class java/lang/ClassNotFoundException
+}

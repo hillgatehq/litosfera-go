@@ -1,0 +1,614 @@
+Compiled from "BinaryDumpOutputStream.java"
+public class org.bol.debug.BinaryDumpOutputStream extends java.io.OutputStream {
+  private static final char[] HEX;
+
+  private java.io.PrintWriter _out;
+
+  private boolean locked;
+
+  private boolean _showOffset;
+
+  private int bytesPerLine;
+
+  private int _spacingInterval;
+
+  private char substituteChar;
+
+  private java.lang.String offsetSeperator;
+
+  private int offset;
+
+  private int lineCount;
+
+  private int bytesSinceSpace;
+
+  private char[] ascii;
+
+  private boolean showAscii;
+
+  private java.lang.String asciiBegin;
+
+  private java.lang.String asciiEnd;
+
+  public org.bol.debug.BinaryDumpOutputStream();
+    Code:
+       0: aload_0
+       1: new           #1                  // class java/io/PrintWriter
+       4: dup
+       5: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+       8: iconst_1
+       9: invokespecial #3                  // Method java/io/PrintWriter."<init>":(Ljava/io/OutputStream;Z)V
+      12: invokespecial #4                  // Method "<init>":(Ljava/io/PrintWriter;)V
+      15: return
+
+  public org.bol.debug.BinaryDumpOutputStream(java.io.PrintWriter);
+    Code:
+       0: aload_0
+       1: invokespecial #5                  // Method java/io/OutputStream."<init>":()V
+       4: aload_0
+       5: iconst_0
+       6: putfield      #6                  // Field locked:Z
+       9: aload_0
+      10: iconst_1
+      11: putfield      #7                  // Field _showOffset:Z
+      14: aload_0
+      15: bipush        40
+      17: putfield      #8                  // Field bytesPerLine:I
+      20: aload_0
+      21: iconst_4
+      22: putfield      #9                  // Field _spacingInterval:I
+      25: aload_0
+      26: bipush        46
+      28: putfield      #10                 // Field substituteChar:C
+      31: aload_0
+      32: ldc           #11                 // String :
+      34: putfield      #12                 // Field offsetSeperator:Ljava/lang/String;
+      37: aload_0
+      38: iconst_0
+      39: putfield      #13                 // Field offset:I
+      42: aload_0
+      43: iconst_0
+      44: putfield      #14                 // Field lineCount:I
+      47: aload_0
+      48: iconst_0
+      49: putfield      #15                 // Field bytesSinceSpace:I
+      52: aload_0
+      53: aconst_null
+      54: putfield      #16                 // Field ascii:[C
+      57: aload_0
+      58: iconst_1
+      59: putfield      #17                 // Field showAscii:Z
+      62: aload_0
+      63: ldc           #18                 // String   |
+      65: putfield      #19                 // Field asciiBegin:Ljava/lang/String;
+      68: aload_0
+      69: ldc           #20                 // String |
+      71: putfield      #21                 // Field asciiEnd:Ljava/lang/String;
+      74: aload_0
+      75: aload_1
+      76: putfield      #22                 // Field _out:Ljava/io/PrintWriter;
+      79: return
+
+  public org.bol.debug.BinaryDumpOutputStream(java.io.Writer);
+    Code:
+       0: aload_0
+       1: invokespecial #5                  // Method java/io/OutputStream."<init>":()V
+       4: aload_0
+       5: iconst_0
+       6: putfield      #6                  // Field locked:Z
+       9: aload_0
+      10: iconst_1
+      11: putfield      #7                  // Field _showOffset:Z
+      14: aload_0
+      15: bipush        40
+      17: putfield      #8                  // Field bytesPerLine:I
+      20: aload_0
+      21: iconst_4
+      22: putfield      #9                  // Field _spacingInterval:I
+      25: aload_0
+      26: bipush        46
+      28: putfield      #10                 // Field substituteChar:C
+      31: aload_0
+      32: ldc           #11                 // String :
+      34: putfield      #12                 // Field offsetSeperator:Ljava/lang/String;
+      37: aload_0
+      38: iconst_0
+      39: putfield      #13                 // Field offset:I
+      42: aload_0
+      43: iconst_0
+      44: putfield      #14                 // Field lineCount:I
+      47: aload_0
+      48: iconst_0
+      49: putfield      #15                 // Field bytesSinceSpace:I
+      52: aload_0
+      53: aconst_null
+      54: putfield      #16                 // Field ascii:[C
+      57: aload_0
+      58: iconst_1
+      59: putfield      #17                 // Field showAscii:Z
+      62: aload_0
+      63: ldc           #18                 // String   |
+      65: putfield      #19                 // Field asciiBegin:Ljava/lang/String;
+      68: aload_0
+      69: ldc           #20                 // String |
+      71: putfield      #21                 // Field asciiEnd:Ljava/lang/String;
+      74: aload_0
+      75: new           #1                  // class java/io/PrintWriter
+      78: dup
+      79: aload_1
+      80: iconst_1
+      81: invokespecial #23                 // Method java/io/PrintWriter."<init>":(Ljava/io/Writer;Z)V
+      84: putfield      #22                 // Field _out:Ljava/io/PrintWriter;
+      87: return
+
+  public void close() throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: getfield      #22                 // Field _out:Ljava/io/PrintWriter;
+       4: ifnull        25
+       7: aload_0
+       8: getfield      #14                 // Field lineCount:I
+      11: ifle          18
+      14: aload_0
+      15: invokevirtual #24                 // Method finishFinalLine:()V
+      18: aload_0
+      19: getfield      #22                 // Field _out:Ljava/io/PrintWriter;
+      22: invokevirtual #25                 // Method java/io/PrintWriter.close:()V
+      25: aload_0
+      26: aconst_null
+      27: putfield      #22                 // Field _out:Ljava/io/PrintWriter;
+      30: return
+
+  private void finishFinalLine();
+    Code:
+       0: aload_0
+       1: getfield      #14                 // Field lineCount:I
+       4: aload_0
+       5: invokevirtual #26                 // Method getBytesPerLine:()I
+       8: if_icmpge     93
+      11: aload_0
+      12: invokevirtual #27                 // Method getSpacingInterval:()I
+      15: ifle          43
+      18: aload_0
+      19: getfield      #15                 // Field bytesSinceSpace:I
+      22: aload_0
+      23: invokevirtual #27                 // Method getSpacingInterval:()I
+      26: if_icmpne     43
+      29: aload_0
+      30: getfield      #22                 // Field _out:Ljava/io/PrintWriter;
+      33: bipush        32
+      35: invokevirtual #28                 // Method java/io/PrintWriter.print:(C)V
+      38: aload_0
+      39: iconst_0
+      40: putfield      #15                 // Field bytesSinceSpace:I
+      43: aload_0
+      44: getfield      #22                 // Field _out:Ljava/io/PrintWriter;
+      47: ldc           #29                 // String
+      49: invokevirtual #30                 // Method java/io/PrintWriter.print:(Ljava/lang/String;)V
+      52: aload_0
+      53: getfield      #17                 // Field showAscii:Z
+      56: ifeq          70
+      59: aload_0
+      60: getfield      #16                 // Field ascii:[C
+      63: aload_0
+      64: getfield      #14                 // Field lineCount:I
+      67: bipush        32
+      69: castore
+      70: aload_0
+      71: dup
+      72: getfield      #14                 // Field lineCount:I
+      75: iconst_1
+      76: iadd
+      77: putfield      #14                 // Field lineCount:I
+      80: aload_0
+      81: dup
+      82: getfield      #15                 // Field bytesSinceSpace:I
+      85: iconst_1
+      86: iadd
+      87: putfield      #15                 // Field bytesSinceSpace:I
+      90: goto          0
+      93: aload_0
+      94: getfield      #17                 // Field showAscii:Z
+      97: ifeq          133
+     100: aload_0
+     101: getfield      #22                 // Field _out:Ljava/io/PrintWriter;
+     104: aload_0
+     105: invokevirtual #31                 // Method getAsciiBegin:()Ljava/lang/String;
+     108: invokevirtual #30                 // Method java/io/PrintWriter.print:(Ljava/lang/String;)V
+     111: aload_0
+     112: getfield      #22                 // Field _out:Ljava/io/PrintWriter;
+     115: aload_0
+     116: getfield      #16                 // Field ascii:[C
+     119: invokevirtual #32                 // Method java/io/PrintWriter.print:([C)V
+     122: aload_0
+     123: getfield      #22                 // Field _out:Ljava/io/PrintWriter;
+     126: aload_0
+     127: invokevirtual #33                 // Method getAsciiEnd:()Ljava/lang/String;
+     130: invokevirtual #30                 // Method java/io/PrintWriter.print:(Ljava/lang/String;)V
+     133: aload_0
+     134: getfield      #22                 // Field _out:Ljava/io/PrintWriter;
+     137: invokevirtual #34                 // Method java/io/PrintWriter.println:()V
+     140: return
+
+  public void flush() throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: getfield      #22                 // Field _out:Ljava/io/PrintWriter;
+       4: invokevirtual #35                 // Method java/io/PrintWriter.flush:()V
+       7: return
+
+  public java.lang.String getAsciiBegin();
+    Code:
+       0: aload_0
+       1: getfield      #19                 // Field asciiBegin:Ljava/lang/String;
+       4: areturn
+
+  public java.lang.String getAsciiEnd();
+    Code:
+       0: aload_0
+       1: getfield      #21                 // Field asciiEnd:Ljava/lang/String;
+       4: areturn
+
+  public int getBytesPerLine();
+    Code:
+       0: aload_0
+       1: getfield      #8                  // Field bytesPerLine:I
+       4: ireturn
+
+  public java.lang.String getOffsetSeperator();
+    Code:
+       0: aload_0
+       1: getfield      #12                 // Field offsetSeperator:Ljava/lang/String;
+       4: areturn
+
+  public boolean getShowAscii();
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field showAscii:Z
+       4: ireturn
+
+  public char getSubstituteChar();
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field substituteChar:C
+       4: ireturn
+
+  public void setAsciiBegin(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field locked:Z
+       4: ifeq          15
+       7: new           #36                 // class java/lang/IllegalStateException
+      10: dup
+      11: invokespecial #37                 // Method java/lang/IllegalStateException."<init>":()V
+      14: athrow
+      15: aload_0
+      16: aload_1
+      17: putfield      #19                 // Field asciiBegin:Ljava/lang/String;
+      20: return
+
+  public void setAsciiEnd(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field locked:Z
+       4: ifeq          15
+       7: new           #36                 // class java/lang/IllegalStateException
+      10: dup
+      11: invokespecial #37                 // Method java/lang/IllegalStateException."<init>":()V
+      14: athrow
+      15: aload_0
+      16: aload_1
+      17: putfield      #21                 // Field asciiEnd:Ljava/lang/String;
+      20: return
+
+  public void setBytesPerLine(int);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field locked:Z
+       4: ifeq          15
+       7: new           #36                 // class java/lang/IllegalStateException
+      10: dup
+      11: invokespecial #37                 // Method java/lang/IllegalStateException."<init>":()V
+      14: athrow
+      15: aload_0
+      16: iload_1
+      17: putfield      #8                  // Field bytesPerLine:I
+      20: aload_0
+      21: aconst_null
+      22: putfield      #16                 // Field ascii:[C
+      25: return
+
+  public void setOffsetSeperator(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field locked:Z
+       4: ifeq          15
+       7: new           #36                 // class java/lang/IllegalStateException
+      10: dup
+      11: invokespecial #37                 // Method java/lang/IllegalStateException."<init>":()V
+      14: athrow
+      15: aload_0
+      16: aload_1
+      17: putfield      #12                 // Field offsetSeperator:Ljava/lang/String;
+      20: return
+
+  public void setShowAscii(boolean);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field locked:Z
+       4: ifeq          15
+       7: new           #36                 // class java/lang/IllegalStateException
+      10: dup
+      11: invokespecial #37                 // Method java/lang/IllegalStateException."<init>":()V
+      14: athrow
+      15: aload_0
+      16: iload_1
+      17: putfield      #17                 // Field showAscii:Z
+      20: return
+
+  public void setSubstituteChar(char);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field locked:Z
+       4: ifeq          15
+       7: new           #36                 // class java/lang/IllegalStateException
+      10: dup
+      11: invokespecial #37                 // Method java/lang/IllegalStateException."<init>":()V
+      14: athrow
+      15: aload_0
+      16: iload_1
+      17: putfield      #10                 // Field substituteChar:C
+      20: return
+
+  public void write(int) throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field showAscii:Z
+       4: ifeq          24
+       7: aload_0
+       8: getfield      #16                 // Field ascii:[C
+      11: ifnonnull     24
+      14: aload_0
+      15: aload_0
+      16: invokevirtual #26                 // Method getBytesPerLine:()I
+      19: newarray       char
+      21: putfield      #16                 // Field ascii:[C
+      24: aload_0
+      25: iconst_1
+      26: putfield      #6                  // Field locked:Z
+      29: aload_0
+      30: getfield      #14                 // Field lineCount:I
+      33: aload_0
+      34: invokevirtual #26                 // Method getBytesPerLine:()I
+      37: if_icmpne     110
+      40: aload_0
+      41: invokevirtual #38                 // Method getShowAscii:()Z
+      44: ifeq          80
+      47: aload_0
+      48: getfield      #22                 // Field _out:Ljava/io/PrintWriter;
+      51: aload_0
+      52: invokevirtual #31                 // Method getAsciiBegin:()Ljava/lang/String;
+      55: invokevirtual #30                 // Method java/io/PrintWriter.print:(Ljava/lang/String;)V
+      58: aload_0
+      59: getfield      #22                 // Field _out:Ljava/io/PrintWriter;
+      62: aload_0
+      63: getfield      #16                 // Field ascii:[C
+      66: invokevirtual #32                 // Method java/io/PrintWriter.print:([C)V
+      69: aload_0
+      70: getfield      #22                 // Field _out:Ljava/io/PrintWriter;
+      73: aload_0
+      74: invokevirtual #33                 // Method getAsciiEnd:()Ljava/lang/String;
+      77: invokevirtual #30                 // Method java/io/PrintWriter.print:(Ljava/lang/String;)V
+      80: aload_0
+      81: getfield      #22                 // Field _out:Ljava/io/PrintWriter;
+      84: invokevirtual #34                 // Method java/io/PrintWriter.println:()V
+      87: aload_0
+      88: iconst_0
+      89: putfield      #15                 // Field bytesSinceSpace:I
+      92: aload_0
+      93: iconst_0
+      94: putfield      #14                 // Field lineCount:I
+      97: aload_0
+      98: dup
+      99: getfield      #13                 // Field offset:I
+     102: aload_0
+     103: invokevirtual #26                 // Method getBytesPerLine:()I
+     106: iadd
+     107: putfield      #13                 // Field offset:I
+     110: aload_0
+     111: getfield      #14                 // Field lineCount:I
+     114: ifne          144
+     117: aload_0
+     118: invokevirtual #39                 // Method isShowOffset:()Z
+     121: ifeq          144
+     124: aload_0
+     125: aload_0
+     126: getfield      #13                 // Field offset:I
+     129: iconst_4
+     130: invokevirtual #40                 // Method writeHex:(II)V
+     133: aload_0
+     134: getfield      #22                 // Field _out:Ljava/io/PrintWriter;
+     137: aload_0
+     138: invokevirtual #41                 // Method getOffsetSeperator:()Ljava/lang/String;
+     141: invokevirtual #30                 // Method java/io/PrintWriter.print:(Ljava/lang/String;)V
+     144: aload_0
+     145: invokevirtual #27                 // Method getSpacingInterval:()I
+     148: ifle          176
+     151: aload_0
+     152: getfield      #15                 // Field bytesSinceSpace:I
+     155: aload_0
+     156: invokevirtual #27                 // Method getSpacingInterval:()I
+     159: if_icmpne     176
+     162: aload_0
+     163: getfield      #22                 // Field _out:Ljava/io/PrintWriter;
+     166: bipush        32
+     168: invokevirtual #28                 // Method java/io/PrintWriter.print:(C)V
+     171: aload_0
+     172: iconst_0
+     173: putfield      #15                 // Field bytesSinceSpace:I
+     176: aload_0
+     177: iload_1
+     178: iconst_2
+     179: invokevirtual #40                 // Method writeHex:(II)V
+     182: aload_0
+     183: getfield      #17                 // Field showAscii:Z
+     186: ifeq          222
+     189: iload_1
+     190: bipush        32
+     192: if_icmplt     201
+     195: iload_1
+     196: bipush        127
+     198: if_icmple     209
+     201: aload_0
+     202: invokevirtual #42                 // Method getSubstituteChar:()C
+     205: istore_2
+     206: goto          212
+     209: iload_1
+     210: i2c
+     211: istore_2
+     212: aload_0
+     213: getfield      #16                 // Field ascii:[C
+     216: aload_0
+     217: getfield      #14                 // Field lineCount:I
+     220: iload_2
+     221: castore
+     222: aload_0
+     223: dup
+     224: getfield      #14                 // Field lineCount:I
+     227: iconst_1
+     228: iadd
+     229: putfield      #14                 // Field lineCount:I
+     232: aload_0
+     233: dup
+     234: getfield      #15                 // Field bytesSinceSpace:I
+     237: iconst_1
+     238: iadd
+     239: putfield      #15                 // Field bytesSinceSpace:I
+     242: return
+
+  private void writeHex(int, int);
+    Code:
+       0: iconst_0
+       1: istore_3
+       2: iload_3
+       3: iload_2
+       4: if_icmpge     40
+       7: iload_1
+       8: iconst_4
+       9: iload_2
+      10: iload_3
+      11: isub
+      12: iconst_1
+      13: isub
+      14: imul
+      15: ishr
+      16: bipush        15
+      18: iand
+      19: istore        4
+      21: aload_0
+      22: getfield      #22                 // Field _out:Ljava/io/PrintWriter;
+      25: getstatic     #43                 // Field HEX:[C
+      28: iload         4
+      30: caload
+      31: invokevirtual #28                 // Method java/io/PrintWriter.print:(C)V
+      34: iinc          3, 1
+      37: goto          2
+      40: return
+
+  public void setSpacingInterval(int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: putfield      #9                  // Field _spacingInterval:I
+       5: return
+
+  public boolean isShowOffset();
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field _showOffset:Z
+       4: ireturn
+
+  public void setShowOffset(boolean);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: putfield      #7                  // Field _showOffset:Z
+       5: return
+
+  public int getSpacingInterval();
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field _spacingInterval:I
+       4: ireturn
+
+  static {};
+    Code:
+       0: bipush        16
+       2: newarray       char
+       4: dup
+       5: iconst_0
+       6: bipush        48
+       8: castore
+       9: dup
+      10: iconst_1
+      11: bipush        49
+      13: castore
+      14: dup
+      15: iconst_2
+      16: bipush        50
+      18: castore
+      19: dup
+      20: iconst_3
+      21: bipush        51
+      23: castore
+      24: dup
+      25: iconst_4
+      26: bipush        52
+      28: castore
+      29: dup
+      30: iconst_5
+      31: bipush        53
+      33: castore
+      34: dup
+      35: bipush        6
+      37: bipush        54
+      39: castore
+      40: dup
+      41: bipush        7
+      43: bipush        55
+      45: castore
+      46: dup
+      47: bipush        8
+      49: bipush        56
+      51: castore
+      52: dup
+      53: bipush        9
+      55: bipush        57
+      57: castore
+      58: dup
+      59: bipush        10
+      61: bipush        97
+      63: castore
+      64: dup
+      65: bipush        11
+      67: bipush        98
+      69: castore
+      70: dup
+      71: bipush        12
+      73: bipush        99
+      75: castore
+      76: dup
+      77: bipush        13
+      79: bipush        100
+      81: castore
+      82: dup
+      83: bipush        14
+      85: bipush        101
+      87: castore
+      88: dup
+      89: bipush        15
+      91: bipush        102
+      93: castore
+      94: putstatic     #43                 // Field HEX:[C
+      97: return
+}

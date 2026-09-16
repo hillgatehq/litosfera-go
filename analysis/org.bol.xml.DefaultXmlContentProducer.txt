@@ -1,0 +1,36 @@
+Compiled from "DefaultXmlContentProducer.java"
+public class org.bol.xml.DefaultXmlContentProducer implements org.bol.xml.XmlContentProducer {
+  public org.bol.xml.DefaultXmlContentProducer();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public byte[] onProduceXml(java.lang.String) throws java.io.IOException, javax.xml.xpath.XPathExpressionException, org.xml.sax.SAXException, javax.xml.parsers.ParserConfigurationException, javax.xml.crypto.MarshalException, javax.xml.crypto.dsig.XMLSignatureException, javax.xml.transform.TransformerException, xades4j.XAdES4jException, java.security.GeneralSecurityException, java.lang.NoSuchMethodException, java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException, java.lang.ClassNotFoundException, java.lang.InstantiationException, java.lang.NoSuchFieldException;
+    Code:
+       0: new           #2                  // class java/io/ByteArrayOutputStream
+       3: dup
+       4: invokespecial #3                  // Method java/io/ByteArrayOutputStream."<init>":()V
+       7: astore_2
+       8: new           #4                  // class java/io/DataOutputStream
+      11: dup
+      12: aload_2
+      13: invokespecial #5                  // Method java/io/DataOutputStream."<init>":(Ljava/io/OutputStream;)V
+      16: astore_3
+      17: new           #6                  // class java/io/OutputStreamWriter
+      20: dup
+      21: aload_3
+      22: getstatic     #7                  // Field java/nio/charset/StandardCharsets.UTF_8:Ljava/nio/charset/Charset;
+      25: invokespecial #8                  // Method java/io/OutputStreamWriter."<init>":(Ljava/io/OutputStream;Ljava/nio/charset/Charset;)V
+      28: astore        4
+      30: aload         4
+      32: aload_1
+      33: invokevirtual #9                  // Method java/io/Writer.write:(Ljava/lang/String;)V
+      36: aload         4
+      38: invokevirtual #10                 // Method java/io/Writer.flush:()V
+      41: aload         4
+      43: invokevirtual #11                 // Method java/io/Writer.close:()V
+      46: aload_2
+      47: invokevirtual #12                 // Method java/io/ByteArrayOutputStream.toByteArray:()[B
+      50: areturn
+}

@@ -1,0 +1,237 @@
+Compiled from "XmlHelper.java"
+public class org.bol.xml.XmlHelper {
+  private static org.slf4j.Logger log;
+
+  private org.bol.xml.XmlHelper();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public static java.lang.String nodeToString(org.w3c.dom.Node) throws javax.xml.transform.TransformerException;
+    Code:
+       0: new           #2                  // class java/io/StringWriter
+       3: dup
+       4: invokespecial #3                  // Method java/io/StringWriter."<init>":()V
+       7: astore_1
+       8: invokestatic  #4                  // Method javax/xml/transform/TransformerFactory.newInstance:()Ljavax/xml/transform/TransformerFactory;
+      11: astore_2
+      12: aload_2
+      13: ldc           #6                  // String http://javax.xml.XMLConstants/feature/secure-processing
+      15: iconst_1
+      16: invokevirtual #7                  // Method javax/xml/transform/TransformerFactory.setFeature:(Ljava/lang/String;Z)V
+      19: aload_2
+      20: invokevirtual #8                  // Method javax/xml/transform/TransformerFactory.newTransformer:()Ljavax/xml/transform/Transformer;
+      23: astore_3
+      24: aload_3
+      25: ldc           #10                 // String omit-xml-declaration
+      27: ldc           #11                 // String yes
+      29: invokevirtual #12                 // Method javax/xml/transform/Transformer.setOutputProperty:(Ljava/lang/String;Ljava/lang/String;)V
+      32: aload_3
+      33: ldc           #13                 // String method
+      35: ldc           #14                 // String xml
+      37: invokevirtual #12                 // Method javax/xml/transform/Transformer.setOutputProperty:(Ljava/lang/String;Ljava/lang/String;)V
+      40: aload_3
+      41: ldc           #15                 // String encoding
+      43: getstatic     #16                 // Field java/nio/charset/StandardCharsets.UTF_8:Ljava/nio/charset/Charset;
+      46: invokevirtual #17                 // Method java/nio/charset/Charset.name:()Ljava/lang/String;
+      49: invokevirtual #12                 // Method javax/xml/transform/Transformer.setOutputProperty:(Ljava/lang/String;Ljava/lang/String;)V
+      52: aload_3
+      53: new           #18                 // class javax/xml/transform/dom/DOMSource
+      56: dup
+      57: aload_0
+      58: invokespecial #19                 // Method javax/xml/transform/dom/DOMSource."<init>":(Lorg/w3c/dom/Node;)V
+      61: new           #20                 // class javax/xml/transform/stream/StreamResult
+      64: dup
+      65: aload_1
+      66: invokespecial #21                 // Method javax/xml/transform/stream/StreamResult."<init>":(Ljava/io/Writer;)V
+      69: invokevirtual #22                 // Method javax/xml/transform/Transformer.transform:(Ljavax/xml/transform/Source;Ljavax/xml/transform/Result;)V
+      72: aload_1
+      73: invokevirtual #23                 // Method java/io/StringWriter.toString:()Ljava/lang/String;
+      76: areturn
+
+  public static java.lang.String getCharacterDataFromElement(org.w3c.dom.Element);
+    Code:
+       0: aload_0
+       1: invokeinterface #24,  1           // InterfaceMethod org/w3c/dom/Element.getFirstChild:()Lorg/w3c/dom/Node;
+       6: astore_1
+       7: aload_1
+       8: instanceof    #25                 // class org/w3c/dom/CharacterData
+      11: ifeq          26
+      14: aload_1
+      15: checkcast     #25                 // class org/w3c/dom/CharacterData
+      18: astore_2
+      19: aload_2
+      20: invokeinterface #26,  1           // InterfaceMethod org/w3c/dom/CharacterData.getData:()Ljava/lang/String;
+      25: areturn
+      26: aconst_null
+      27: areturn
+
+  public static org.w3c.dom.Document loadDocumentFromInputStream(java.io.InputStream) throws org.xml.sax.SAXException, java.io.IOException, javax.xml.parsers.ParserConfigurationException;
+    Code:
+       0: invokestatic  #27                 // Method javax/xml/parsers/DocumentBuilderFactory.newInstance:()Ljavax/xml/parsers/DocumentBuilderFactory;
+       3: astore_1
+       4: aload_1
+       5: ldc           #6                  // String http://javax.xml.XMLConstants/feature/secure-processing
+       7: iconst_1
+       8: invokevirtual #28                 // Method javax/xml/parsers/DocumentBuilderFactory.setFeature:(Ljava/lang/String;Z)V
+      11: aload_1
+      12: iconst_1
+      13: invokevirtual #29                 // Method javax/xml/parsers/DocumentBuilderFactory.setNamespaceAware:(Z)V
+      16: aload_1
+      17: invokevirtual #30                 // Method javax/xml/parsers/DocumentBuilderFactory.newDocumentBuilder:()Ljavax/xml/parsers/DocumentBuilder;
+      20: aload_0
+      21: invokevirtual #31                 // Method javax/xml/parsers/DocumentBuilder.parse:(Ljava/io/InputStream;)Lorg/w3c/dom/Document;
+      24: areturn
+
+  public static java.lang.String loadXmlFromInputStreamOmmitDeclaration(java.io.InputStream) throws org.xml.sax.SAXException, java.io.IOException, javax.xml.parsers.ParserConfigurationException, javax.xml.transform.TransformerException;
+    Code:
+       0: aload_0
+       1: invokestatic  #32                 // Method loadDocumentFromInputStream:(Ljava/io/InputStream;)Lorg/w3c/dom/Document;
+       4: astore_1
+       5: aload_1
+       6: invokeinterface #33,  1           // InterfaceMethod org/w3c/dom/Document.getDocumentElement:()Lorg/w3c/dom/Element;
+      11: astore_2
+      12: aload_2
+      13: invokestatic  #34                 // Method nodeToString:(Lorg/w3c/dom/Node;)Ljava/lang/String;
+      16: areturn
+
+  public static long copy(java.io.InputStream, java.io.OutputStream) throws java.io.IOException;
+    Code:
+       0: iconst_m1
+       1: istore_2
+       2: sipush        4096
+       5: newarray       byte
+       7: astore_3
+       8: lconst_0
+       9: lstore        4
+      11: aload_0
+      12: aload_3
+      13: invokevirtual #35                 // Method java/io/InputStream.read:([B)I
+      16: istore_2
+      17: iload_2
+      18: iconst_m1
+      19: if_icmpeq     45
+      22: aload_1
+      23: aload_3
+      24: iconst_0
+      25: iload_2
+      26: invokevirtual #36                 // Method java/io/OutputStream.write:([BII)V
+      29: lload         4
+      31: iload_2
+      32: i2l
+      33: ladd
+      34: lstore        4
+      36: aload_0
+      37: aload_3
+      38: invokevirtual #35                 // Method java/io/InputStream.read:([B)I
+      41: istore_2
+      42: goto          17
+      45: lload         4
+      47: lreturn
+
+  public static byte[] readBytesFromStream(java.io.InputStream) throws java.io.IOException;
+    Code:
+       0: aconst_null
+       1: astore_1
+       2: new           #37                 // class java/io/ByteArrayOutputStream
+       5: dup
+       6: invokespecial #38                 // Method java/io/ByteArrayOutputStream."<init>":()V
+       9: astore_2
+      10: aload_0
+      11: aload_2
+      12: invokestatic  #39                 // Method copy:(Ljava/io/InputStream;Ljava/io/OutputStream;)J
+      15: pop2
+      16: aload_2
+      17: invokevirtual #40                 // Method java/io/ByteArrayOutputStream.flush:()V
+      20: aload_2
+      21: invokevirtual #41                 // Method java/io/ByteArrayOutputStream.toByteArray:()[B
+      24: astore_1
+      25: aload_2
+      26: invokevirtual #42                 // Method java/io/ByteArrayOutputStream.close:()V
+      29: goto          50
+      32: astore_3
+      33: aload_2
+      34: invokevirtual #42                 // Method java/io/ByteArrayOutputStream.close:()V
+      37: goto          48
+      40: astore        4
+      42: aload_3
+      43: aload         4
+      45: invokevirtual #44                 // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+      48: aload_3
+      49: athrow
+      50: aload_1
+      51: areturn
+    Exception table:
+       from    to  target type
+          10    25    32   Class java/lang/Throwable
+          33    37    40   Class java/lang/Throwable
+
+  public static org.w3c.dom.Document loadDocumentFromString(java.lang.String) throws org.xml.sax.SAXException, java.io.IOException, javax.xml.parsers.ParserConfigurationException;
+    Code:
+       0: invokestatic  #27                 // Method javax/xml/parsers/DocumentBuilderFactory.newInstance:()Ljavax/xml/parsers/DocumentBuilderFactory;
+       3: astore_1
+       4: aload_1
+       5: ldc           #6                  // String http://javax.xml.XMLConstants/feature/secure-processing
+       7: iconst_1
+       8: invokevirtual #28                 // Method javax/xml/parsers/DocumentBuilderFactory.setFeature:(Ljava/lang/String;Z)V
+      11: aload_1
+      12: iconst_1
+      13: invokevirtual #29                 // Method javax/xml/parsers/DocumentBuilderFactory.setNamespaceAware:(Z)V
+      16: aload_1
+      17: invokevirtual #30                 // Method javax/xml/parsers/DocumentBuilderFactory.newDocumentBuilder:()Ljavax/xml/parsers/DocumentBuilder;
+      20: new           #45                 // class org/xml/sax/InputSource
+      23: dup
+      24: new           #46                 // class java/io/StringReader
+      27: dup
+      28: aload_0
+      29: invokespecial #47                 // Method java/io/StringReader."<init>":(Ljava/lang/String;)V
+      32: invokespecial #48                 // Method org/xml/sax/InputSource."<init>":(Ljava/io/Reader;)V
+      35: invokevirtual #49                 // Method javax/xml/parsers/DocumentBuilder.parse:(Lorg/xml/sax/InputSource;)Lorg/w3c/dom/Document;
+      38: areturn
+
+  public static void processXmlErrorResponse(org.w3c.dom.Document) throws java.io.IOException, javax.xml.transform.TransformerException;
+    Code:
+       0: aload_0
+       1: invokeinterface #33,  1           // InterfaceMethod org/w3c/dom/Document.getDocumentElement:()Lorg/w3c/dom/Element;
+       6: astore_1
+       7: getstatic     #50                 // Field log:Lorg/slf4j/Logger;
+      10: getstatic     #51                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      13: ldc           #52                 // String Processing Xml Error:
+      15: invokestatic  #53                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      18: getstatic     #50                 // Field log:Lorg/slf4j/Logger;
+      21: getstatic     #51                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      24: aload_1
+      25: invokestatic  #34                 // Method nodeToString:(Lorg/w3c/dom/Node;)Ljava/lang/String;
+      28: invokestatic  #54                 // Method org/bol/server/LogWrapper.dumpStr:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      31: aload_1
+      32: ldc           #55                 // String Result
+      34: invokeinterface #56,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+      39: iconst_0
+      40: invokeinterface #57,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+      45: checkcast     #58                 // class org/w3c/dom/Element
+      48: astore_2
+      49: aload_1
+      50: ldc           #59                 // String Code
+      52: invokeinterface #56,  2           // InterfaceMethod org/w3c/dom/Element.getElementsByTagName:(Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+      57: iconst_0
+      58: invokeinterface #57,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+      63: checkcast     #58                 // class org/w3c/dom/Element
+      66: astore_3
+      67: new           #60                 // class java/io/IOException
+      70: dup
+      71: aload_3
+      72: invokestatic  #61                 // Method getCharacterDataFromElement:(Lorg/w3c/dom/Element;)Ljava/lang/String;
+      75: aload_2
+      76: invokestatic  #61                 // Method getCharacterDataFromElement:(Lorg/w3c/dom/Element;)Ljava/lang/String;
+      79: invokedynamic #62,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      84: invokespecial #63                 // Method java/io/IOException."<init>":(Ljava/lang/String;)V
+      87: athrow
+
+  static {};
+    Code:
+       0: ldc           #64                 // class org/bol/xml/XmlHelper
+       2: invokestatic  #65                 // Method org/slf4j/LoggerFactory.getLogger:(Ljava/lang/Class;)Lorg/slf4j/Logger;
+       5: putstatic     #50                 // Field log:Lorg/slf4j/Logger;
+       8: return
+}

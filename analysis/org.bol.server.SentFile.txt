@@ -1,0 +1,21 @@
+Compiled from "SentFile.java"
+public class org.bol.server.SentFile extends java.util.HashMap<java.lang.String, java.lang.Object> {
+  private static final long serialVersionUID = 1l;
+
+  private java.lang.String _token;
+
+  public org.bol.server.SentFile(java.lang.String);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/util/HashMap."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field _token:Ljava/lang/String;
+       9: return
+
+  public java.lang.String getToken();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field _token:Ljava/lang/String;
+       4: areturn
+}

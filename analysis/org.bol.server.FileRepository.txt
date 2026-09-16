@@ -1,0 +1,964 @@
+Compiled from "FileRepository.java"
+public class org.bol.server.FileRepository {
+  private static org.slf4j.Logger log;
+
+  private java.util.concurrent.ConcurrentHashMap<java.lang.String, org.bol.server.ReservedFile> reservedQueue;
+
+  private java.util.concurrent.ConcurrentHashMap<java.lang.String, org.bol.server.ReceivedFile> receiveQueue;
+
+  private java.util.concurrent.ConcurrentHashMap<java.lang.String, org.bol.server.SentFile> sendQueue;
+
+  private java.util.concurrent.locks.ReentrantLock dirListLock;
+
+  public org.bol.server.FileRepository();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #2                  // class java/util/concurrent/ConcurrentHashMap
+       8: dup
+       9: invokespecial #3                  // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+      12: putfield      #4                  // Field reservedQueue:Ljava/util/concurrent/ConcurrentHashMap;
+      15: aload_0
+      16: new           #2                  // class java/util/concurrent/ConcurrentHashMap
+      19: dup
+      20: invokespecial #3                  // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+      23: putfield      #5                  // Field receiveQueue:Ljava/util/concurrent/ConcurrentHashMap;
+      26: aload_0
+      27: new           #2                  // class java/util/concurrent/ConcurrentHashMap
+      30: dup
+      31: invokespecial #3                  // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+      34: putfield      #6                  // Field sendQueue:Ljava/util/concurrent/ConcurrentHashMap;
+      37: aload_0
+      38: new           #7                  // class java/util/concurrent/locks/ReentrantLock
+      41: dup
+      42: invokespecial #8                  // Method java/util/concurrent/locks/ReentrantLock."<init>":()V
+      45: putfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+      48: return
+
+  public org.bol.server.ReservedFile ReserveFile(java.lang.String, java.lang.String) throws java.io.IOException;
+    Code:
+       0: new           #10                 // class org/bol/server/ReservedFile
+       3: dup
+       4: aload_1
+       5: aload_2
+       6: invokespecial #11                 // Method org/bol/server/ReservedFile."<init>":(Ljava/lang/String;Ljava/lang/String;)V
+       9: areturn
+
+  public org.bol.server.ReservedFile ReserveFile(java.lang.String) throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: ldc           #12                 // String System
+       4: invokevirtual #13                 // Method ReserveFile:(Ljava/lang/String;Ljava/lang/String;)Lorg/bol/server/ReservedFile;
+       7: areturn
+
+  public org.bol.server.ReservedFile reserveFileForSending(java.lang.String, java.lang.String, java.lang.String) throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+       4: invokevirtual #14                 // Method java/util/concurrent/locks/ReentrantLock.lock:()V
+       7: aload_0
+       8: aload_1
+       9: invokevirtual #15                 // Method getWaitingFiles:(Ljava/lang/String;)Ljava/util/List;
+      12: astore        4
+      14: aconst_null
+      15: aload         4
+      17: if_acmpeq     381
+      20: aload         4
+      22: invokeinterface #16,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      27: astore        5
+      29: aload         5
+      31: invokeinterface #17,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      36: ifeq          381
+      39: aload         5
+      41: invokeinterface #18,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      46: checkcast     #19                 // class java/io/File
+      49: astore        6
+      51: aconst_null
+      52: aload_3
+      53: if_acmpeq     68
+      56: aload         6
+      58: invokevirtual #20                 // Method java/io/File.getName:()Ljava/lang/String;
+      61: aload_3
+      62: invokevirtual #21                 // Method java/lang/String.contains:(Ljava/lang/CharSequence;)Z
+      65: ifeq          378
+      68: aload_0
+      69: getfield      #4                  // Field reservedQueue:Ljava/util/concurrent/ConcurrentHashMap;
+      72: aload         6
+      74: invokevirtual #20                 // Method java/io/File.getName:()Ljava/lang/String;
+      77: invokevirtual #22                 // Method java/util/concurrent/ConcurrentHashMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      80: checkcast     #10                 // class org/bol/server/ReservedFile
+      83: astore        7
+      85: aload         7
+      87: ifnonnull     203
+      90: aconst_null
+      91: astore        8
+      93: aload_0
+      94: aload         6
+      96: invokevirtual #23                 // Method java/io/File.getPath:()Ljava/lang/String;
+      99: aload_2
+     100: invokevirtual #13                 // Method ReserveFile:(Ljava/lang/String;Ljava/lang/String;)Lorg/bol/server/ReservedFile;
+     103: astore        8
+     105: aload_0
+     106: getfield      #4                  // Field reservedQueue:Ljava/util/concurrent/ConcurrentHashMap;
+     109: aload         6
+     111: invokevirtual #20                 // Method java/io/File.getName:()Ljava/lang/String;
+     114: aload         8
+     116: invokevirtual #24                 // Method java/util/concurrent/ConcurrentHashMap.putIfAbsent:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     119: checkcast     #10                 // class org/bol/server/ReservedFile
+     122: astore        9
+     124: aload         9
+     126: ifnull        153
+     129: aload         8
+     131: invokevirtual #25                 // Method org/bol/server/ReservedFile.release:()V
+     134: goto          147
+     137: astore        10
+     139: getstatic     #27                 // Field log:Lorg/slf4j/Logger;
+     142: aload         10
+     144: invokestatic  #28                 // Method org/bol/server/LogWrapper.logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+     147: aconst_null
+     148: astore        8
+     150: goto          29
+     153: aload         8
+     155: astore        10
+     157: aload_0
+     158: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+     161: invokevirtual #29                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     164: aload         10
+     166: areturn
+     167: astore        9
+     169: getstatic     #27                 // Field log:Lorg/slf4j/Logger;
+     172: aload         9
+     174: invokestatic  #28                 // Method org/bol/server/LogWrapper.logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+     177: aload         8
+     179: ifnull        200
+     182: aload         8
+     184: invokevirtual #25                 // Method org/bol/server/ReservedFile.release:()V
+     187: goto          200
+     190: astore        10
+     192: getstatic     #27                 // Field log:Lorg/slf4j/Logger;
+     195: aload         10
+     197: invokestatic  #28                 // Method org/bol/server/LogWrapper.logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+     200: goto          378
+     203: aload         7
+     205: ldc2_w        #31                 // long 12l
+     208: invokevirtual #33                 // Method org/bol/server/ReservedFile.shouldRelease:(J)Z
+     211: ifeq          378
+     214: getstatic     #27                 // Field log:Lorg/slf4j/Logger;
+     217: getstatic     #34                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     220: aload         6
+     222: invokevirtual #20                 // Method java/io/File.getName:()Ljava/lang/String;
+     225: invokedynamic #35,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     230: invokestatic  #36                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     233: aload_0
+     234: getfield      #4                  // Field reservedQueue:Ljava/util/concurrent/ConcurrentHashMap;
+     237: aload         6
+     239: invokevirtual #20                 // Method java/io/File.getName:()Ljava/lang/String;
+     242: aload         7
+     244: invokevirtual #37                 // Method java/util/concurrent/ConcurrentHashMap.remove:(Ljava/lang/Object;Ljava/lang/Object;)Z
+     247: ifeq          378
+     250: aload         7
+     252: invokevirtual #25                 // Method org/bol/server/ReservedFile.release:()V
+     255: goto          268
+     258: astore        8
+     260: getstatic     #27                 // Field log:Lorg/slf4j/Logger;
+     263: aload         8
+     265: invokestatic  #28                 // Method org/bol/server/LogWrapper.logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+     268: aconst_null
+     269: astore        8
+     271: aload_0
+     272: aload         6
+     274: invokevirtual #23                 // Method java/io/File.getPath:()Ljava/lang/String;
+     277: aload_2
+     278: invokevirtual #13                 // Method ReserveFile:(Ljava/lang/String;Ljava/lang/String;)Lorg/bol/server/ReservedFile;
+     281: astore        8
+     283: aload_0
+     284: getfield      #4                  // Field reservedQueue:Ljava/util/concurrent/ConcurrentHashMap;
+     287: aload         6
+     289: invokevirtual #20                 // Method java/io/File.getName:()Ljava/lang/String;
+     292: aload         8
+     294: invokevirtual #24                 // Method java/util/concurrent/ConcurrentHashMap.putIfAbsent:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     297: checkcast     #10                 // class org/bol/server/ReservedFile
+     300: astore        9
+     302: aload         9
+     304: ifnull        331
+     307: aload         8
+     309: invokevirtual #25                 // Method org/bol/server/ReservedFile.release:()V
+     312: goto          325
+     315: astore        10
+     317: getstatic     #27                 // Field log:Lorg/slf4j/Logger;
+     320: aload         10
+     322: invokestatic  #28                 // Method org/bol/server/LogWrapper.logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+     325: aconst_null
+     326: astore        8
+     328: goto          29
+     331: aload         8
+     333: astore        10
+     335: aload_0
+     336: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+     339: invokevirtual #29                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     342: aload         10
+     344: areturn
+     345: astore        9
+     347: getstatic     #27                 // Field log:Lorg/slf4j/Logger;
+     350: aload         9
+     352: invokestatic  #28                 // Method org/bol/server/LogWrapper.logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+     355: aload         8
+     357: ifnull        378
+     360: aload         8
+     362: invokevirtual #25                 // Method org/bol/server/ReservedFile.release:()V
+     365: goto          378
+     368: astore        10
+     370: getstatic     #27                 // Field log:Lorg/slf4j/Logger;
+     373: aload         10
+     375: invokestatic  #28                 // Method org/bol/server/LogWrapper.logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+     378: goto          29
+     381: aload_0
+     382: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+     385: invokevirtual #29                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     388: goto          403
+     391: astore        11
+     393: aload_0
+     394: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+     397: invokevirtual #29                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     400: aload         11
+     402: athrow
+     403: aconst_null
+     404: areturn
+    Exception table:
+       from    to  target type
+         129   134   137   Class java/io/IOException
+          93   150   167   Class java/lang/Exception
+         153   157   167   Class java/lang/Exception
+         182   187   190   Class java/io/IOException
+         250   255   258   Class java/io/IOException
+         307   312   315   Class java/io/IOException
+         271   328   345   Class java/lang/Exception
+         331   335   345   Class java/lang/Exception
+         360   365   368   Class java/io/IOException
+           0   157   391   any
+         167   335   391   any
+         345   381   391   any
+         391   393   391   any
+
+  public boolean remReservedFile(org.bol.server.ReservedFile) throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+       4: invokevirtual #14                 // Method java/util/concurrent/locks/ReentrantLock.lock:()V
+       7: aload_0
+       8: getfield      #4                  // Field reservedQueue:Ljava/util/concurrent/ConcurrentHashMap;
+      11: aload_1
+      12: invokevirtual #38                 // Method org/bol/server/ReservedFile.getName:()Ljava/lang/String;
+      15: invokevirtual #39                 // Method java/util/concurrent/ConcurrentHashMap.containsKey:(Ljava/lang/Object;)Z
+      18: ifeq          51
+      21: aload_0
+      22: getfield      #4                  // Field reservedQueue:Ljava/util/concurrent/ConcurrentHashMap;
+      25: aload_1
+      26: invokevirtual #38                 // Method org/bol/server/ReservedFile.getName:()Ljava/lang/String;
+      29: aload_1
+      30: invokevirtual #37                 // Method java/util/concurrent/ConcurrentHashMap.remove:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      33: ifeq          51
+      36: aload_1
+      37: invokevirtual #25                 // Method org/bol/server/ReservedFile.release:()V
+      40: iconst_1
+      41: istore_2
+      42: aload_0
+      43: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+      46: invokevirtual #29                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+      49: iload_2
+      50: ireturn
+      51: iconst_0
+      52: istore_2
+      53: aload_0
+      54: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+      57: invokevirtual #29                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+      60: iload_2
+      61: ireturn
+      62: astore_3
+      63: aload_0
+      64: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+      67: invokevirtual #29                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+      70: aload_3
+      71: athrow
+    Exception table:
+       from    to  target type
+           0    42    62   any
+          51    53    62   any
+
+  public boolean remReservedFileAndMove(org.bol.server.ReservedFile, java.lang.String) throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+       4: invokevirtual #14                 // Method java/util/concurrent/locks/ReentrantLock.lock:()V
+       7: aload_0
+       8: getfield      #4                  // Field reservedQueue:Ljava/util/concurrent/ConcurrentHashMap;
+      11: aload_1
+      12: invokevirtual #38                 // Method org/bol/server/ReservedFile.getName:()Ljava/lang/String;
+      15: invokevirtual #39                 // Method java/util/concurrent/ConcurrentHashMap.containsKey:(Ljava/lang/Object;)Z
+      18: ifeq          108
+      21: aload_1
+      22: invokevirtual #25                 // Method org/bol/server/ReservedFile.release:()V
+      25: aload_1
+      26: new           #19                 // class java/io/File
+      29: dup
+      30: aload_2
+      31: aload_1
+      32: invokevirtual #38                 // Method org/bol/server/ReservedFile.getName:()Ljava/lang/String;
+      35: invokespecial #40                 // Method java/io/File."<init>":(Ljava/lang/String;Ljava/lang/String;)V
+      38: invokevirtual #41                 // Method org/bol/server/ReservedFile.renameTo:(Ljava/io/File;)Z
+      41: istore_3
+      42: iload_3
+      43: ifne          64
+      46: new           #42                 // class java/lang/IllegalStateException
+      49: dup
+      50: aload_1
+      51: invokevirtual #38                 // Method org/bol/server/ReservedFile.getName:()Ljava/lang/String;
+      54: aload_2
+      55: invokedynamic #43,  0             // InvokeDynamic #1:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      60: invokespecial #44                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      63: athrow
+      64: getstatic     #27                 // Field log:Lorg/slf4j/Logger;
+      67: getstatic     #34                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      70: aload_1
+      71: invokevirtual #38                 // Method org/bol/server/ReservedFile.getName:()Ljava/lang/String;
+      74: aload_2
+      75: invokedynamic #45,  0             // InvokeDynamic #2:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      80: invokestatic  #36                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      83: iconst_1
+      84: istore        4
+      86: aload_0
+      87: getfield      #4                  // Field reservedQueue:Ljava/util/concurrent/ConcurrentHashMap;
+      90: aload_1
+      91: invokevirtual #38                 // Method org/bol/server/ReservedFile.getName:()Ljava/lang/String;
+      94: invokevirtual #46                 // Method java/util/concurrent/ConcurrentHashMap.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+      97: pop
+      98: aload_0
+      99: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+     102: invokevirtual #29                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     105: iload         4
+     107: ireturn
+     108: aload_0
+     109: getfield      #4                  // Field reservedQueue:Ljava/util/concurrent/ConcurrentHashMap;
+     112: aload_1
+     113: invokevirtual #38                 // Method org/bol/server/ReservedFile.getName:()Ljava/lang/String;
+     116: invokevirtual #46                 // Method java/util/concurrent/ConcurrentHashMap.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+     119: pop
+     120: aload_0
+     121: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+     124: invokevirtual #29                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     127: goto          154
+     130: astore        5
+     132: aload_0
+     133: getfield      #4                  // Field reservedQueue:Ljava/util/concurrent/ConcurrentHashMap;
+     136: aload_1
+     137: invokevirtual #38                 // Method org/bol/server/ReservedFile.getName:()Ljava/lang/String;
+     140: invokevirtual #46                 // Method java/util/concurrent/ConcurrentHashMap.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+     143: pop
+     144: aload_0
+     145: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+     148: invokevirtual #29                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     151: aload         5
+     153: athrow
+     154: iconst_0
+     155: ireturn
+    Exception table:
+       from    to  target type
+           0    86   130   any
+         130   132   130   any
+
+  public java.util.Collection<org.bol.server.ReservedFile> getReservedFiles(java.lang.String);
+    Code:
+       0: new           #47                 // class java/util/ArrayList
+       3: dup
+       4: invokespecial #48                 // Method java/util/ArrayList."<init>":()V
+       7: astore_2
+       8: aload_0
+       9: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+      12: invokevirtual #14                 // Method java/util/concurrent/locks/ReentrantLock.lock:()V
+      15: getstatic     #27                 // Field log:Lorg/slf4j/Logger;
+      18: getstatic     #34                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      21: aload_0
+      22: getfield      #4                  // Field reservedQueue:Ljava/util/concurrent/ConcurrentHashMap;
+      25: invokevirtual #49                 // Method java/util/concurrent/ConcurrentHashMap.size:()I
+      28: invokedynamic #50,  0             // InvokeDynamic #3:makeConcatWithConstants:(I)Ljava/lang/String;
+      33: invokestatic  #36                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      36: aload_0
+      37: getfield      #4                  // Field reservedQueue:Ljava/util/concurrent/ConcurrentHashMap;
+      40: invokevirtual #51                 // Method java/util/concurrent/ConcurrentHashMap.entrySet:()Ljava/util/Set;
+      43: invokeinterface #52,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      48: astore_3
+      49: aload_3
+      50: invokeinterface #17,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      55: ifeq          180
+      58: aload_3
+      59: invokeinterface #18,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      64: checkcast     #53                 // class java/util/Map$Entry
+      67: astore        4
+      69: getstatic     #27                 // Field log:Lorg/slf4j/Logger;
+      72: getstatic     #34                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      75: aload         4
+      77: invokeinterface #54,  1           // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+      82: checkcast     #55                 // class java/lang/String
+      85: invokedynamic #56,  0             // InvokeDynamic #4:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      90: invokestatic  #36                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      93: getstatic     #27                 // Field log:Lorg/slf4j/Logger;
+      96: getstatic     #34                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      99: aload_1
+     100: invokedynamic #57,  0             // InvokeDynamic #5:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     105: invokestatic  #36                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     108: getstatic     #27                 // Field log:Lorg/slf4j/Logger;
+     111: getstatic     #34                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     114: aload         4
+     116: invokeinterface #58,  1           // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+     121: checkcast     #10                 // class org/bol/server/ReservedFile
+     124: invokevirtual #59                 // Method org/bol/server/ReservedFile.getToken:()Ljava/lang/String;
+     127: invokedynamic #60,  0             // InvokeDynamic #6:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     132: invokestatic  #36                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     135: aconst_null
+     136: aload_1
+     137: if_acmpeq     160
+     140: aload         4
+     142: invokeinterface #58,  1           // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+     147: checkcast     #10                 // class org/bol/server/ReservedFile
+     150: invokevirtual #59                 // Method org/bol/server/ReservedFile.getToken:()Ljava/lang/String;
+     153: aload_1
+     154: invokevirtual #21                 // Method java/lang/String.contains:(Ljava/lang/CharSequence;)Z
+     157: ifeq          177
+     160: aload_2
+     161: aload         4
+     163: invokeinterface #58,  1           // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+     168: checkcast     #10                 // class org/bol/server/ReservedFile
+     171: invokeinterface #61,  2           // InterfaceMethod java/util/Collection.add:(Ljava/lang/Object;)Z
+     176: pop
+     177: goto          49
+     180: aload_0
+     181: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+     184: invokevirtual #29                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     187: goto          202
+     190: astore        5
+     192: aload_0
+     193: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+     196: invokevirtual #29                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     199: aload         5
+     201: athrow
+     202: aload_2
+     203: areturn
+    Exception table:
+       from    to  target type
+           8   180   190   any
+         190   192   190   any
+
+  public java.util.Collection<org.bol.server.ReceivedFile> getReceivedFiles(java.lang.String);
+    Code:
+       0: new           #47                 // class java/util/ArrayList
+       3: dup
+       4: invokespecial #48                 // Method java/util/ArrayList."<init>":()V
+       7: astore_2
+       8: new           #47                 // class java/util/ArrayList
+      11: dup
+      12: invokespecial #48                 // Method java/util/ArrayList."<init>":()V
+      15: astore_3
+      16: aload_0
+      17: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+      20: invokevirtual #14                 // Method java/util/concurrent/locks/ReentrantLock.lock:()V
+      23: getstatic     #27                 // Field log:Lorg/slf4j/Logger;
+      26: getstatic     #62                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+      29: aload_0
+      30: getfield      #5                  // Field receiveQueue:Ljava/util/concurrent/ConcurrentHashMap;
+      33: invokevirtual #49                 // Method java/util/concurrent/ConcurrentHashMap.size:()I
+      36: invokedynamic #63,  0             // InvokeDynamic #7:makeConcatWithConstants:(I)Ljava/lang/String;
+      41: invokestatic  #36                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      44: aload_0
+      45: getfield      #5                  // Field receiveQueue:Ljava/util/concurrent/ConcurrentHashMap;
+      48: invokevirtual #51                 // Method java/util/concurrent/ConcurrentHashMap.entrySet:()Ljava/util/Set;
+      51: invokeinterface #52,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      56: astore        4
+      58: aload         4
+      60: invokeinterface #17,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      65: ifeq          208
+      68: aload         4
+      70: invokeinterface #18,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      75: checkcast     #53                 // class java/util/Map$Entry
+      78: astore        5
+      80: getstatic     #27                 // Field log:Lorg/slf4j/Logger;
+      83: getstatic     #62                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+      86: aload         5
+      88: invokeinterface #54,  1           // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+      93: checkcast     #55                 // class java/lang/String
+      96: invokedynamic #64,  0             // InvokeDynamic #8:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     101: invokestatic  #36                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     104: getstatic     #27                 // Field log:Lorg/slf4j/Logger;
+     107: getstatic     #62                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     110: aload_1
+     111: invokedynamic #57,  0             // InvokeDynamic #5:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     116: invokestatic  #36                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     119: getstatic     #27                 // Field log:Lorg/slf4j/Logger;
+     122: getstatic     #62                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     125: aload         5
+     127: invokeinterface #58,  1           // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+     132: checkcast     #65                 // class org/bol/server/ReceivedFile
+     135: invokevirtual #66                 // Method org/bol/server/ReceivedFile.getToken:()Ljava/lang/String;
+     138: invokedynamic #60,  0             // InvokeDynamic #6:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     143: invokestatic  #36                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     146: aconst_null
+     147: aload_1
+     148: if_acmpeq     171
+     151: aload         5
+     153: invokeinterface #58,  1           // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+     158: checkcast     #65                 // class org/bol/server/ReceivedFile
+     161: invokevirtual #66                 // Method org/bol/server/ReceivedFile.getToken:()Ljava/lang/String;
+     164: aload_1
+     165: invokevirtual #21                 // Method java/lang/String.contains:(Ljava/lang/CharSequence;)Z
+     168: ifeq          205
+     171: aload_2
+     172: aload         5
+     174: invokeinterface #58,  1           // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+     179: checkcast     #65                 // class org/bol/server/ReceivedFile
+     182: invokeinterface #61,  2           // InterfaceMethod java/util/Collection.add:(Ljava/lang/Object;)Z
+     187: pop
+     188: aload_3
+     189: aload         5
+     191: invokeinterface #54,  1           // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+     196: checkcast     #55                 // class java/lang/String
+     199: invokeinterface #67,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     204: pop
+     205: goto          58
+     208: aload_3
+     209: invokeinterface #16,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     214: astore        4
+     216: aload         4
+     218: invokeinterface #17,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     223: ifeq          251
+     226: aload         4
+     228: invokeinterface #18,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     233: checkcast     #55                 // class java/lang/String
+     236: astore        5
+     238: aload_0
+     239: getfield      #5                  // Field receiveQueue:Ljava/util/concurrent/ConcurrentHashMap;
+     242: aload         5
+     244: invokevirtual #46                 // Method java/util/concurrent/ConcurrentHashMap.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+     247: pop
+     248: goto          216
+     251: aload_0
+     252: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+     255: invokevirtual #29                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     258: goto          273
+     261: astore        6
+     263: aload_0
+     264: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+     267: invokevirtual #29                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     270: aload         6
+     272: athrow
+     273: aload_2
+     274: areturn
+    Exception table:
+       from    to  target type
+          16   251   261   any
+         261   263   261   any
+
+  public java.util.Collection<org.bol.server.SentFile> getSentFiles(java.lang.String);
+    Code:
+       0: new           #47                 // class java/util/ArrayList
+       3: dup
+       4: invokespecial #48                 // Method java/util/ArrayList."<init>":()V
+       7: astore_2
+       8: new           #47                 // class java/util/ArrayList
+      11: dup
+      12: invokespecial #48                 // Method java/util/ArrayList."<init>":()V
+      15: astore_3
+      16: aload_0
+      17: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+      20: invokevirtual #14                 // Method java/util/concurrent/locks/ReentrantLock.lock:()V
+      23: getstatic     #27                 // Field log:Lorg/slf4j/Logger;
+      26: getstatic     #62                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+      29: aload_0
+      30: getfield      #6                  // Field sendQueue:Ljava/util/concurrent/ConcurrentHashMap;
+      33: invokevirtual #49                 // Method java/util/concurrent/ConcurrentHashMap.size:()I
+      36: invokedynamic #68,  0             // InvokeDynamic #9:makeConcatWithConstants:(I)Ljava/lang/String;
+      41: invokestatic  #36                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      44: aload_0
+      45: getfield      #6                  // Field sendQueue:Ljava/util/concurrent/ConcurrentHashMap;
+      48: invokevirtual #51                 // Method java/util/concurrent/ConcurrentHashMap.entrySet:()Ljava/util/Set;
+      51: invokeinterface #52,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      56: astore        4
+      58: aload         4
+      60: invokeinterface #17,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      65: ifeq          208
+      68: aload         4
+      70: invokeinterface #18,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      75: checkcast     #53                 // class java/util/Map$Entry
+      78: astore        5
+      80: getstatic     #27                 // Field log:Lorg/slf4j/Logger;
+      83: getstatic     #62                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+      86: aload         5
+      88: invokeinterface #54,  1           // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+      93: checkcast     #55                 // class java/lang/String
+      96: invokedynamic #69,  0             // InvokeDynamic #10:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     101: invokestatic  #36                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     104: getstatic     #27                 // Field log:Lorg/slf4j/Logger;
+     107: getstatic     #62                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     110: aload_1
+     111: invokedynamic #57,  0             // InvokeDynamic #5:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     116: invokestatic  #36                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     119: getstatic     #27                 // Field log:Lorg/slf4j/Logger;
+     122: getstatic     #62                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     125: aload         5
+     127: invokeinterface #58,  1           // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+     132: checkcast     #70                 // class org/bol/server/SentFile
+     135: invokevirtual #71                 // Method org/bol/server/SentFile.getToken:()Ljava/lang/String;
+     138: invokedynamic #60,  0             // InvokeDynamic #6:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     143: invokestatic  #36                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     146: aconst_null
+     147: aload_1
+     148: if_acmpeq     171
+     151: aload         5
+     153: invokeinterface #58,  1           // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+     158: checkcast     #70                 // class org/bol/server/SentFile
+     161: invokevirtual #71                 // Method org/bol/server/SentFile.getToken:()Ljava/lang/String;
+     164: aload_1
+     165: invokevirtual #21                 // Method java/lang/String.contains:(Ljava/lang/CharSequence;)Z
+     168: ifeq          205
+     171: aload_2
+     172: aload         5
+     174: invokeinterface #58,  1           // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+     179: checkcast     #70                 // class org/bol/server/SentFile
+     182: invokeinterface #61,  2           // InterfaceMethod java/util/Collection.add:(Ljava/lang/Object;)Z
+     187: pop
+     188: aload_3
+     189: aload         5
+     191: invokeinterface #54,  1           // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+     196: checkcast     #55                 // class java/lang/String
+     199: invokeinterface #67,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     204: pop
+     205: goto          58
+     208: aload_3
+     209: invokeinterface #16,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     214: astore        4
+     216: aload         4
+     218: invokeinterface #17,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     223: ifeq          251
+     226: aload         4
+     228: invokeinterface #18,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     233: checkcast     #55                 // class java/lang/String
+     236: astore        5
+     238: aload_0
+     239: getfield      #6                  // Field sendQueue:Ljava/util/concurrent/ConcurrentHashMap;
+     242: aload         5
+     244: invokevirtual #46                 // Method java/util/concurrent/ConcurrentHashMap.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+     247: pop
+     248: goto          216
+     251: aload_0
+     252: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+     255: invokevirtual #29                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     258: goto          273
+     261: astore        6
+     263: aload_0
+     264: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+     267: invokevirtual #29                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     270: aload         6
+     272: athrow
+     273: aload_2
+     274: areturn
+    Exception table:
+       from    to  target type
+          16   251   261   any
+         261   263   261   any
+
+  public void registerReceivedFile(org.bol.server.ReceivedFile);
+    Code:
+       0: new           #72                 // class java/util/HashMap
+       3: dup
+       4: invokespecial #73                 // Method java/util/HashMap."<init>":()V
+       7: astore_2
+       8: aload_2
+       9: ldc           #74                 // String message
+      11: ldc           #75                 // String Registering received file
+      13: invokevirtual #76                 // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      16: pop
+      17: aload_2
+      18: ldc           #77                 // String file
+      20: aload_1
+      21: invokevirtual #76                 // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      24: pop
+      25: getstatic     #27                 // Field log:Lorg/slf4j/Logger;
+      28: getstatic     #34                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      31: aload_2
+      32: invokestatic  #78                 // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+      35: invokestatic  #36                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      38: aconst_null
+      39: aload_1
+      40: ldc           #79                 // String filename
+      42: invokevirtual #80                 // Method org/bol/server/ReceivedFile.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      45: if_acmpeq     129
+      48: aload_0
+      49: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+      52: invokevirtual #14                 // Method java/util/concurrent/locks/ReentrantLock.lock:()V
+      55: aload_0
+      56: getfield      #5                  // Field receiveQueue:Ljava/util/concurrent/ConcurrentHashMap;
+      59: aload_1
+      60: ldc           #79                 // String filename
+      62: invokevirtual #80                 // Method org/bol/server/ReceivedFile.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      65: checkcast     #55                 // class java/lang/String
+      68: aload_1
+      69: invokevirtual #24                 // Method java/util/concurrent/ConcurrentHashMap.putIfAbsent:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      72: checkcast     #65                 // class org/bol/server/ReceivedFile
+      75: astore_3
+      76: aconst_null
+      77: aload_3
+      78: if_acmpeq     107
+      81: new           #42                 // class java/lang/IllegalStateException
+      84: dup
+      85: aload_1
+      86: ldc           #79                 // String filename
+      88: invokevirtual #80                 // Method org/bol/server/ReceivedFile.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      91: checkcast     #55                 // class java/lang/String
+      94: aload_3
+      95: invokestatic  #78                 // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+      98: invokedynamic #81,  0             // InvokeDynamic #11:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     103: invokespecial #44                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     106: athrow
+     107: aload_0
+     108: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+     111: invokevirtual #29                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     114: goto          129
+     117: astore        4
+     119: aload_0
+     120: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+     123: invokevirtual #29                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     126: aload         4
+     128: athrow
+     129: return
+    Exception table:
+       from    to  target type
+          48   107   117   any
+         117   119   117   any
+
+  public void registerSentFile(org.bol.server.SentFile);
+    Code:
+       0: new           #72                 // class java/util/HashMap
+       3: dup
+       4: invokespecial #73                 // Method java/util/HashMap."<init>":()V
+       7: astore_2
+       8: aload_2
+       9: ldc           #74                 // String message
+      11: ldc           #82                 // String Registering sent file
+      13: invokevirtual #76                 // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      16: pop
+      17: aload_2
+      18: ldc           #77                 // String file
+      20: aload_1
+      21: invokevirtual #76                 // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      24: pop
+      25: getstatic     #27                 // Field log:Lorg/slf4j/Logger;
+      28: getstatic     #34                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      31: aload_2
+      32: invokestatic  #78                 // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+      35: invokestatic  #36                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      38: aload_0
+      39: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+      42: invokevirtual #14                 // Method java/util/concurrent/locks/ReentrantLock.lock:()V
+      45: aconst_null
+      46: aload_1
+      47: ldc           #83                 // String correlationId
+      49: invokevirtual #84                 // Method org/bol/server/SentFile.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      52: if_acmpeq     115
+      55: aload_0
+      56: getfield      #6                  // Field sendQueue:Ljava/util/concurrent/ConcurrentHashMap;
+      59: aload_1
+      60: ldc           #83                 // String correlationId
+      62: invokevirtual #84                 // Method org/bol/server/SentFile.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      65: checkcast     #55                 // class java/lang/String
+      68: aload_1
+      69: invokevirtual #24                 // Method java/util/concurrent/ConcurrentHashMap.putIfAbsent:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      72: checkcast     #70                 // class org/bol/server/SentFile
+      75: astore_3
+      76: aconst_null
+      77: aload_3
+      78: if_acmpeq     107
+      81: new           #42                 // class java/lang/IllegalStateException
+      84: dup
+      85: aload_1
+      86: ldc           #83                 // String correlationId
+      88: invokevirtual #84                 // Method org/bol/server/SentFile.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      91: checkcast     #55                 // class java/lang/String
+      94: aload_3
+      95: invokestatic  #78                 // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+      98: invokedynamic #85,  0             // InvokeDynamic #12:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     103: invokespecial #44                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     106: athrow
+     107: aload_0
+     108: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+     111: invokevirtual #29                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     114: return
+     115: aconst_null
+     116: aload_1
+     117: ldc           #79                 // String filename
+     119: invokevirtual #84                 // Method org/bol/server/SentFile.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     122: if_acmpeq     168
+     125: aconst_null
+     126: aload_0
+     127: getfield      #6                  // Field sendQueue:Ljava/util/concurrent/ConcurrentHashMap;
+     130: aload_1
+     131: ldc           #79                 // String filename
+     133: invokevirtual #84                 // Method org/bol/server/SentFile.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     136: checkcast     #55                 // class java/lang/String
+     139: aload_1
+     140: invokevirtual #24                 // Method java/util/concurrent/ConcurrentHashMap.putIfAbsent:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     143: if_acmpeq     168
+     146: new           #42                 // class java/lang/IllegalStateException
+     149: dup
+     150: aload_1
+     151: ldc           #79                 // String filename
+     153: invokevirtual #84                 // Method org/bol/server/SentFile.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     156: checkcast     #55                 // class java/lang/String
+     159: invokedynamic #86,  0             // InvokeDynamic #13:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     164: invokespecial #44                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     167: athrow
+     168: aload_0
+     169: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+     172: invokevirtual #29                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     175: goto          190
+     178: astore        4
+     180: aload_0
+     181: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+     184: invokevirtual #29                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     187: aload         4
+     189: athrow
+     190: return
+    Exception table:
+       from    to  target type
+          38   107   178   any
+         115   168   178   any
+         178   180   178   any
+
+  public java.util.List<java.io.File> getWaitingFiles(java.lang.String) throws java.io.IOException;
+    Code:
+       0: new           #47                 // class java/util/ArrayList
+       3: dup
+       4: invokespecial #48                 // Method java/util/ArrayList."<init>":()V
+       7: astore_2
+       8: getstatic     #27                 // Field log:Lorg/slf4j/Logger;
+      11: getstatic     #34                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      14: aload_1
+      15: invokedynamic #87,  0             // InvokeDynamic #14:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      20: invokestatic  #36                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      23: aload_0
+      24: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+      27: invokevirtual #14                 // Method java/util/concurrent/locks/ReentrantLock.lock:()V
+      30: new           #19                 // class java/io/File
+      33: dup
+      34: aload_1
+      35: invokespecial #88                 // Method java/io/File."<init>":(Ljava/lang/String;)V
+      38: astore_3
+      39: aload_3
+      40: invokedynamic #89,  0             // InvokeDynamic #15:accept:()Ljava/io/FileFilter;
+      45: invokevirtual #90                 // Method java/io/File.listFiles:(Ljava/io/FileFilter;)[Ljava/io/File;
+      48: astore        4
+      50: aconst_null
+      51: aload         4
+      53: if_acmpeq     65
+      56: aload         4
+      58: invokestatic  #91                 // Method java/util/Arrays.asList:([Ljava/lang/Object;)Ljava/util/List;
+      61: astore_2
+      62: goto          79
+      65: new           #42                 // class java/lang/IllegalStateException
+      68: dup
+      69: aload_1
+      70: invokedynamic #92,  0             // InvokeDynamic #16:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      75: invokespecial #44                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      78: athrow
+      79: aload_2
+      80: invokeinterface #93,  1           // InterfaceMethod java/util/List.stream:()Ljava/util/stream/Stream;
+      85: invokedynamic #94,  0             // InvokeDynamic #17:apply:()Ljava/util/function/Function;
+      90: invokeinterface #95,  2           // InterfaceMethod java/util/stream/Stream.map:(Ljava/util/function/Function;)Ljava/util/stream/Stream;
+      95: invokestatic  #96                 // Method java/util/stream/Collectors.toList:()Ljava/util/stream/Collector;
+      98: invokeinterface #97,  2           // InterfaceMethod java/util/stream/Stream.collect:(Ljava/util/stream/Collector;)Ljava/lang/Object;
+     103: checkcast     #98                 // class java/util/List
+     106: astore        5
+     108: new           #47                 // class java/util/ArrayList
+     111: dup
+     112: invokespecial #48                 // Method java/util/ArrayList."<init>":()V
+     115: astore        6
+     117: aload_0
+     118: getfield      #4                  // Field reservedQueue:Ljava/util/concurrent/ConcurrentHashMap;
+     121: invokevirtual #99                 // Method java/util/concurrent/ConcurrentHashMap.keySet:()Ljava/util/concurrent/ConcurrentHashMap$KeySetView;
+     124: invokevirtual #100                // Method java/util/concurrent/ConcurrentHashMap$KeySetView.iterator:()Ljava/util/Iterator;
+     127: astore        7
+     129: aload         7
+     131: invokeinterface #17,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     136: ifeq          176
+     139: aload         7
+     141: invokeinterface #18,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     146: checkcast     #55                 // class java/lang/String
+     149: astore        8
+     151: aload         5
+     153: aload         8
+     155: invokeinterface #101,  2          // InterfaceMethod java/util/List.contains:(Ljava/lang/Object;)Z
+     160: ifne          173
+     163: aload         6
+     165: aload         8
+     167: invokeinterface #67,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     172: pop
+     173: goto          129
+     176: aload         6
+     178: invokeinterface #16,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     183: astore        7
+     185: aload         7
+     187: invokeinterface #17,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     192: ifeq          247
+     195: aload         7
+     197: invokeinterface #18,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     202: checkcast     #55                 // class java/lang/String
+     205: astore        8
+     207: aload_0
+     208: getfield      #4                  // Field reservedQueue:Ljava/util/concurrent/ConcurrentHashMap;
+     211: aload         8
+     213: invokevirtual #46                 // Method java/util/concurrent/ConcurrentHashMap.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+     216: checkcast     #10                 // class org/bol/server/ReservedFile
+     219: astore        9
+     221: aload         9
+     223: ifnull        244
+     226: aload         9
+     228: invokevirtual #25                 // Method org/bol/server/ReservedFile.release:()V
+     231: goto          244
+     234: astore        10
+     236: getstatic     #27                 // Field log:Lorg/slf4j/Logger;
+     239: aload         10
+     241: invokestatic  #28                 // Method org/bol/server/LogWrapper.logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+     244: goto          185
+     247: aload_0
+     248: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+     251: invokevirtual #29                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     254: goto          269
+     257: astore        11
+     259: aload_0
+     260: getfield      #9                  // Field dirListLock:Ljava/util/concurrent/locks/ReentrantLock;
+     263: invokevirtual #29                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     266: aload         11
+     268: athrow
+     269: aload_2
+     270: areturn
+    Exception table:
+       from    to  target type
+         226   231   234   Class java/io/IOException
+          23   247   257   any
+         257   259   257   any
+
+  private static boolean lambda$getWaitingFiles$0(java.io.File);
+    Code:
+       0: aload_0
+       1: invokevirtual #20                 // Method java/io/File.getName:()Ljava/lang/String;
+       4: invokevirtual #102                // Method java/lang/String.toLowerCase:()Ljava/lang/String;
+       7: ldc           #103                // String .xml
+       9: invokevirtual #104                // Method java/lang/String.endsWith:(Ljava/lang/String;)Z
+      12: ireturn
+
+  static {};
+    Code:
+       0: ldc           #105                // class org/bol/server/FileRepository
+       2: invokestatic  #106                // Method org/slf4j/LoggerFactory.getLogger:(Ljava/lang/Class;)Lorg/slf4j/Logger;
+       5: putstatic     #27                 // Field log:Lorg/slf4j/Logger;
+       8: return
+}

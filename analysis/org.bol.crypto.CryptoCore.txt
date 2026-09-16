@@ -1,0 +1,2208 @@
+Compiled from "CryptoCore.java"
+public abstract class org.bol.crypto.CryptoCore {
+  private static final java.lang.String SUN_PKCS11_KEYSTORE_TYPE = "PKCS11";
+
+  private static final java.lang.String SUN_PKCS11_PROVIDERNAME = "SunPKCS11";
+
+  private static final java.lang.String SUN_PKCS11_CLASSNAME = "sun.security.pkcs11.SunPKCS11";
+
+  private static org.slf4j.Logger log;
+
+  public static java.lang.String ETOKEN;
+
+  public static java.lang.String ETOKEN_PASS;
+
+  public static java.math.BigInteger DEMO_SN;
+
+  public static java.lang.String DEMO_SUBJ;
+
+  public static java.lang.String ETOKEN_ALIAS;
+
+  public static java.lang.String TSA_URL;
+
+  public static java.lang.String PKCS11_DLL;
+
+  public static long PKCS11_SLOT;
+
+  public static boolean PKCS11_USE_SLOT_INDEX;
+
+  public static org.bol.crypto.CryptoCore$PROVIDER_TYPES PROVIDER_TYPE;
+
+  public static java.lang.String SERVER_CONF;
+
+  private java.security.Provider prov;
+
+  private java.security.KeyStore provKeyStore;
+
+  private javax.net.ssl.SSLSocketFactory sslSocketFactory;
+
+  private java.security.PrivateKey signPk;
+
+  private java.security.cert.X509Certificate signCert;
+
+  private java.lang.String signCertAlias;
+
+  public static java.lang.String signCertPath;
+
+  public static java.lang.String enabledMechanisms;
+
+  public static long signSession;
+
+  public static boolean WITH_SIGNING;
+
+  public javax.net.ssl.SSLSocketFactory getSslFactory();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field sslSocketFactory:Ljavax/net/ssl/SSLSocketFactory;
+       4: areturn
+
+  public java.security.Provider getProvider();
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field prov:Ljava/security/Provider;
+       4: areturn
+
+  protected java.security.PrivateKey getSignPk();
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field signPk:Ljava/security/PrivateKey;
+       4: areturn
+
+  protected org.bol.crypto.CryptoCore() throws java.security.KeyStoreException, java.security.NoSuchAlgorithmException, java.security.cert.CertStoreException, java.security.cert.CertificateException, java.security.cert.CRLException, java.io.IOException;
+    Code:
+       0: aload_0
+       1: invokespecial #5                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aconst_null
+       6: putfield      #3                  // Field prov:Ljava/security/Provider;
+       9: aload_0
+      10: aconst_null
+      11: putfield      #6                  // Field provKeyStore:Ljava/security/KeyStore;
+      14: aload_0
+      15: aconst_null
+      16: putfield      #2                  // Field sslSocketFactory:Ljavax/net/ssl/SSLSocketFactory;
+      19: aload_0
+      20: aconst_null
+      21: putfield      #4                  // Field signPk:Ljava/security/PrivateKey;
+      24: aload_0
+      25: aconst_null
+      26: putfield      #7                  // Field signCert:Ljava/security/cert/X509Certificate;
+      29: aload_0
+      30: aconst_null
+      31: putfield      #8                  // Field signCertAlias:Ljava/lang/String;
+      34: return
+
+  public java.security.cert.X509Certificate getSignCertificate();
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field signCert:Ljava/security/cert/X509Certificate;
+       4: areturn
+
+  public java.security.PrivateKey getSigningPrivateKey();
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field signPk:Ljava/security/PrivateKey;
+       4: areturn
+
+  public void setSigningProps(java.security.cert.X509Certificate, java.security.KeyPair);
+    Code:
+       0: aload_0
+       1: aload_2
+       2: invokevirtual #9                  // Method java/security/KeyPair.getPrivate:()Ljava/security/PrivateKey;
+       5: putfield      #4                  // Field signPk:Ljava/security/PrivateKey;
+       8: aload_0
+       9: aload_1
+      10: putfield      #7                  // Field signCert:Ljava/security/cert/X509Certificate;
+      13: return
+
+  public static long findPrivateKeyById(sun.security.pkcs11.wrapper.PKCS11, long, byte[]) throws sun.security.pkcs11.wrapper.PKCS11Exception;
+    Code:
+       0: iconst_2
+       1: anewarray     #10                 // class sun/security/pkcs11/wrapper/CK_ATTRIBUTE
+       4: dup
+       5: iconst_0
+       6: new           #10                 // class sun/security/pkcs11/wrapper/CK_ATTRIBUTE
+       9: dup
+      10: lconst_0
+      11: ldc2_w        #11                 // long 3l
+      14: invokespecial #13                 // Method sun/security/pkcs11/wrapper/CK_ATTRIBUTE."<init>":(JJ)V
+      17: aastore
+      18: dup
+      19: iconst_1
+      20: new           #10                 // class sun/security/pkcs11/wrapper/CK_ATTRIBUTE
+      23: dup
+      24: ldc2_w        #14                 // long 258l
+      27: aload_3
+      28: invokespecial #16                 // Method sun/security/pkcs11/wrapper/CK_ATTRIBUTE."<init>":(JLjava/lang/Object;)V
+      31: aastore
+      32: astore        4
+      34: aload_0
+      35: lload_1
+      36: aload         4
+      38: invokevirtual #17                 // Method sun/security/pkcs11/wrapper/PKCS11.C_FindObjectsInit:(J[Lsun/security/pkcs11/wrapper/CK_ATTRIBUTE;)V
+      41: aload_0
+      42: lload_1
+      43: lconst_1
+      44: invokevirtual #18                 // Method sun/security/pkcs11/wrapper/PKCS11.C_FindObjects:(JJ)[J
+      47: astore        5
+      49: aload_0
+      50: lload_1
+      51: invokevirtual #19                 // Method sun/security/pkcs11/wrapper/PKCS11.C_FindObjectsFinal:(J)V
+      54: aload         5
+      56: arraylength
+      57: ifne          77
+      60: new           #20                 // class java/lang/RuntimeException
+      63: dup
+      64: aload_3
+      65: invokestatic  #21                 // Method org/bol/crypto/PrivateKeyInfo.bytesToHex:([B)Ljava/lang/String;
+      68: invokedynamic #22,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      73: invokespecial #23                 // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;)V
+      76: athrow
+      77: aload         5
+      79: iconst_0
+      80: laload
+      81: lreturn
+
+  public static long findPrivateKeyByLabel(sun.security.pkcs11.wrapper.PKCS11, long, java.lang.String) throws sun.security.pkcs11.wrapper.PKCS11Exception;
+    Code:
+       0: iconst_2
+       1: anewarray     #10                 // class sun/security/pkcs11/wrapper/CK_ATTRIBUTE
+       4: dup
+       5: iconst_0
+       6: new           #10                 // class sun/security/pkcs11/wrapper/CK_ATTRIBUTE
+       9: dup
+      10: lconst_0
+      11: ldc2_w        #11                 // long 3l
+      14: invokespecial #13                 // Method sun/security/pkcs11/wrapper/CK_ATTRIBUTE."<init>":(JJ)V
+      17: aastore
+      18: dup
+      19: iconst_1
+      20: new           #10                 // class sun/security/pkcs11/wrapper/CK_ATTRIBUTE
+      23: dup
+      24: ldc2_w        #11                 // long 3l
+      27: aload_3
+      28: invokespecial #16                 // Method sun/security/pkcs11/wrapper/CK_ATTRIBUTE."<init>":(JLjava/lang/Object;)V
+      31: aastore
+      32: astore        4
+      34: aload_0
+      35: lload_1
+      36: aload         4
+      38: invokevirtual #17                 // Method sun/security/pkcs11/wrapper/PKCS11.C_FindObjectsInit:(J[Lsun/security/pkcs11/wrapper/CK_ATTRIBUTE;)V
+      41: aload_0
+      42: lload_1
+      43: lconst_1
+      44: invokevirtual #18                 // Method sun/security/pkcs11/wrapper/PKCS11.C_FindObjects:(JJ)[J
+      47: astore        5
+      49: aload_0
+      50: lload_1
+      51: invokevirtual #19                 // Method sun/security/pkcs11/wrapper/PKCS11.C_FindObjectsFinal:(J)V
+      54: aload         5
+      56: arraylength
+      57: ifne          74
+      60: new           #20                 // class java/lang/RuntimeException
+      63: dup
+      64: aload_3
+      65: invokedynamic #24,  0             // InvokeDynamic #1:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      70: invokespecial #23                 // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;)V
+      73: athrow
+      74: aload         5
+      76: iconst_0
+      77: laload
+      78: lreturn
+
+  public static java.security.PrivateKey createPrivateKey(java.security.Provider, sun.security.pkcs11.wrapper.PKCS11, long, long) throws sun.security.pkcs11.wrapper.PKCS11Exception, java.lang.IllegalArgumentException, java.lang.reflect.InvocationTargetException;
+    Code:
+       0: iconst_2
+       1: anewarray     #10                 // class sun/security/pkcs11/wrapper/CK_ATTRIBUTE
+       4: dup
+       5: iconst_0
+       6: new           #10                 // class sun/security/pkcs11/wrapper/CK_ATTRIBUTE
+       9: dup
+      10: ldc2_w        #25                 // long 256l
+      13: invokespecial #27                 // Method sun/security/pkcs11/wrapper/CK_ATTRIBUTE."<init>":(J)V
+      16: aastore
+      17: dup
+      18: iconst_1
+      19: new           #10                 // class sun/security/pkcs11/wrapper/CK_ATTRIBUTE
+      22: dup
+      23: ldc2_w        #14                 // long 258l
+      26: invokespecial #27                 // Method sun/security/pkcs11/wrapper/CK_ATTRIBUTE."<init>":(J)V
+      29: aastore
+      30: astore        6
+      32: aload_1
+      33: lload_2
+      34: lload         4
+      36: aload         6
+      38: invokevirtual #28                 // Method sun/security/pkcs11/wrapper/PKCS11.C_GetAttributeValue:(JJ[Lsun/security/pkcs11/wrapper/CK_ATTRIBUTE;)V
+      41: aconst_null
+      42: astore        7
+      44: aconst_null
+      45: astore        8
+      47: aload_0
+      48: invokevirtual #29                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      51: ldc           #30                 // String getToken
+      53: iconst_0
+      54: anewarray     #31                 // class java/lang/Class
+      57: invokevirtual #32                 // Method java/lang/Class.getDeclaredMethod:(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;
+      60: astore        9
+      62: aload         9
+      64: iconst_1
+      65: invokevirtual #33                 // Method java/lang/reflect/Method.setAccessible:(Z)V
+      68: aload         9
+      70: aload_0
+      71: iconst_0
+      72: anewarray     #34                 // class java/lang/Object
+      75: invokevirtual #35                 // Method java/lang/reflect/Method.invoke:(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;
+      78: astore        7
+      80: aload         7
+      82: invokevirtual #29                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      85: ldc           #36                 // String getOpSession
+      87: iconst_0
+      88: anewarray     #31                 // class java/lang/Class
+      91: invokevirtual #32                 // Method java/lang/Class.getDeclaredMethod:(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;
+      94: astore        10
+      96: aload         10
+      98: iconst_1
+      99: invokevirtual #33                 // Method java/lang/reflect/Method.setAccessible:(Z)V
+     102: aload         10
+     104: aload         7
+     106: iconst_0
+     107: anewarray     #34                 // class java/lang/Object
+     110: invokevirtual #35                 // Method java/lang/reflect/Method.invoke:(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;
+     113: astore        8
+     115: goto          132
+     118: astore        9
+     120: new           #20                 // class java/lang/RuntimeException
+     123: dup
+     124: ldc           #39                 // String Failed to create PKCS#11 PrivateKey
+     126: aload         9
+     128: invokespecial #40                 // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     131: athrow
+     132: ldc           #41                 // String sun.security.pkcs11.Session
+     134: invokestatic  #42                 // Method java/lang/Class.forName:(Ljava/lang/String;)Ljava/lang/Class;
+     137: astore        9
+     139: ldc           #43                 // String sun.security.pkcs11.P11Key
+     141: invokestatic  #42                 // Method java/lang/Class.forName:(Ljava/lang/String;)Ljava/lang/Class;
+     144: astore        10
+     146: aload         10
+     148: ldc           #44                 // String privateKey
+     150: iconst_5
+     151: anewarray     #31                 // class java/lang/Class
+     154: dup
+     155: iconst_0
+     156: aload         9
+     158: aastore
+     159: dup
+     160: iconst_1
+     161: getstatic     #45                 // Field java/lang/Long.TYPE:Ljava/lang/Class;
+     164: aastore
+     165: dup
+     166: iconst_2
+     167: ldc           #46                 // class java/lang/String
+     169: aastore
+     170: dup
+     171: iconst_3
+     172: getstatic     #47                 // Field java/lang/Integer.TYPE:Ljava/lang/Class;
+     175: aastore
+     176: dup
+     177: iconst_4
+     178: ldc           #48                 // class "[Lsun/security/pkcs11/wrapper/CK_ATTRIBUTE;"
+     180: aastore
+     181: invokevirtual #32                 // Method java/lang/Class.getDeclaredMethod:(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;
+     184: astore        11
+     186: aload         11
+     188: iconst_1
+     189: invokevirtual #33                 // Method java/lang/reflect/Method.setAccessible:(Z)V
+     192: iconst_0
+     193: anewarray     #10                 // class sun/security/pkcs11/wrapper/CK_ATTRIBUTE
+     196: astore        12
+     198: aconst_null
+     199: astore        13
+     201: sipush        2048
+     204: istore        14
+     206: aload         11
+     208: aconst_null
+     209: iconst_5
+     210: anewarray     #34                 // class java/lang/Object
+     213: dup
+     214: iconst_0
+     215: aload         8
+     217: aastore
+     218: dup
+     219: iconst_1
+     220: lload         4
+     222: invokestatic  #49                 // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+     225: aastore
+     226: dup
+     227: iconst_2
+     228: ldc           #50                 // String RSA
+     230: aastore
+     231: dup
+     232: iconst_3
+     233: iload         14
+     235: invokestatic  #51                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+     238: aastore
+     239: dup
+     240: iconst_4
+     241: aload         12
+     243: aastore
+     244: invokevirtual #35                 // Method java/lang/reflect/Method.invoke:(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;
+     247: checkcast     #52                 // class java/security/PrivateKey
+     250: astore        13
+     252: goto          319
+     255: astore        15
+     257: getstatic     #54                 // Field java/lang/System.err:Ljava/io/PrintStream;
+     260: ldc           #55                 // String Type mismatch - printing method params again:
+     262: invokevirtual #56                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+     265: aload         11
+     267: invokevirtual #57                 // Method java/lang/reflect/Method.getParameterTypes:()[Ljava/lang/Class;
+     270: astore        16
+     272: aload         16
+     274: arraylength
+     275: istore        17
+     277: iconst_0
+     278: istore        18
+     280: iload         18
+     282: iload         17
+     284: if_icmpge     316
+     287: aload         16
+     289: iload         18
+     291: aaload
+     292: astore        19
+     294: getstatic     #54                 // Field java/lang/System.err:Ljava/io/PrintStream;
+     297: aload         19
+     299: invokevirtual #58                 // Method java/lang/Class.getName:()Ljava/lang/String;
+     302: invokedynamic #59,  0             // InvokeDynamic #2:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     307: invokevirtual #56                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+     310: iinc          18, 1
+     313: goto          280
+     316: aload         15
+     318: athrow
+     319: aload         13
+     321: areturn
+     322: astore        9
+     324: new           #20                 // class java/lang/RuntimeException
+     327: dup
+     328: ldc           #61                 // String Failed to create PKCS#11 PrivateKey via reflection
+     330: aload         9
+     332: invokespecial #40                 // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     335: athrow
+    Exception table:
+       from    to  target type
+          47   115   118   Class java/lang/NoSuchMethodException
+          47   115   118   Class java/lang/IllegalAccessException
+         206   252   255   Class java/lang/IllegalArgumentException
+         132   321   322   Class java/lang/ReflectiveOperationException
+
+  static org.bol.crypto.PrivateKeyInfo readPrivateKeyInfo(sun.security.pkcs11.wrapper.PKCS11, long, long);
+    Code:
+       0: iconst_3
+       1: anewarray     #10                 // class sun/security/pkcs11/wrapper/CK_ATTRIBUTE
+       4: dup
+       5: iconst_0
+       6: new           #10                 // class sun/security/pkcs11/wrapper/CK_ATTRIBUTE
+       9: dup
+      10: ldc2_w        #11                 // long 3l
+      13: invokespecial #27                 // Method sun/security/pkcs11/wrapper/CK_ATTRIBUTE."<init>":(J)V
+      16: aastore
+      17: dup
+      18: iconst_1
+      19: new           #10                 // class sun/security/pkcs11/wrapper/CK_ATTRIBUTE
+      22: dup
+      23: ldc2_w        #14                 // long 258l
+      26: invokespecial #27                 // Method sun/security/pkcs11/wrapper/CK_ATTRIBUTE."<init>":(J)V
+      29: aastore
+      30: dup
+      31: iconst_2
+      32: new           #10                 // class sun/security/pkcs11/wrapper/CK_ATTRIBUTE
+      35: dup
+      36: ldc2_w        #25                 // long 256l
+      39: invokespecial #27                 // Method sun/security/pkcs11/wrapper/CK_ATTRIBUTE."<init>":(J)V
+      42: aastore
+      43: astore        5
+      45: aload_0
+      46: lload_1
+      47: lload_3
+      48: aload         5
+      50: invokevirtual #28                 // Method sun/security/pkcs11/wrapper/PKCS11.C_GetAttributeValue:(JJ[Lsun/security/pkcs11/wrapper/CK_ATTRIBUTE;)V
+      53: goto          58
+      56: astore        6
+      58: aload         5
+      60: iconst_0
+      61: aaload
+      62: getfield      #63                 // Field sun/security/pkcs11/wrapper/CK_ATTRIBUTE.pValue:Ljava/lang/Object;
+      65: ifnull        91
+      68: new           #46                 // class java/lang/String
+      71: dup
+      72: aload         5
+      74: iconst_0
+      75: aaload
+      76: getfield      #63                 // Field sun/security/pkcs11/wrapper/CK_ATTRIBUTE.pValue:Ljava/lang/Object;
+      79: checkcast     #64                 // class "[C"
+      82: invokespecial #65                 // Method java/lang/String."<init>":([C)V
+      85: invokevirtual #66                 // Method java/lang/String.trim:()Ljava/lang/String;
+      88: goto          92
+      91: aconst_null
+      92: astore        6
+      94: aload         5
+      96: iconst_1
+      97: aaload
+      98: getfield      #63                 // Field sun/security/pkcs11/wrapper/CK_ATTRIBUTE.pValue:Ljava/lang/Object;
+     101: checkcast     #67                 // class "[B"
+     104: astore        7
+     106: aload         5
+     108: iconst_2
+     109: aaload
+     110: invokevirtual #68                 // Method sun/security/pkcs11/wrapper/CK_ATTRIBUTE.getLong:()J
+     113: lstore        8
+     115: new           #69                 // class org/bol/crypto/PrivateKeyInfo
+     118: dup
+     119: lload_3
+     120: aload         6
+     122: aload         7
+     124: lload         8
+     126: invokespecial #70                 // Method org/bol/crypto/PrivateKeyInfo."<init>":(JLjava/lang/String;[BJ)V
+     129: areturn
+    Exception table:
+       from    to  target type
+          45    53    56   Class sun/security/pkcs11/wrapper/PKCS11Exception
+
+  public static long openSession(sun.security.pkcs11.wrapper.PKCS11, long, char[]);
+    Code:
+       0: ldc2_w        #71                 // long -1l
+       3: lstore        4
+       5: aload_0
+       6: lload_1
+       7: ldc2_w        #73                 // long 6l
+      10: aconst_null
+      11: aconst_null
+      12: invokevirtual #75                 // Method sun/security/pkcs11/wrapper/PKCS11.C_OpenSession:(JJLjava/lang/Object;Lsun/security/pkcs11/wrapper/CK_NOTIFY;)J
+      15: lstore        4
+      17: aload_0
+      18: lload         4
+      20: lconst_1
+      21: aload_3
+      22: invokevirtual #76                 // Method sun/security/pkcs11/wrapper/PKCS11.C_Login:(JJ[C)V
+      25: goto          45
+      28: astore        6
+      30: aload         6
+      32: invokevirtual #77                 // Method sun/security/pkcs11/wrapper/PKCS11Exception.getErrorCode:()J
+      35: ldc2_w        #25                 // long 256l
+      38: lcmp
+      39: ifeq          45
+      42: aload         6
+      44: athrow
+      45: lload         4
+      47: lreturn
+      48: astore        6
+      50: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+      53: aload         6
+      55: invokestatic  #79                 // Method org/bol/server/LogWrapper.logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+      58: ldc2_w        #71                 // long -1l
+      61: lreturn
+    Exception table:
+       from    to  target type
+           5    25    28   Class sun/security/pkcs11/wrapper/PKCS11Exception
+           5    47    48   Class sun/security/pkcs11/wrapper/PKCS11Exception
+
+  public static void closeSession(sun.security.pkcs11.wrapper.PKCS11, long);
+    Code:
+       0: lload_1
+       1: ldc2_w        #71                 // long -1l
+       4: lcmp
+       5: ifne          9
+       8: return
+       9: aload_0
+      10: lload_1
+      11: invokevirtual #80                 // Method sun/security/pkcs11/wrapper/PKCS11.C_Logout:(J)V
+      14: goto          47
+      17: astore_3
+      18: aload_3
+      19: invokevirtual #77                 // Method sun/security/pkcs11/wrapper/PKCS11Exception.getErrorCode:()J
+      22: ldc2_w        #81                 // long 257l
+      25: lcmp
+      26: ifeq          47
+      29: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+      32: getstatic     #83                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+      35: aload_3
+      36: invokevirtual #84                 // Method sun/security/pkcs11/wrapper/PKCS11Exception.getMessage:()Ljava/lang/String;
+      39: invokedynamic #85,  0             // InvokeDynamic #3:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      44: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      47: aload_0
+      48: lload_1
+      49: invokevirtual #87                 // Method sun/security/pkcs11/wrapper/PKCS11.C_CloseSession:(J)V
+      52: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+      55: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      58: lload_1
+      59: invokedynamic #89,  0             // InvokeDynamic #4:makeConcatWithConstants:(J)Ljava/lang/String;
+      64: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      67: goto          78
+      70: astore_3
+      71: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+      74: aload_3
+      75: invokestatic  #79                 // Method org/bol/server/LogWrapper.logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+      78: return
+    Exception table:
+       from    to  target type
+           9    14    17   Class sun/security/pkcs11/wrapper/PKCS11Exception
+           9    67    70   Class sun/security/pkcs11/wrapper/PKCS11Exception
+
+  public java.util.List<org.bol.crypto.PrivateKeyInfo> locatePrivateKeys(sun.security.pkcs11.wrapper.PKCS11, long);
+    Code:
+       0: iconst_1
+       1: anewarray     #10                 // class sun/security/pkcs11/wrapper/CK_ATTRIBUTE
+       4: dup
+       5: iconst_0
+       6: new           #10                 // class sun/security/pkcs11/wrapper/CK_ATTRIBUTE
+       9: dup
+      10: lconst_0
+      11: ldc2_w        #11                 // long 3l
+      14: invokespecial #13                 // Method sun/security/pkcs11/wrapper/CK_ATTRIBUTE."<init>":(JJ)V
+      17: aastore
+      18: astore        4
+      20: aload_1
+      21: lload_2
+      22: aload         4
+      24: invokevirtual #17                 // Method sun/security/pkcs11/wrapper/PKCS11.C_FindObjectsInit:(J[Lsun/security/pkcs11/wrapper/CK_ATTRIBUTE;)V
+      27: new           #90                 // class java/util/ArrayList
+      30: dup
+      31: invokespecial #91                 // Method java/util/ArrayList."<init>":()V
+      34: astore        5
+      36: aload_1
+      37: lload_2
+      38: ldc2_w        #92                 // long 50l
+      41: invokevirtual #18                 // Method sun/security/pkcs11/wrapper/PKCS11.C_FindObjects:(JJ)[J
+      44: astore        6
+      46: aload         6
+      48: arraylength
+      49: ifne          55
+      52: goto          123
+      55: aload         6
+      57: astore        7
+      59: aload         7
+      61: arraylength
+      62: istore        8
+      64: iconst_0
+      65: istore        9
+      67: iload         9
+      69: iload         8
+      71: if_icmpge     120
+      74: aload         7
+      76: iload         9
+      78: laload
+      79: lstore        10
+      81: aload_1
+      82: lload_2
+      83: lload         10
+      85: invokestatic  #94                 // Method readPrivateKeyInfo:(Lsun/security/pkcs11/wrapper/PKCS11;JJ)Lorg/bol/crypto/PrivateKeyInfo;
+      88: astore        12
+      90: aload         5
+      92: aload         12
+      94: invokeinterface #95,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      99: pop
+     100: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     103: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     106: aload         12
+     108: invokevirtual #96                 // Method org/bol/crypto/PrivateKeyInfo.toString:()Ljava/lang/String;
+     111: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     114: iinc          9, 1
+     117: goto          67
+     120: goto          36
+     123: aload_1
+     124: lload_2
+     125: invokevirtual #19                 // Method sun/security/pkcs11/wrapper/PKCS11.C_FindObjectsFinal:(J)V
+     128: aload         5
+     130: areturn
+     131: astore        4
+     133: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     136: aload         4
+     138: invokestatic  #79                 // Method org/bol/server/LogWrapper.logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+     141: aconst_null
+     142: areturn
+    Exception table:
+       from    to  target type
+           0   130   131   Class sun/security/pkcs11/wrapper/PKCS11Exception
+
+  public java.security.PrivateKey loadPrivateKey(java.security.Provider, sun.security.pkcs11.wrapper.PKCS11, long, java.lang.String, byte[]);
+    Code:
+       0: ldc2_w        #71                 // long -1l
+       3: lstore        7
+       5: aconst_null
+       6: aload         5
+       8: if_acmpeq     23
+      11: aload_2
+      12: lload_3
+      13: aload         5
+      15: invokestatic  #97                 // Method findPrivateKeyByLabel:(Lsun/security/pkcs11/wrapper/PKCS11;JLjava/lang/String;)J
+      18: lstore        7
+      20: goto          32
+      23: aload_2
+      24: lload_3
+      25: aload         6
+      27: invokestatic  #98                 // Method findPrivateKeyById:(Lsun/security/pkcs11/wrapper/PKCS11;J[B)J
+      30: lstore        7
+      32: aload_1
+      33: aload_2
+      34: lload_3
+      35: lload         7
+      37: invokestatic  #99                 // Method createPrivateKey:(Ljava/security/Provider;Lsun/security/pkcs11/wrapper/PKCS11;JJ)Ljava/security/PrivateKey;
+      40: astore        9
+      42: aload         9
+      44: areturn
+      45: astore        7
+      47: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+      50: aload         7
+      52: invokestatic  #79                 // Method org/bol/server/LogWrapper.logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+      55: aconst_null
+      56: areturn
+    Exception table:
+       from    to  target type
+           0    44    45   Class java/lang/reflect/InvocationTargetException
+           0    44    45   Class sun/security/pkcs11/wrapper/PKCS11Exception
+
+  public long[] getSlotsWithTokens(java.lang.String) throws java.io.IOException;
+    Code:
+       0: aconst_null
+       1: astore_2
+       2: aconst_null
+       3: astore_3
+       4: new           #101                // class sun/security/pkcs11/wrapper/CK_C_INITIALIZE_ARGS
+       7: dup
+       8: invokespecial #102                // Method sun/security/pkcs11/wrapper/CK_C_INITIALIZE_ARGS."<init>":()V
+      11: astore        4
+      13: ldc           #103                // String C_GetFunctionList
+      15: astore        5
+      17: ldc2_w        #104                // long 2l
+      20: lstore        6
+      22: aload         4
+      24: ldc2_w        #104                // long 2l
+      27: putfield      #106                // Field sun/security/pkcs11/wrapper/CK_C_INITIALIZE_ARGS.flags:J
+      30: aload_1
+      31: aload         5
+      33: aload         4
+      35: iconst_0
+      36: invokestatic  #107                // Method sun/security/pkcs11/wrapper/PKCS11.getInstance:(Ljava/lang/String;Ljava/lang/String;Lsun/security/pkcs11/wrapper/CK_C_INITIALIZE_ARGS;Z)Lsun/security/pkcs11/wrapper/PKCS11;
+      39: astore_3
+      40: goto          56
+      43: astore        8
+      45: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+      48: aload         8
+      50: invokestatic  #79                 // Method org/bol/server/LogWrapper.logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+      53: aload         8
+      55: athrow
+      56: aload_3
+      57: invokevirtual #109                // Method sun/security/pkcs11/wrapper/PKCS11.C_GetInfo:()Lsun/security/pkcs11/wrapper/CK_INFO;
+      60: astore        8
+      62: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+      65: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      68: invokestatic  #110                // Method java/lang/System.lineSeparator:()Ljava/lang/String;
+      71: aload         8
+      73: invokevirtual #111                // Method sun/security/pkcs11/wrapper/CK_INFO.toString:()Ljava/lang/String;
+      76: invokedynamic #112,  0            // InvokeDynamic #5:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      81: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      84: goto          115
+      87: astore        8
+      89: aconst_null
+      90: astore        4
+      92: aload_1
+      93: aload         5
+      95: aload         4
+      97: iconst_1
+      98: invokestatic  #107                // Method sun/security/pkcs11/wrapper/PKCS11.getInstance:(Ljava/lang/String;Ljava/lang/String;Lsun/security/pkcs11/wrapper/CK_C_INITIALIZE_ARGS;Z)Lsun/security/pkcs11/wrapper/PKCS11;
+     101: astore_3
+     102: goto          115
+     105: astore        9
+     107: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     110: aload         9
+     112: invokestatic  #79                 // Method org/bol/server/LogWrapper.logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+     115: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     118: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     121: ldc           #113                // String Getting slot list
+     123: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     126: aload_3
+     127: iconst_1
+     128: invokevirtual #114                // Method sun/security/pkcs11/wrapper/PKCS11.C_GetSlotList:(Z)[J
+     131: astore_2
+     132: ldc2_w        #71                 // long -1l
+     135: getstatic     #115                // Field PKCS11_SLOT:J
+     138: lcmp
+     139: ifeq          159
+     142: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     145: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     148: getstatic     #115                // Field PKCS11_SLOT:J
+     151: invokedynamic #116,  0            // InvokeDynamic #6:makeConcatWithConstants:(J)Ljava/lang/String;
+     156: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     159: aload_2
+     160: astore        8
+     162: aload         8
+     164: arraylength
+     165: istore        9
+     167: iconst_0
+     168: istore        10
+     170: iload         10
+     172: iload         9
+     174: if_icmpge     394
+     177: aload         8
+     179: iload         10
+     181: laload
+     182: lstore        11
+     184: ldc2_w        #71                 // long -1l
+     187: getstatic     #115                // Field PKCS11_SLOT:J
+     190: lcmp
+     191: ifeq          206
+     194: iconst_0
+     195: lload         11
+     197: getstatic     #115                // Field PKCS11_SLOT:J
+     200: invokestatic  #117                // Method java/lang/Long.compareUnsigned:(JJ)I
+     203: if_icmpne     388
+     206: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     209: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     212: lload         11
+     214: invokedynamic #118,  0            // InvokeDynamic #7:makeConcatWithConstants:(J)Ljava/lang/String;
+     219: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     222: aload_3
+     223: lload         11
+     225: invokevirtual #119                // Method sun/security/pkcs11/wrapper/PKCS11.C_GetSlotInfo:(J)Lsun/security/pkcs11/wrapper/CK_SLOT_INFO;
+     228: astore        13
+     230: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     233: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     236: lload         11
+     238: aload         13
+     240: getfield      #120                // Field sun/security/pkcs11/wrapper/CK_SLOT_INFO.manufacturerID:[C
+     243: invokestatic  #121                // Method java/lang/String.valueOf:([C)Ljava/lang/String;
+     246: invokevirtual #66                 // Method java/lang/String.trim:()Ljava/lang/String;
+     249: aload         13
+     251: getfield      #122                // Field sun/security/pkcs11/wrapper/CK_SLOT_INFO.slotDescription:[C
+     254: invokestatic  #121                // Method java/lang/String.valueOf:([C)Ljava/lang/String;
+     257: invokevirtual #66                 // Method java/lang/String.trim:()Ljava/lang/String;
+     260: invokedynamic #123,  0            // InvokeDynamic #8:makeConcatWithConstants:(JLjava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     265: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     268: aload         13
+     270: getfield      #124                // Field sun/security/pkcs11/wrapper/CK_SLOT_INFO.flags:J
+     273: ldc2_w        #104                // long 2l
+     276: land
+     277: lconst_0
+     278: lcmp
+     279: ifeq          296
+     282: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     285: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     288: ldc           #125                // String Slot is removable device
+     290: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     293: goto          307
+     296: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     299: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     302: ldc           #126                // String Slot is static device
+     304: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     307: aload_3
+     308: lload         11
+     310: invokevirtual #127                // Method sun/security/pkcs11/wrapper/PKCS11.C_GetTokenInfo:(J)Lsun/security/pkcs11/wrapper/CK_TOKEN_INFO;
+     313: astore        14
+     315: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     318: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     321: aload         14
+     323: getfield      #128                // Field sun/security/pkcs11/wrapper/CK_TOKEN_INFO.manufacturerID:[C
+     326: invokestatic  #121                // Method java/lang/String.valueOf:([C)Ljava/lang/String;
+     329: invokevirtual #66                 // Method java/lang/String.trim:()Ljava/lang/String;
+     332: aload         14
+     334: getfield      #129                // Field sun/security/pkcs11/wrapper/CK_TOKEN_INFO.model:[C
+     337: invokestatic  #121                // Method java/lang/String.valueOf:([C)Ljava/lang/String;
+     340: invokevirtual #66                 // Method java/lang/String.trim:()Ljava/lang/String;
+     343: invokedynamic #130,  0            // InvokeDynamic #9:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     348: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     351: aload         14
+     353: getfield      #131                // Field sun/security/pkcs11/wrapper/CK_TOKEN_INFO.flags:J
+     356: lconst_1
+     357: land
+     358: lconst_0
+     359: lcmp
+     360: ifeq          377
+     363: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     366: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     369: ldc           #132                // String Token is present
+     371: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     374: goto          388
+     377: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     380: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     383: ldc           #133                // String Missing token
+     385: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     388: iinc          10, 1
+     391: goto          170
+     394: goto          411
+     397: astore        8
+     399: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     402: aload         8
+     404: invokestatic  #79                 // Method org/bol/server/LogWrapper.logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+     407: iconst_0
+     408: newarray       long
+     410: areturn
+     411: aload_2
+     412: areturn
+    Exception table:
+       from    to  target type
+          30    40    43   Class java/io/IOException
+          30    84    87   Class sun/security/pkcs11/wrapper/PKCS11Exception
+          89   102   105   Class java/io/IOException
+          89   102   105   Class sun/security/pkcs11/wrapper/PKCS11Exception
+         115   394   397   Class java/lang/Exception
+
+  public static java.security.cert.X509Certificate generateCertificate(java.lang.String, java.security.KeyPair, int, java.lang.String, java.math.BigInteger) throws java.security.GeneralSecurityException, java.io.IOException;
+    Code:
+       0: aload_1
+       1: invokevirtual #9                  // Method java/security/KeyPair.getPrivate:()Ljava/security/PrivateKey;
+       4: astore        5
+       6: new           #135                // class sun/security/x509/X509CertInfo
+       9: dup
+      10: invokespecial #136                // Method sun/security/x509/X509CertInfo."<init>":()V
+      13: astore        6
+      15: new           #137                // class java/util/Date
+      18: dup
+      19: invokespecial #138                // Method java/util/Date."<init>":()V
+      22: astore        7
+      24: new           #137                // class java/util/Date
+      27: dup
+      28: aload         7
+      30: invokevirtual #139                // Method java/util/Date.getTime:()J
+      33: iload_2
+      34: i2l
+      35: ldc2_w        #140                // long 86400000l
+      38: lmul
+      39: ladd
+      40: invokespecial #142                // Method java/util/Date."<init>":(J)V
+      43: astore        8
+      45: new           #143                // class sun/security/x509/CertificateValidity
+      48: dup
+      49: aload         7
+      51: aload         8
+      53: invokespecial #144                // Method sun/security/x509/CertificateValidity."<init>":(Ljava/util/Date;Ljava/util/Date;)V
+      56: astore        9
+      58: aconst_null
+      59: aload         4
+      61: if_acmpne     82
+      64: new           #145                // class java/math/BigInteger
+      67: dup
+      68: bipush        64
+      70: new           #146                // class java/security/SecureRandom
+      73: dup
+      74: invokespecial #147                // Method java/security/SecureRandom."<init>":()V
+      77: invokespecial #148                // Method java/math/BigInteger."<init>":(ILjava/util/Random;)V
+      80: astore        4
+      82: new           #149                // class sun/security/x509/X500Name
+      85: dup
+      86: aload_0
+      87: invokespecial #150                // Method sun/security/x509/X500Name."<init>":(Ljava/lang/String;)V
+      90: astore        10
+      92: aload         6
+      94: ldc           #151                // String validity
+      96: aload         9
+      98: invokevirtual #152                // Method sun/security/x509/X509CertInfo.set:(Ljava/lang/String;Ljava/lang/Object;)V
+     101: aload         6
+     103: ldc           #153                // String serialNumber
+     105: new           #154                // class sun/security/x509/CertificateSerialNumber
+     108: dup
+     109: aload         4
+     111: invokespecial #155                // Method sun/security/x509/CertificateSerialNumber."<init>":(Ljava/math/BigInteger;)V
+     114: invokevirtual #152                // Method sun/security/x509/X509CertInfo.set:(Ljava/lang/String;Ljava/lang/Object;)V
+     117: aload         6
+     119: ldc           #156                // String subject
+     121: aload         10
+     123: invokevirtual #152                // Method sun/security/x509/X509CertInfo.set:(Ljava/lang/String;Ljava/lang/Object;)V
+     126: aload         6
+     128: ldc           #157                // String issuer
+     130: aload         10
+     132: invokevirtual #152                // Method sun/security/x509/X509CertInfo.set:(Ljava/lang/String;Ljava/lang/Object;)V
+     135: aload         6
+     137: ldc           #158                // String key
+     139: new           #159                // class sun/security/x509/CertificateX509Key
+     142: dup
+     143: aload_1
+     144: invokevirtual #160                // Method java/security/KeyPair.getPublic:()Ljava/security/PublicKey;
+     147: invokespecial #161                // Method sun/security/x509/CertificateX509Key."<init>":(Ljava/security/PublicKey;)V
+     150: invokevirtual #152                // Method sun/security/x509/X509CertInfo.set:(Ljava/lang/String;Ljava/lang/Object;)V
+     153: aload         6
+     155: ldc           #162                // String version
+     157: new           #163                // class sun/security/x509/CertificateVersion
+     160: dup
+     161: iconst_2
+     162: invokespecial #164                // Method sun/security/x509/CertificateVersion."<init>":(I)V
+     165: invokevirtual #152                // Method sun/security/x509/X509CertInfo.set:(Ljava/lang/String;Ljava/lang/Object;)V
+     168: new           #165                // class sun/security/x509/AlgorithmId
+     171: dup
+     172: getstatic     #166                // Field sun/security/x509/AlgorithmId.RSAEncryption_oid:Lsun/security/util/ObjectIdentifier;
+     175: invokespecial #167                // Method sun/security/x509/AlgorithmId."<init>":(Lsun/security/util/ObjectIdentifier;)V
+     178: astore        11
+     180: aload         6
+     182: ldc           #168                // String algorithmID
+     184: new           #169                // class sun/security/x509/CertificateAlgorithmId
+     187: dup
+     188: aload         11
+     190: invokespecial #170                // Method sun/security/x509/CertificateAlgorithmId."<init>":(Lsun/security/x509/AlgorithmId;)V
+     193: invokevirtual #152                // Method sun/security/x509/X509CertInfo.set:(Ljava/lang/String;Ljava/lang/Object;)V
+     196: new           #171                // class sun/security/x509/X509CertImpl
+     199: dup
+     200: aload         6
+     202: invokespecial #172                // Method sun/security/x509/X509CertImpl."<init>":(Lsun/security/x509/X509CertInfo;)V
+     205: astore        12
+     207: aload         12
+     209: aload         5
+     211: aload_3
+     212: invokevirtual #173                // Method sun/security/x509/X509CertImpl.sign:(Ljava/security/PrivateKey;Ljava/lang/String;)V
+     215: aload         12
+     217: ldc           #174                // String x509.algorithm
+     219: invokevirtual #175                // Method sun/security/x509/X509CertImpl.get:(Ljava/lang/String;)Ljava/lang/Object;
+     222: checkcast     #165                // class sun/security/x509/AlgorithmId
+     225: astore        11
+     227: aload         6
+     229: ldc           #176                // String algorithmID.algorithm
+     231: aload         11
+     233: invokevirtual #152                // Method sun/security/x509/X509CertInfo.set:(Ljava/lang/String;Ljava/lang/Object;)V
+     236: new           #171                // class sun/security/x509/X509CertImpl
+     239: dup
+     240: aload         6
+     242: invokespecial #172                // Method sun/security/x509/X509CertImpl."<init>":(Lsun/security/x509/X509CertInfo;)V
+     245: astore        12
+     247: aload         12
+     249: aload         5
+     251: aload_3
+     252: invokevirtual #173                // Method sun/security/x509/X509CertImpl.sign:(Ljava/security/PrivateKey;Ljava/lang/String;)V
+     255: aload         12
+     257: areturn
+
+  private void initializePKCS12KeyStore() throws java.security.KeyStoreException, java.io.FileNotFoundException, java.io.IOException, java.security.NoSuchAlgorithmException, java.security.cert.CertificateException;
+    Code:
+       0: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+       3: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+       6: ldc           #177                // String Initializing PKCS12 security provider
+       8: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      11: aconst_null
+      12: aload_0
+      13: getfield      #3                  // Field prov:Ljava/security/Provider;
+      16: if_acmpeq     32
+      19: aload_0
+      20: aconst_null
+      21: putfield      #3                  // Field prov:Ljava/security/Provider;
+      24: aload_0
+      25: aconst_null
+      26: putfield      #6                  // Field provKeyStore:Ljava/security/KeyStore;
+      29: invokestatic  #178                // Method java/lang/System.gc:()V
+      32: aload_0
+      33: ldc           #179                // String PKCS12
+      35: invokestatic  #180                // Method java/security/KeyStore.getInstance:(Ljava/lang/String;)Ljava/security/KeyStore;
+      38: putfield      #6                  // Field provKeyStore:Ljava/security/KeyStore;
+      41: new           #181                // class java/io/FileInputStream
+      44: dup
+      45: getstatic     #182                // Field PKCS11_DLL:Ljava/lang/String;
+      48: invokespecial #183                // Method java/io/FileInputStream."<init>":(Ljava/lang/String;)V
+      51: astore_1
+      52: aload_0
+      53: getfield      #6                  // Field provKeyStore:Ljava/security/KeyStore;
+      56: aload_1
+      57: getstatic     #184                // Field ETOKEN_PASS:Ljava/lang/String;
+      60: invokevirtual #185                // Method java/lang/String.toCharArray:()[C
+      63: invokevirtual #186                // Method java/security/KeyStore.load:(Ljava/io/InputStream;[C)V
+      66: aload_1
+      67: invokevirtual #187                // Method java/io/InputStream.close:()V
+      70: goto          89
+      73: astore_2
+      74: aload_1
+      75: invokevirtual #187                // Method java/io/InputStream.close:()V
+      78: goto          87
+      81: astore_3
+      82: aload_2
+      83: aload_3
+      84: invokevirtual #189                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+      87: aload_2
+      88: athrow
+      89: aload_0
+      90: aload_0
+      91: getfield      #6                  // Field provKeyStore:Ljava/security/KeyStore;
+      94: invokevirtual #190                // Method java/security/KeyStore.getProvider:()Ljava/security/Provider;
+      97: putfield      #3                  // Field prov:Ljava/security/Provider;
+     100: return
+    Exception table:
+       from    to  target type
+          52    66    73   Class java/lang/Throwable
+          74    78    81   Class java/lang/Throwable
+
+  private boolean isJavaGreaterOrEquals9();
+    Code:
+       0: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+       3: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+       6: ldc           #191                // String Checking JAVA version for PKCS11 Provider
+       8: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      11: ldc           #193                // String SunPKCS11
+      13: invokestatic  #194                // Method java/security/Security.getProvider:(Ljava/lang/String;)Ljava/security/Provider;
+      16: astore_1
+      17: aload_1
+      18: ifnull        50
+      21: aload_1
+      22: invokevirtual #29                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      25: ldc           #195                // String configure
+      27: iconst_1
+      28: anewarray     #31                 // class java/lang/Class
+      31: dup
+      32: iconst_0
+      33: ldc           #46                 // class java/lang/String
+      35: aastore
+      36: invokevirtual #196                // Method java/lang/Class.getMethod:(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;
+      39: astore_2
+      40: aload_2
+      41: ifnull        48
+      44: iconst_1
+      45: goto          49
+      48: iconst_0
+      49: ireturn
+      50: goto          54
+      53: astore_1
+      54: iconst_0
+      55: ireturn
+    Exception table:
+       from    to  target type
+          11    49    53   Class java/lang/NoSuchMethodException
+
+  protected java.security.Provider createPKCS11Provider(java.lang.String);
+    Code:
+       0: aconst_null
+       1: astore_2
+       2: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+       5: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+       8: aload_1
+       9: invokedynamic #197,  0            // InvokeDynamic #10:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      14: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      17: aload_0
+      18: invokevirtual #198                // Method isJavaGreaterOrEquals9:()Z
+      21: ifeq          33
+      24: aload_0
+      25: aload_1
+      26: invokevirtual #199                // Method getProviderJavaGreaterOrEquals9:(Ljava/lang/String;)Ljava/security/Provider;
+      29: astore_2
+      30: goto          39
+      33: aload_0
+      34: aload_1
+      35: invokevirtual #200                // Method getProviderJavaLowerThan9:(Ljava/lang/String;)Ljava/security/Provider;
+      38: astore_2
+      39: aload_2
+      40: ifnonnull     53
+      43: new           #201                // class java/lang/IllegalStateException
+      46: dup
+      47: ldc           #202                // String Unable to create PKCS11 provider
+      49: invokespecial #203                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      52: athrow
+      53: aload_2
+      54: areturn
+
+  private java.security.Provider getProviderJavaLowerThan9(java.lang.String);
+    Code:
+       0: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+       3: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+       6: ldc           #204                // String Creating PKCS11 Provider for JAVA < 9
+       8: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      11: new           #205                // class java/io/ByteArrayInputStream
+      14: dup
+      15: aload_1
+      16: invokevirtual #206                // Method java/lang/String.getBytes:()[B
+      19: invokespecial #207                // Method java/io/ByteArrayInputStream."<init>":([B)V
+      22: astore_2
+      23: ldc           #208                // String sun.security.pkcs11.SunPKCS11
+      25: invokestatic  #42                 // Method java/lang/Class.forName:(Ljava/lang/String;)Ljava/lang/Class;
+      28: astore_3
+      29: aload_3
+      30: iconst_1
+      31: anewarray     #31                 // class java/lang/Class
+      34: dup
+      35: iconst_0
+      36: ldc           #209                // class java/io/InputStream
+      38: aastore
+      39: invokevirtual #210                // Method java/lang/Class.getConstructor:([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;
+      42: astore        4
+      44: aload         4
+      46: iconst_1
+      47: anewarray     #34                 // class java/lang/Object
+      50: dup
+      51: iconst_0
+      52: aload_2
+      53: aastore
+      54: invokevirtual #211                // Method java/lang/reflect/Constructor.newInstance:([Ljava/lang/Object;)Ljava/lang/Object;
+      57: checkcast     #212                // class java/security/Provider
+      60: astore        5
+      62: aload_2
+      63: invokevirtual #213                // Method java/io/ByteArrayInputStream.close:()V
+      66: aload         5
+      68: areturn
+      69: astore_3
+      70: aload_2
+      71: invokevirtual #213                // Method java/io/ByteArrayInputStream.close:()V
+      74: goto          85
+      77: astore        4
+      79: aload_3
+      80: aload         4
+      82: invokevirtual #189                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+      85: aload_3
+      86: athrow
+      87: astore_2
+      88: new           #201                // class java/lang/IllegalStateException
+      91: dup
+      92: ldc           #214                // String Unable to instantiate PKCS11 (JDK < 9)
+      94: aload_2
+      95: invokespecial #215                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      98: athrow
+    Exception table:
+       from    to  target type
+          23    62    69   Class java/lang/Throwable
+          70    74    77   Class java/lang/Throwable
+          11    66    87   Class java/lang/Exception
+          69    87    87   Class java/lang/Exception
+
+  private java.security.Provider getProviderJavaGreaterOrEquals9(java.lang.String);
+    Code:
+       0: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+       3: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+       6: ldc           #216                // String Creating PKCS11 Provider for JAVA >= 9
+       8: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      11: ldc           #193                // String SunPKCS11
+      13: invokestatic  #194                // Method java/security/Security.getProvider:(Ljava/lang/String;)Ljava/security/Provider;
+      16: astore_2
+      17: aload_2
+      18: invokevirtual #29                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      21: ldc           #195                // String configure
+      23: iconst_1
+      24: anewarray     #31                 // class java/lang/Class
+      27: dup
+      28: iconst_0
+      29: ldc           #46                 // class java/lang/String
+      31: aastore
+      32: invokevirtual #196                // Method java/lang/Class.getMethod:(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;
+      35: astore_3
+      36: aload_3
+      37: aload_2
+      38: iconst_1
+      39: anewarray     #34                 // class java/lang/Object
+      42: dup
+      43: iconst_0
+      44: aload_1
+      45: invokedynamic #217,  0            // InvokeDynamic #11:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      50: aastore
+      51: invokevirtual #35                 // Method java/lang/reflect/Method.invoke:(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;
+      54: checkcast     #212                // class java/security/Provider
+      57: areturn
+      58: astore_2
+      59: new           #201                // class java/lang/IllegalStateException
+      62: dup
+      63: ldc           #218                // String Unable to instantiate PKCS11 (JDK >= 9)
+      65: aload_2
+      66: invokespecial #215                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      69: athrow
+    Exception table:
+       from    to  target type
+          11    57    58   Class java/lang/Exception
+
+  protected void cleanupPKCS11Provider() throws java.lang.NoSuchFieldException, java.lang.SecurityException, java.lang.IllegalArgumentException, java.lang.IllegalAccessException;
+    Code:
+       0: aconst_null
+       1: aload_0
+       2: getfield      #3                  // Field prov:Ljava/security/Provider;
+       5: if_acmpeq     207
+       8: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+      11: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      14: ldc           #219                // String Releasing existing PKCS11 security provider
+      16: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      19: ldc           #220                // class sun/security/pkcs11/SunPKCS11
+      21: ldc           #221                // String p11
+      23: invokevirtual #222                // Method java/lang/Class.getDeclaredField:(Ljava/lang/String;)Ljava/lang/reflect/Field;
+      26: astore_1
+      27: aload_1
+      28: iconst_1
+      29: invokevirtual #223                // Method java/lang/reflect/Field.setAccessible:(Z)V
+      32: aload_1
+      33: aload_0
+      34: getfield      #3                  // Field prov:Ljava/security/Provider;
+      37: invokevirtual #224                // Method java/lang/reflect/Field.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      40: checkcast     #225                // class sun/security/pkcs11/wrapper/PKCS11
+      43: astore_2
+      44: aconst_null
+      45: aload_0
+      46: getfield      #7                  // Field signCert:Ljava/security/cert/X509Certificate;
+      49: if_acmpne     125
+      52: ldc2_w        #71                 // long -1l
+      55: getstatic     #226                // Field signSession:J
+      58: lcmp
+      59: ifne          125
+      62: ldc           #225                // class sun/security/pkcs11/wrapper/PKCS11
+      64: ldc           #227                // String moduleMap
+      66: invokevirtual #222                // Method java/lang/Class.getDeclaredField:(Ljava/lang/String;)Ljava/lang/reflect/Field;
+      69: astore_3
+      70: aload_3
+      71: iconst_1
+      72: invokevirtual #223                // Method java/lang/reflect/Field.setAccessible:(Z)V
+      75: aload_3
+      76: aload_2
+      77: invokevirtual #224                // Method java/lang/reflect/Field.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      80: checkcast     #228                // class java/util/Map
+      83: astore        4
+      85: aload         4
+      87: invokeinterface #229,  1          // InterfaceMethod java/util/Map.clear:()V
+      92: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+      95: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      98: ldc           #230                // String Cleared module map of the provider
+     100: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     103: aload_2
+     104: getstatic     #231                // Field sun/security/pkcs11/wrapper/PKCS11Constants.NULL_PTR:Ljava/lang/Object;
+     107: invokevirtual #232                // Method sun/security/pkcs11/wrapper/PKCS11.C_Finalize:(Ljava/lang/Object;)V
+     110: goto          142
+     113: astore_3
+     114: new           #201                // class java/lang/IllegalStateException
+     117: dup
+     118: ldc           #233                // String Provider cleanup failed
+     120: aload_3
+     121: invokespecial #215                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     124: athrow
+     125: ldc2_w        #71                 // long -1l
+     128: getstatic     #226                // Field signSession:J
+     131: lcmp
+     132: ifeq          142
+     135: aload_2
+     136: getstatic     #226                // Field signSession:J
+     139: invokestatic  #234                // Method closeSession:(Lsun/security/pkcs11/wrapper/PKCS11;J)V
+     142: aload_0
+     143: getfield      #3                  // Field prov:Ljava/security/Provider;
+     146: invokevirtual #235                // Method java/security/Provider.clear:()V
+     149: aconst_null
+     150: aload_0
+     151: getfield      #3                  // Field prov:Ljava/security/Provider;
+     154: invokevirtual #236                // Method java/security/Provider.getName:()Ljava/lang/String;
+     157: invokestatic  #194                // Method java/security/Security.getProvider:(Ljava/lang/String;)Ljava/security/Provider;
+     160: if_acmpeq     173
+     163: aload_0
+     164: getfield      #3                  // Field prov:Ljava/security/Provider;
+     167: invokevirtual #236                // Method java/security/Provider.getName:()Ljava/lang/String;
+     170: invokestatic  #237                // Method java/security/Security.removeProvider:(Ljava/lang/String;)V
+     173: aload_0
+     174: aconst_null
+     175: putfield      #3                  // Field prov:Ljava/security/Provider;
+     178: aload_0
+     179: aconst_null
+     180: putfield      #7                  // Field signCert:Ljava/security/cert/X509Certificate;
+     183: aload_0
+     184: aconst_null
+     185: putfield      #4                  // Field signPk:Ljava/security/PrivateKey;
+     188: aload_0
+     189: aconst_null
+     190: putfield      #8                  // Field signCertAlias:Ljava/lang/String;
+     193: goto          207
+     196: astore_3
+     197: new           #201                // class java/lang/IllegalStateException
+     200: dup
+     201: ldc           #238                // String PKCS11 Provider cleanup failed
+     203: invokespecial #203                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     206: athrow
+     207: return
+    Exception table:
+       from    to  target type
+          62   110   113   Class sun/security/pkcs11/wrapper/PKCS11Exception
+         173   193   196   Class java/lang/Throwable
+
+  private int initializePKCS11ProviderKeyStore(int) throws java.io.IOException, java.security.KeyStoreException, java.lang.NoSuchFieldException, java.lang.IllegalAccessException, java.security.NoSuchAlgorithmException, java.security.cert.CertificateException;
+    Code:
+       0: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+       3: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+       6: ldc           #239                // String Initializing PKCS11 security provider
+       8: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      11: aload_0
+      12: invokevirtual #240                // Method cleanupPKCS11Provider:()V
+      15: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+      18: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      21: ldc           #241                // String Getting Slot list with tokens...
+      23: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      26: aload_0
+      27: getstatic     #182                // Field PKCS11_DLL:Ljava/lang/String;
+      30: invokevirtual #242                // Method getSlotsWithTokens:(Ljava/lang/String;)[J
+      33: astore_2
+      34: aconst_null
+      35: aload_2
+      36: if_acmpeq     60
+      39: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+      42: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      45: aload_2
+      46: invokestatic  #243                // Method java/util/Arrays.toString:([J)Ljava/lang/String;
+      49: invokedynamic #244,  0            // InvokeDynamic #12:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      54: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      57: goto          71
+      60: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+      63: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      66: ldc           #245                // String Slot list is empty
+      68: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      71: aconst_null
+      72: aload_2
+      73: if_acmpeq     788
+      76: aload_2
+      77: arraylength
+      78: ifle          788
+      81: iconst_0
+      82: istore_3
+      83: iload_3
+      84: aload_2
+      85: arraylength
+      86: if_icmpge     774
+      89: iconst_m1
+      90: iload_1
+      91: if_icmpeq     103
+      94: iload_1
+      95: iflt          768
+      98: iload_3
+      99: iload_1
+     100: if_icmple     768
+     103: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     106: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     109: iload_3
+     110: invokedynamic #246,  0            // InvokeDynamic #13:makeConcatWithConstants:(I)Ljava/lang/String;
+     115: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     118: ldc2_w        #71                 // long -1l
+     121: getstatic     #115                // Field PKCS11_SLOT:J
+     124: lcmp
+     125: ifeq          141
+     128: iconst_0
+     129: aload_2
+     130: iload_3
+     131: laload
+     132: getstatic     #115                // Field PKCS11_SLOT:J
+     135: invokestatic  #117                // Method java/lang/Long.compareUnsigned:(JJ)I
+     138: if_icmpne     768
+     141: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     144: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     147: iload_3
+     148: invokedynamic #247,  0            // InvokeDynamic #14:makeConcatWithConstants:(I)Ljava/lang/String;
+     153: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     156: getstatic     #248                // Field ETOKEN:Ljava/lang/String;
+     159: invokestatic  #249                // Method java/util/UUID.randomUUID:()Ljava/util/UUID;
+     162: getstatic     #182                // Field PKCS11_DLL:Ljava/lang/String;
+     165: getstatic     #250                // Field PKCS11_USE_SLOT_INDEX:Z
+     168: ifeq          180
+     171: iload_3
+     172: invokedynamic #251,  0            // InvokeDynamic #15:makeConcatWithConstants:(I)Ljava/lang/String;
+     177: goto          188
+     180: aload_2
+     181: iload_3
+     182: laload
+     183: invokedynamic #252,  0            // InvokeDynamic #16:makeConcatWithConstants:(J)Ljava/lang/String;
+     188: aconst_null
+     189: getstatic     #253                // Field enabledMechanisms:Ljava/lang/String;
+     192: if_acmpeq     206
+     195: getstatic     #253                // Field enabledMechanisms:Ljava/lang/String;
+     198: invokedynamic #254,  0            // InvokeDynamic #17:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     203: goto          208
+     206: ldc           #255                // String
+     208: invokestatic  #256                // Method org/bol/server/LogWrapper.getLogLevel:()Lorg/slf4j/event/Level;
+     211: getstatic     #83                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     214: invokevirtual #257                // Method org/slf4j/event/Level.compareTo:(Ljava/lang/Enum;)I
+     217: iflt          226
+     220: ldc_w         #258                // String true
+     223: goto          229
+     226: ldc_w         #259                // String false
+     229: invokedynamic #260,  0            // InvokeDynamic #18:makeConcatWithConstants:(Ljava/lang/String;Ljava/util/UUID;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     234: astore        4
+     236: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     239: getstatic     #83                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     242: aload         4
+     244: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     247: aload_0
+     248: aload_0
+     249: aload         4
+     251: invokevirtual #261                // Method createPKCS11Provider:(Ljava/lang/String;)Ljava/security/Provider;
+     254: putfield      #3                  // Field prov:Ljava/security/Provider;
+     257: aload_0
+     258: getfield      #3                  // Field prov:Ljava/security/Provider;
+     261: invokestatic  #262                // Method java/security/Security.addProvider:(Ljava/security/Provider;)I
+     264: pop
+     265: aconst_null
+     266: getstatic     #263                // Field signCertPath:Ljava/lang/String;
+     269: if_acmpeq     721
+     272: ldc2_w        #71                 // long -1l
+     275: putstatic     #226                // Field signSession:J
+     278: aload_0
+     279: aconst_null
+     280: putfield      #4                  // Field signPk:Ljava/security/PrivateKey;
+     283: aload_0
+     284: aconst_null
+     285: putfield      #7                  // Field signCert:Ljava/security/cert/X509Certificate;
+     288: ldc_w         #264                // String X.509
+     291: invokestatic  #265                // Method java/security/cert/CertificateFactory.getInstance:(Ljava/lang/String;)Ljava/security/cert/CertificateFactory;
+     294: astore        5
+     296: new           #266                // class java/io/File
+     299: dup
+     300: getstatic     #263                // Field signCertPath:Ljava/lang/String;
+     303: invokespecial #267                // Method java/io/File."<init>":(Ljava/lang/String;)V
+     306: astore        6
+     308: aload         6
+     310: invokevirtual #268                // Method java/io/File.length:()J
+     313: l2i
+     314: newarray       byte
+     316: astore        7
+     318: new           #181                // class java/io/FileInputStream
+     321: dup
+     322: aload         6
+     324: invokespecial #269                // Method java/io/FileInputStream."<init>":(Ljava/io/File;)V
+     327: astore        8
+     329: aload         8
+     331: aload         7
+     333: invokevirtual #270                // Method java/io/FileInputStream.read:([B)I
+     336: i2l
+     337: aload         6
+     339: invokevirtual #268                // Method java/io/File.length:()J
+     342: lcmp
+     343: ifeq          357
+     346: new           #201                // class java/lang/IllegalStateException
+     349: dup
+     350: ldc_w         #271                // String Error reading signing certificate
+     353: invokespecial #203                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     356: athrow
+     357: aload         8
+     359: invokevirtual #272                // Method java/io/FileInputStream.close:()V
+     362: goto          387
+     365: astore        9
+     367: aload         8
+     369: invokevirtual #272                // Method java/io/FileInputStream.close:()V
+     372: goto          384
+     375: astore        10
+     377: aload         9
+     379: aload         10
+     381: invokevirtual #189                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     384: aload         9
+     386: athrow
+     387: new           #205                // class java/io/ByteArrayInputStream
+     390: dup
+     391: aload         7
+     393: invokespecial #207                // Method java/io/ByteArrayInputStream."<init>":([B)V
+     396: astore        8
+     398: aload         5
+     400: aload         8
+     402: invokevirtual #273                // Method java/security/cert/CertificateFactory.generateCertificate:(Ljava/io/InputStream;)Ljava/security/cert/Certificate;
+     405: checkcast     #274                // class java/security/cert/X509Certificate
+     408: astore        9
+     410: aconst_null
+     411: aload         9
+     413: if_acmpeq     425
+     416: aload_0
+     417: aload         9
+     419: putfield      #7                  // Field signCert:Ljava/security/cert/X509Certificate;
+     422: goto          436
+     425: new           #201                // class java/lang/IllegalStateException
+     428: dup
+     429: ldc_w         #275                // String Error loading signing certificate
+     432: invokespecial #203                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     435: athrow
+     436: aconst_null
+     437: astore        10
+     439: ldc           #220                // class sun/security/pkcs11/SunPKCS11
+     441: ldc           #221                // String p11
+     443: invokevirtual #222                // Method java/lang/Class.getDeclaredField:(Ljava/lang/String;)Ljava/lang/reflect/Field;
+     446: astore        11
+     448: aload         11
+     450: iconst_1
+     451: invokevirtual #223                // Method java/lang/reflect/Field.setAccessible:(Z)V
+     454: aload         11
+     456: aload_0
+     457: getfield      #3                  // Field prov:Ljava/security/Provider;
+     460: invokevirtual #224                // Method java/lang/reflect/Field.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     463: checkcast     #225                // class sun/security/pkcs11/wrapper/PKCS11
+     466: astore        10
+     468: goto          486
+     471: astore        11
+     473: new           #20                 // class java/lang/RuntimeException
+     476: dup
+     477: ldc_w         #277                // String Failed to access PKCS11
+     480: aload         11
+     482: invokespecial #40                 // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     485: athrow
+     486: aload         10
+     488: aload_2
+     489: iload_3
+     490: laload
+     491: getstatic     #184                // Field ETOKEN_PASS:Ljava/lang/String;
+     494: invokevirtual #185                // Method java/lang/String.toCharArray:()[C
+     497: invokestatic  #278                // Method openSession:(Lsun/security/pkcs11/wrapper/PKCS11;J[C)J
+     500: lstore        11
+     502: lload         11
+     504: putstatic     #226                // Field signSession:J
+     507: aload_0
+     508: aload         10
+     510: lload         11
+     512: invokevirtual #279                // Method locatePrivateKeys:(Lsun/security/pkcs11/wrapper/PKCS11;J)Ljava/util/List;
+     515: astore        13
+     517: aload         13
+     519: invokeinterface #280,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     524: astore        14
+     526: aload         14
+     528: invokeinterface #281,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     533: ifeq          718
+     536: aload         14
+     538: invokeinterface #282,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     543: checkcast     #69                 // class org/bol/crypto/PrivateKeyInfo
+     546: astore        15
+     548: aload_0
+     549: aload_0
+     550: getfield      #3                  // Field prov:Ljava/security/Provider;
+     553: aload         10
+     555: lload         11
+     557: aconst_null
+     558: aload         15
+     560: getfield      #283                // Field org/bol/crypto/PrivateKeyInfo.id:[B
+     563: invokevirtual #284                // Method loadPrivateKey:(Ljava/security/Provider;Lsun/security/pkcs11/wrapper/PKCS11;JLjava/lang/String;[B)Ljava/security/PrivateKey;
+     566: astore        16
+     568: ldc_w         #285                // String qwerty
+     571: invokevirtual #206                // Method java/lang/String.getBytes:()[B
+     574: astore        17
+     576: aload_0
+     577: aload         17
+     579: aload         16
+     581: invokevirtual #286                // Method signData:([BLjava/security/PrivateKey;)[B
+     584: astore        18
+     586: aload_0
+     587: aload         17
+     589: aload_0
+     590: getfield      #7                  // Field signCert:Ljava/security/cert/X509Certificate;
+     593: invokevirtual #287                // Method java/security/cert/X509Certificate.getPublicKey:()Ljava/security/PublicKey;
+     596: aload         18
+     598: invokevirtual #288                // Method verifySig:([BLjava/security/PublicKey;[B)Z
+     601: ifeq          668
+     604: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     607: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     610: aload         15
+     612: getfield      #283                // Field org/bol/crypto/PrivateKeyInfo.id:[B
+     615: invokestatic  #21                 // Method org/bol/crypto/PrivateKeyInfo.bytesToHex:([B)Ljava/lang/String;
+     618: aload         15
+     620: getfield      #289                // Field org/bol/crypto/PrivateKeyInfo.label:Ljava/lang/String;
+     623: aload         16
+     625: invokeinterface #290,  1          // InterfaceMethod java/security/PrivateKey.getAlgorithm:()Ljava/lang/String;
+     630: invokedynamic #291,  0            // InvokeDynamic #19:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     635: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     638: aload_0
+     639: aload         16
+     641: putfield      #4                  // Field signPk:Ljava/security/PrivateKey;
+     644: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     647: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     650: aload_0
+     651: getfield      #4                  // Field signPk:Ljava/security/PrivateKey;
+     654: invokevirtual #292                // Method java/lang/Object.toString:()Ljava/lang/String;
+     657: invokedynamic #293,  0            // InvokeDynamic #20:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     662: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     665: goto          718
+     668: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     671: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     674: aload         15
+     676: getfield      #283                // Field org/bol/crypto/PrivateKeyInfo.id:[B
+     679: invokestatic  #21                 // Method org/bol/crypto/PrivateKeyInfo.bytesToHex:([B)Ljava/lang/String;
+     682: aload         15
+     684: getfield      #289                // Field org/bol/crypto/PrivateKeyInfo.label:Ljava/lang/String;
+     687: aload         16
+     689: invokeinterface #290,  1          // InterfaceMethod java/security/PrivateKey.getAlgorithm:()Ljava/lang/String;
+     694: invokedynamic #294,  0            // InvokeDynamic #21:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     699: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     702: goto          715
+     705: astore        17
+     707: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     710: aload         17
+     712: invokestatic  #79                 // Method org/bol/server/LogWrapper.logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+     715: goto          526
+     718: goto          766
+     721: aload_0
+     722: ldc_w         #295                // String PKCS11
+     725: aload_0
+     726: getfield      #3                  // Field prov:Ljava/security/Provider;
+     729: invokestatic  #296                // Method java/security/KeyStore.getInstance:(Ljava/lang/String;Ljava/security/Provider;)Ljava/security/KeyStore;
+     732: putfield      #6                  // Field provKeyStore:Ljava/security/KeyStore;
+     735: aload_0
+     736: getfield      #3                  // Field prov:Ljava/security/Provider;
+     739: checkcast     #297                // class java/security/AuthProvider
+     742: astore        5
+     744: aload         5
+     746: new           #298                // class org/bol/crypto/CryptoCore$1
+     749: dup
+     750: aload_0
+     751: invokespecial #299                // Method org/bol/crypto/CryptoCore$1."<init>":(Lorg/bol/crypto/CryptoCore;)V
+     754: invokevirtual #300                // Method java/security/AuthProvider.setCallbackHandler:(Ljavax/security/auth/callback/CallbackHandler;)V
+     757: aload_0
+     758: getfield      #6                  // Field provKeyStore:Ljava/security/KeyStore;
+     761: aconst_null
+     762: aconst_null
+     763: invokevirtual #186                // Method java/security/KeyStore.load:(Ljava/io/InputStream;[C)V
+     766: iload_3
+     767: ireturn
+     768: iinc          3, 1
+     771: goto          83
+     774: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     777: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     780: ldc_w         #301                // String No more tokens to check in the slot list
+     783: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     786: iconst_m1
+     787: ireturn
+     788: new           #108                // class java/io/IOException
+     791: dup
+     792: ldc_w         #302                // String No valid security token found
+     795: invokespecial #303                // Method java/io/IOException."<init>":(Ljava/lang/String;)V
+     798: athrow
+    Exception table:
+       from    to  target type
+         329   357   365   Class java/lang/Throwable
+         367   372   375   Class java/lang/Throwable
+         439   468   471   Class java/lang/NoSuchFieldException
+         439   468   471   Class java/lang/IllegalAccessException
+         568   665   705   Class java/lang/Exception
+         668   702   705   Class java/lang/Exception
+
+  private int initializeProviderKeyStore(int) throws java.io.IOException, java.security.GeneralSecurityException, java.lang.NoSuchFieldException, java.lang.IllegalAccessException;
+    Code:
+       0: getstatic     #304                // Field PROVIDER_TYPE:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+       3: getstatic     #305                // Field org/bol/crypto/CryptoCore$PROVIDER_TYPES.PKCS11:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+       6: invokevirtual #306                // Method org/bol/crypto/CryptoCore$PROVIDER_TYPES.equals:(Ljava/lang/Object;)Z
+       9: ifeq          18
+      12: aload_0
+      13: iload_1
+      14: invokevirtual #307                // Method initializePKCS11ProviderKeyStore:(I)I
+      17: ireturn
+      18: getstatic     #304                // Field PROVIDER_TYPE:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+      21: getstatic     #308                // Field org/bol/crypto/CryptoCore$PROVIDER_TYPES.PKCS12:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+      24: invokevirtual #306                // Method org/bol/crypto/CryptoCore$PROVIDER_TYPES.equals:(Ljava/lang/Object;)Z
+      27: ifeq          43
+      30: iload_1
+      31: iconst_m1
+      32: if_icmpne     41
+      35: aload_0
+      36: invokevirtual #309                // Method initializePKCS12KeyStore:()V
+      39: iconst_0
+      40: ireturn
+      41: iconst_m1
+      42: ireturn
+      43: new           #201                // class java/lang/IllegalStateException
+      46: dup
+      47: ldc_w         #310                // String Invalid Provider Type
+      50: invokespecial #203                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      53: athrow
+
+  protected boolean checkSignCertOrAlias(java.security.cert.X509Certificate, java.lang.String) throws java.security.KeyStoreException, java.security.cert.CertificateParsingException;
+    Code:
+       0: new           #311                // class java/lang/UnsupportedOperationException
+       3: dup
+       4: ldc_w         #312                // String This method should be implemented in subclasses
+       7: invokespecial #313                // Method java/lang/UnsupportedOperationException."<init>":(Ljava/lang/String;)V
+      10: athrow
+
+  private byte[] signData(byte[], java.security.PrivateKey) throws java.lang.Exception;
+    Code:
+       0: ldc_w         #314                // String SHA256withRSA
+       3: invokestatic  #315                // Method java/security/Signature.getInstance:(Ljava/lang/String;)Ljava/security/Signature;
+       6: astore_3
+       7: aload_3
+       8: aload_2
+       9: invokevirtual #316                // Method java/security/Signature.initSign:(Ljava/security/PrivateKey;)V
+      12: aload_3
+      13: aload_1
+      14: invokevirtual #317                // Method java/security/Signature.update:([B)V
+      17: aload_3
+      18: invokevirtual #318                // Method java/security/Signature.sign:()[B
+      21: areturn
+
+  private boolean verifySig(byte[], java.security.PublicKey, byte[]) throws java.lang.Exception;
+    Code:
+       0: ldc_w         #314                // String SHA256withRSA
+       3: invokestatic  #315                // Method java/security/Signature.getInstance:(Ljava/lang/String;)Ljava/security/Signature;
+       6: astore        4
+       8: aload         4
+      10: aload_2
+      11: invokevirtual #319                // Method java/security/Signature.initVerify:(Ljava/security/PublicKey;)V
+      14: aload         4
+      16: aload_1
+      17: invokevirtual #317                // Method java/security/Signature.update:([B)V
+      20: aload         4
+      22: aload_3
+      23: invokevirtual #320                // Method java/security/Signature.verify:([B)Z
+      26: ireturn
+
+  private boolean locateProviderSigningCertificate(java.security.KeyStore) throws java.security.KeyStoreException, java.security.UnrecoverableKeyException, java.security.NoSuchAlgorithmException, java.security.cert.CertificateException, java.io.IOException;
+    Code:
+       0: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+       3: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+       6: ldc_w         #321                // String Listing Provider KeyStore certificates
+       9: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      12: aload_1
+      13: invokevirtual #322                // Method java/security/KeyStore.aliases:()Ljava/util/Enumeration;
+      16: invokestatic  #323                // Method java/util/Collections.list:(Ljava/util/Enumeration;)Ljava/util/ArrayList;
+      19: astore_2
+      20: aload_0
+      21: aconst_null
+      22: putfield      #7                  // Field signCert:Ljava/security/cert/X509Certificate;
+      25: aload_0
+      26: aconst_null
+      27: putfield      #4                  // Field signPk:Ljava/security/PrivateKey;
+      30: aload_0
+      31: aconst_null
+      32: putfield      #8                  // Field signCertAlias:Ljava/lang/String;
+      35: aload_2
+      36: invokeinterface #324,  1          // InterfaceMethod java/util/List.isEmpty:()Z
+      41: ifeq          59
+      44: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+      47: getstatic     #325                // Field org/slf4j/event/Level.ERROR:Lorg/slf4j/event/Level;
+      50: ldc_w         #326                // String No entries available in this keystore
+      53: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      56: goto          79
+      59: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+      62: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      65: aload_2
+      66: invokeinterface #327,  1          // InterfaceMethod java/util/List.size:()I
+      71: invokedynamic #328,  0            // InvokeDynamic #22:makeConcatWithConstants:(I)Ljava/lang/String;
+      76: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      79: aload_2
+      80: invokeinterface #280,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      85: astore_3
+      86: aload_3
+      87: invokeinterface #281,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      92: ifeq          455
+      95: aload_3
+      96: invokeinterface #282,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     101: checkcast     #46                 // class java/lang/String
+     104: astore        4
+     106: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     109: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     112: aload         4
+     114: invokedynamic #329,  0            // InvokeDynamic #23:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     119: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     122: aload_1
+     123: aload         4
+     125: getstatic     #304                // Field PROVIDER_TYPE:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+     128: getstatic     #308                // Field org/bol/crypto/CryptoCore$PROVIDER_TYPES.PKCS12:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+     131: invokevirtual #306                // Method org/bol/crypto/CryptoCore$PROVIDER_TYPES.equals:(Ljava/lang/Object;)Z
+     134: ifeq          146
+     137: getstatic     #184                // Field ETOKEN_PASS:Ljava/lang/String;
+     140: invokevirtual #185                // Method java/lang/String.toCharArray:()[C
+     143: goto          147
+     146: aconst_null
+     147: invokevirtual #330                // Method java/security/KeyStore.getKey:(Ljava/lang/String;[C)Ljava/security/Key;
+     150: astore        5
+     152: aload         5
+     154: instanceof    #52                 // class java/security/PrivateKey
+     157: ifeq          385
+     160: aload         5
+     162: checkcast     #52                 // class java/security/PrivateKey
+     165: astore        6
+     167: aload_1
+     168: aload         4
+     170: invokevirtual #331                // Method java/security/KeyStore.getCertificate:(Ljava/lang/String;)Ljava/security/cert/Certificate;
+     173: checkcast     #274                // class java/security/cert/X509Certificate
+     176: astore        7
+     178: aconst_null
+     179: aload         7
+     181: if_acmpeq     385
+     184: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     187: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     190: aload         4
+     192: aload         7
+     194: invokevirtual #332                // Method java/security/cert/X509Certificate.getSubjectX500Principal:()Ljavax/security/auth/x500/X500Principal;
+     197: aload         7
+     199: invokevirtual #333                // Method java/security/cert/X509Certificate.getSerialNumber:()Ljava/math/BigInteger;
+     202: bipush        16
+     204: invokevirtual #334                // Method java/math/BigInteger.toString:(I)Ljava/lang/String;
+     207: invokedynamic #335,  0            // InvokeDynamic #24:makeConcatWithConstants:(Ljava/lang/String;Ljavax/security/auth/x500/X500Principal;Ljava/lang/String;)Ljava/lang/String;
+     212: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     215: aload         7
+     217: invokevirtual #287                // Method java/security/cert/X509Certificate.getPublicKey:()Ljava/security/PublicKey;
+     220: checkcast     #336                // class java/security/interfaces/RSAPublicKey
+     223: astore        8
+     225: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     228: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     231: aload         4
+     233: aload         6
+     235: invokeinterface #290,  1          // InterfaceMethod java/security/PrivateKey.getAlgorithm:()Ljava/lang/String;
+     240: aload         8
+     242: invokeinterface #337,  1          // InterfaceMethod java/security/interfaces/RSAPublicKey.getModulus:()Ljava/math/BigInteger;
+     247: invokevirtual #338                // Method java/math/BigInteger.bitLength:()I
+     250: invokedynamic #339,  0            // InvokeDynamic #25:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;I)Ljava/lang/String;
+     255: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     258: aconst_null
+     259: getstatic     #340                // Field ETOKEN_ALIAS:Ljava/lang/String;
+     262: if_acmpeq     276
+     265: aload         4
+     267: getstatic     #340                // Field ETOKEN_ALIAS:Ljava/lang/String;
+     270: invokevirtual #341                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     273: ifne          287
+     276: aload_0
+     277: aload         7
+     279: aload         4
+     281: invokevirtual #342                // Method checkSignCertOrAlias:(Ljava/security/cert/X509Certificate;Ljava/lang/String;)Z
+     284: ifeq          369
+     287: aconst_null
+     288: aload_0
+     289: getfield      #7                  // Field signCert:Ljava/security/cert/X509Certificate;
+     292: if_acmpeq     313
+     295: aload_0
+     296: getfield      #7                  // Field signCert:Ljava/security/cert/X509Certificate;
+     299: invokevirtual #343                // Method java/security/cert/X509Certificate.getNotAfter:()Ljava/util/Date;
+     302: aload         7
+     304: invokevirtual #343                // Method java/security/cert/X509Certificate.getNotAfter:()Ljava/util/Date;
+     307: invokevirtual #344                // Method java/util/Date.before:(Ljava/util/Date;)Z
+     310: ifeq          350
+     313: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     316: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     319: aload         4
+     321: invokedynamic #345,  0            // InvokeDynamic #26:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     326: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     329: aload_0
+     330: aload         7
+     332: putfield      #7                  // Field signCert:Ljava/security/cert/X509Certificate;
+     335: aload_0
+     336: aload         6
+     338: putfield      #4                  // Field signPk:Ljava/security/PrivateKey;
+     341: aload_0
+     342: aload         4
+     344: putfield      #8                  // Field signCertAlias:Ljava/lang/String;
+     347: goto          385
+     350: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     353: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     356: aload         4
+     358: invokedynamic #346,  0            // InvokeDynamic #27:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     363: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     366: goto          385
+     369: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     372: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     375: aload         4
+     377: invokedynamic #347,  0            // InvokeDynamic #28:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     382: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     385: aconst_null
+     386: aload         4
+     388: if_acmpeq     452
+     391: aload_1
+     392: aload         4
+     394: invokevirtual #348                // Method java/security/KeyStore.getCertificateChain:(Ljava/lang/String;)[Ljava/security/cert/Certificate;
+     397: astore        6
+     399: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     402: getstatic     #83                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     405: invokestatic  #110                // Method java/lang/System.lineSeparator:()Ljava/lang/String;
+     408: aload         4
+     410: invokedynamic #349,  0            // InvokeDynamic #29:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     415: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     418: iconst_0
+     419: istore        7
+     421: iload         7
+     423: aload         6
+     425: arraylength
+     426: if_icmpge     452
+     429: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     432: getstatic     #83                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     435: aload         6
+     437: iload         7
+     439: aaload
+     440: invokevirtual #350                // Method java/security/cert/Certificate.toString:()Ljava/lang/String;
+     443: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     446: iinc          7, 1
+     449: goto          421
+     452: goto          86
+     455: aconst_null
+     456: aload_0
+     457: getfield      #7                  // Field signCert:Ljava/security/cert/X509Certificate;
+     460: if_acmpeq     475
+     463: aconst_null
+     464: aload_0
+     465: getfield      #4                  // Field signPk:Ljava/security/PrivateKey;
+     468: if_acmpeq     475
+     471: iconst_1
+     472: goto          476
+     475: iconst_0
+     476: ireturn
+
+  public void initialize(java.lang.String) throws java.io.IOException, java.security.GeneralSecurityException, java.lang.IllegalAccessException, java.lang.NoSuchFieldException;
+    Code:
+       0: aconst_null
+       1: aload_1
+       2: if_acmpeq     23
+       5: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+       8: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      11: aload_1
+      12: invokedynamic #351,  0            // InvokeDynamic #30:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      17: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      20: goto          35
+      23: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+      26: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      29: ldc_w         #352                // String Initializing Crypto
+      32: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      35: getstatic     #353                // Field WITH_SIGNING:Z
+      38: ifeq          566
+      41: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+      44: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      47: ldc_w         #354                // String Signing enabled
+      50: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      53: ldc_w         #355                // String jdk.certpath.disabledAlgorithms
+      56: invokestatic  #356                // Method java/security/Security.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+      59: astore_2
+      60: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+      63: getstatic     #83                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+      66: aload_2
+      67: ifnull        74
+      70: aload_2
+      71: goto          77
+      74: ldc_w         #357                // String not provided
+      77: invokedynamic #358,  0            // InvokeDynamic #31:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      82: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      85: aload_2
+      86: ifnull        111
+      89: aload_2
+      90: ldc_w         #359                // String SHA1withRSA
+      93: invokevirtual #360                // Method java/lang/String.contains:(Ljava/lang/CharSequence;)Z
+      96: ifeq          111
+      99: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     102: getstatic     #361                // Field org/slf4j/event/Level.WARN:Lorg/slf4j/event/Level;
+     105: ldc_w         #362                // String SHA1withRSA is disabled in jdk.certpath.disabledAlgorithms, this can have effect in PKIXCertificateValidationProvider\nYou might need to run\n$sudo update-crypto-policies --set LEGACY\non your machine
+     108: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     111: getstatic     #363                // Field org/bol/crypto/CryptoCore$PROVIDER_TYPES.TEST:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+     114: getstatic     #304                // Field PROVIDER_TYPE:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+     117: if_acmpne     180
+     120: ldc           #50                 // String RSA
+     122: invokestatic  #364                // Method java/security/KeyPairGenerator.getInstance:(Ljava/lang/String;)Ljava/security/KeyPairGenerator;
+     125: astore_3
+     126: aload_3
+     127: sipush        2048
+     130: new           #146                // class java/security/SecureRandom
+     133: dup
+     134: ldc_w         #365                // String test
+     137: invokevirtual #206                // Method java/lang/String.getBytes:()[B
+     140: invokespecial #366                // Method java/security/SecureRandom."<init>":([B)V
+     143: invokevirtual #367                // Method java/security/KeyPairGenerator.initialize:(ILjava/security/SecureRandom;)V
+     146: aload_3
+     147: invokevirtual #368                // Method java/security/KeyPairGenerator.generateKeyPair:()Ljava/security/KeyPair;
+     150: astore        4
+     152: ldc_w         #369                // String CN=Test, L=Vilnius, C=LT
+     155: aload         4
+     157: sipush        365
+     160: ldc_w         #314                // String SHA256withRSA
+     163: aconst_null
+     164: invokestatic  #370                // Method generateCertificate:(Ljava/lang/String;Ljava/security/KeyPair;ILjava/lang/String;Ljava/math/BigInteger;)Ljava/security/cert/X509Certificate;
+     167: astore        5
+     169: aload_0
+     170: aload         5
+     172: aload         4
+     174: invokevirtual #371                // Method setSigningProps:(Ljava/security/cert/X509Certificate;Ljava/security/KeyPair;)V
+     177: goto          566
+     180: getstatic     #372                // Field org/bol/crypto/CryptoCore$PROVIDER_TYPES.DEMO:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+     183: getstatic     #304                // Field PROVIDER_TYPE:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+     186: if_acmpne     251
+     189: ldc           #50                 // String RSA
+     191: invokestatic  #364                // Method java/security/KeyPairGenerator.getInstance:(Ljava/lang/String;)Ljava/security/KeyPairGenerator;
+     194: astore_3
+     195: aload_3
+     196: sipush        2048
+     199: new           #146                // class java/security/SecureRandom
+     202: dup
+     203: ldc_w         #373                // String demo
+     206: invokevirtual #206                // Method java/lang/String.getBytes:()[B
+     209: invokespecial #366                // Method java/security/SecureRandom."<init>":([B)V
+     212: invokevirtual #367                // Method java/security/KeyPairGenerator.initialize:(ILjava/security/SecureRandom;)V
+     215: aload_3
+     216: invokevirtual #368                // Method java/security/KeyPairGenerator.generateKeyPair:()Ljava/security/KeyPair;
+     219: astore        4
+     221: getstatic     #374                // Field DEMO_SUBJ:Ljava/lang/String;
+     224: aload         4
+     226: sipush        365
+     229: ldc_w         #314                // String SHA256withRSA
+     232: getstatic     #375                // Field DEMO_SN:Ljava/math/BigInteger;
+     235: invokestatic  #370                // Method generateCertificate:(Ljava/lang/String;Ljava/security/KeyPair;ILjava/lang/String;Ljava/math/BigInteger;)Ljava/security/cert/X509Certificate;
+     238: astore        5
+     240: aload_0
+     241: aload         5
+     243: aload         4
+     245: invokevirtual #371                // Method setSigningProps:(Ljava/security/cert/X509Certificate;Ljava/security/KeyPair;)V
+     248: goto          566
+     251: iconst_m1
+     252: istore_3
+     253: aload_0
+     254: iload_3
+     255: invokevirtual #376                // Method initializeProviderKeyStore:(I)I
+     258: istore_3
+     259: iload_3
+     260: iflt          535
+     263: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     266: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     269: iload_3
+     270: invokestatic  #110                // Method java/lang/System.lineSeparator:()Ljava/lang/String;
+     273: aload_0
+     274: getfield      #3                  // Field prov:Ljava/security/Provider;
+     277: invokevirtual #377                // Method java/security/Provider.getInfo:()Ljava/lang/String;
+     280: invokedynamic #378,  0            // InvokeDynamic #32:makeConcatWithConstants:(ILjava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     285: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     288: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     291: getstatic     #83                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     294: aload_0
+     295: getfield      #3                  // Field prov:Ljava/security/Provider;
+     298: invokevirtual #379                // Method java/security/Provider.getServices:()Ljava/util/Set;
+     301: invokevirtual #292                // Method java/lang/Object.toString:()Ljava/lang/String;
+     304: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     307: aconst_null
+     308: getstatic     #263                // Field signCertPath:Ljava/lang/String;
+     311: if_acmpeq     400
+     314: aconst_null
+     315: aload_0
+     316: getfield      #7                  // Field signCert:Ljava/security/cert/X509Certificate;
+     319: if_acmpeq     400
+     322: aconst_null
+     323: aload_0
+     324: getfield      #4                  // Field signPk:Ljava/security/PrivateKey;
+     327: if_acmpeq     400
+     330: new           #380                // class org/bol/crypto/CryptoCore$2
+     333: dup
+     334: aload_0
+     335: invokespecial #381                // Method org/bol/crypto/CryptoCore$2."<init>":(Lorg/bol/crypto/CryptoCore;)V
+     338: astore        4
+     340: ldc_w         #382                // String TLSv1.2
+     343: invokestatic  #383                // Method javax/net/ssl/SSLContext.getInstance:(Ljava/lang/String;)Ljavax/net/ssl/SSLContext;
+     346: astore        5
+     348: aload         5
+     350: iconst_1
+     351: anewarray     #384                // class javax/net/ssl/KeyManager
+     354: dup
+     355: iconst_0
+     356: aload         4
+     358: aastore
+     359: aconst_null
+     360: aconst_null
+     361: invokevirtual #385                // Method javax/net/ssl/SSLContext.init:([Ljavax/net/ssl/KeyManager;[Ljavax/net/ssl/TrustManager;Ljava/security/SecureRandom;)V
+     364: aload         5
+     366: invokevirtual #386                // Method javax/net/ssl/SSLContext.getSocketFactory:()Ljavax/net/ssl/SSLSocketFactory;
+     369: astore        6
+     371: aload_0
+     372: new           #387                // class org/bol/crypto/CryptoCore$3
+     375: dup
+     376: aload_0
+     377: aload         6
+     379: invokespecial #388                // Method org/bol/crypto/CryptoCore$3."<init>":(Lorg/bol/crypto/CryptoCore;Ljavax/net/ssl/SSLSocketFactory;)V
+     382: putfield      #2                  // Field sslSocketFactory:Ljavax/net/ssl/SSLSocketFactory;
+     385: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     388: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     391: ldc_w         #389                // String Signing certificate private key found, stopping search
+     394: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     397: goto          539
+     400: aconst_null
+     401: aload_0
+     402: getfield      #6                  // Field provKeyStore:Ljava/security/KeyStore;
+     405: if_acmpeq     535
+     408: aload_0
+     409: aload_0
+     410: getfield      #6                  // Field provKeyStore:Ljava/security/KeyStore;
+     413: invokevirtual #390                // Method locateProviderSigningCertificate:(Ljava/security/KeyStore;)Z
+     416: ifeq          535
+     419: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     422: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     425: invokestatic  #391                // Method javax/net/ssl/KeyManagerFactory.getDefaultAlgorithm:()Ljava/lang/String;
+     428: invokedynamic #392,  0            // InvokeDynamic #33:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     433: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     436: invokestatic  #391                // Method javax/net/ssl/KeyManagerFactory.getDefaultAlgorithm:()Ljava/lang/String;
+     439: invokestatic  #393                // Method javax/net/ssl/KeyManagerFactory.getInstance:(Ljava/lang/String;)Ljavax/net/ssl/KeyManagerFactory;
+     442: astore        4
+     444: aload         4
+     446: aload_0
+     447: getfield      #6                  // Field provKeyStore:Ljava/security/KeyStore;
+     450: getstatic     #184                // Field ETOKEN_PASS:Ljava/lang/String;
+     453: invokevirtual #185                // Method java/lang/String.toCharArray:()[C
+     456: invokevirtual #394                // Method javax/net/ssl/KeyManagerFactory.init:(Ljava/security/KeyStore;[C)V
+     459: aload         4
+     461: invokevirtual #395                // Method javax/net/ssl/KeyManagerFactory.getKeyManagers:()[Ljavax/net/ssl/KeyManager;
+     464: astore        5
+     466: aload         5
+     468: iconst_0
+     469: aaload
+     470: checkcast     #396                // class javax/net/ssl/X509ExtendedKeyManager
+     473: astore        6
+     475: new           #397                // class org/bol/crypto/CryptoCore$4
+     478: dup
+     479: aload_0
+     480: aload         6
+     482: invokespecial #398                // Method org/bol/crypto/CryptoCore$4."<init>":(Lorg/bol/crypto/CryptoCore;Ljavax/net/ssl/X509ExtendedKeyManager;)V
+     485: astore        7
+     487: ldc_w         #399                // String TLS
+     490: invokestatic  #383                // Method javax/net/ssl/SSLContext.getInstance:(Ljava/lang/String;)Ljavax/net/ssl/SSLContext;
+     493: astore        8
+     495: aload         8
+     497: iconst_1
+     498: anewarray     #384                // class javax/net/ssl/KeyManager
+     501: dup
+     502: iconst_0
+     503: aload         7
+     505: aastore
+     506: aconst_null
+     507: aconst_null
+     508: invokevirtual #385                // Method javax/net/ssl/SSLContext.init:([Ljavax/net/ssl/KeyManager;[Ljavax/net/ssl/TrustManager;Ljava/security/SecureRandom;)V
+     511: aload_0
+     512: aload         8
+     514: invokevirtual #386                // Method javax/net/ssl/SSLContext.getSocketFactory:()Ljavax/net/ssl/SSLSocketFactory;
+     517: putfield      #2                  // Field sslSocketFactory:Ljavax/net/ssl/SSLSocketFactory;
+     520: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     523: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     526: ldc_w         #400                // String Signing certificate found, stopping search
+     529: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     532: goto          539
+     535: iload_3
+     536: ifge          253
+     539: aconst_null
+     540: aload_0
+     541: getfield      #7                  // Field signCert:Ljava/security/cert/X509Certificate;
+     544: if_acmpeq     555
+     547: aconst_null
+     548: aload_0
+     549: getfield      #4                  // Field signPk:Ljava/security/PrivateKey;
+     552: if_acmpne     566
+     555: new           #201                // class java/lang/IllegalStateException
+     558: dup
+     559: ldc_w         #401                // String Unable to acquire valid signing certificate or private key
+     562: invokespecial #203                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     565: athrow
+     566: getstatic     #78                 // Field log:Lorg/slf4j/Logger;
+     569: getstatic     #88                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     572: ldc_w         #402                // String Crypto init done
+     575: invokestatic  #86                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     578: return
+
+  public void cleanupProvider() throws java.lang.NoSuchFieldException, java.lang.SecurityException, java.lang.IllegalArgumentException, java.lang.IllegalAccessException;
+    Code:
+       0: getstatic     #304                // Field PROVIDER_TYPE:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+       3: getstatic     #305                // Field org/bol/crypto/CryptoCore$PROVIDER_TYPES.PKCS11:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+       6: invokevirtual #306                // Method org/bol/crypto/CryptoCore$PROVIDER_TYPES.equals:(Ljava/lang/Object;)Z
+       9: ifeq          16
+      12: aload_0
+      13: invokevirtual #240                // Method cleanupPKCS11Provider:()V
+      16: return
+
+  static {};
+    Code:
+       0: ldc           #192                // class org/bol/crypto/CryptoCore
+       2: invokestatic  #403                // Method org/slf4j/LoggerFactory.getLogger:(Ljava/lang/Class;)Lorg/slf4j/Logger;
+       5: putstatic     #78                 // Field log:Lorg/slf4j/Logger;
+       8: ldc_w         #404                // String smartcard
+      11: putstatic     #248                // Field ETOKEN:Ljava/lang/String;
+      14: ldc           #255                // String
+      16: putstatic     #184                // Field ETOKEN_PASS:Ljava/lang/String;
+      19: new           #145                // class java/math/BigInteger
+      22: dup
+      23: ldc_w         #405                // String ff00ee00dd00cc00bb00
+      26: bipush        16
+      28: invokespecial #406                // Method java/math/BigInteger."<init>":(Ljava/lang/String;I)V
+      31: putstatic     #375                // Field DEMO_SN:Ljava/math/BigInteger;
+      34: ldc_w         #407                // String CN=Demo, L=Vilnius, C=LT
+      37: putstatic     #374                // Field DEMO_SUBJ:Ljava/lang/String;
+      40: aconst_null
+      41: putstatic     #340                // Field ETOKEN_ALIAS:Ljava/lang/String;
+      44: aconst_null
+      45: putstatic     #408                // Field TSA_URL:Ljava/lang/String;
+      48: ldc_w         #409                // String C:\\Windows\\System32\\eTPKCS11.dll
+      51: putstatic     #182                // Field PKCS11_DLL:Ljava/lang/String;
+      54: ldc2_w        #71                 // long -1l
+      57: putstatic     #115                // Field PKCS11_SLOT:J
+      60: iconst_0
+      61: putstatic     #250                // Field PKCS11_USE_SLOT_INDEX:Z
+      64: getstatic     #305                // Field org/bol/crypto/CryptoCore$PROVIDER_TYPES.PKCS11:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+      67: putstatic     #304                // Field PROVIDER_TYPE:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+      70: ldc_w         #410                // String cfgFiles\\server.conf
+      73: putstatic     #411                // Field SERVER_CONF:Ljava/lang/String;
+      76: aconst_null
+      77: putstatic     #263                // Field signCertPath:Ljava/lang/String;
+      80: aconst_null
+      81: putstatic     #253                // Field enabledMechanisms:Ljava/lang/String;
+      84: ldc2_w        #71                 // long -1l
+      87: putstatic     #226                // Field signSession:J
+      90: iconst_1
+      91: putstatic     #353                // Field WITH_SIGNING:Z
+      94: return
+}

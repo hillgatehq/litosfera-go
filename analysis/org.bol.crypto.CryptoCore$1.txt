@@ -1,0 +1,46 @@
+Compiled from "CryptoCore.java"
+class org.bol.crypto.CryptoCore$1 implements javax.security.auth.callback.CallbackHandler {
+  final org.bol.crypto.CryptoCore this$0;
+
+  org.bol.crypto.CryptoCore$1(org.bol.crypto.CryptoCore);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #1                  // Field this$0:Lorg/bol/crypto/CryptoCore;
+       5: aload_0
+       6: invokespecial #2                  // Method java/lang/Object."<init>":()V
+       9: return
+
+  public void handle(javax.security.auth.callback.Callback[]) throws java.io.IOException, javax.security.auth.callback.UnsupportedCallbackException;
+    Code:
+       0: aload_1
+       1: astore_2
+       2: aload_2
+       3: arraylength
+       4: istore_3
+       5: iconst_0
+       6: istore        4
+       8: iload         4
+      10: iload_3
+      11: if_icmpge     49
+      14: aload_2
+      15: iload         4
+      17: aaload
+      18: astore        5
+      20: aload         5
+      22: instanceof    #3                  // class javax/security/auth/callback/PasswordCallback
+      25: ifeq          43
+      28: aload         5
+      30: checkcast     #3                  // class javax/security/auth/callback/PasswordCallback
+      33: getstatic     #4                  // Field org/bol/crypto/CryptoCore.ETOKEN_PASS:Ljava/lang/String;
+      36: invokevirtual #5                  // Method java/lang/String.toCharArray:()[C
+      39: invokevirtual #6                  // Method javax/security/auth/callback/PasswordCallback.setPassword:([C)V
+      42: return
+      43: iinc          4, 1
+      46: goto          8
+      49: new           #7                  // class java/lang/IllegalStateException
+      52: dup
+      53: ldc           #8                  // String No password callback
+      55: invokespecial #9                  // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      58: athrow
+}

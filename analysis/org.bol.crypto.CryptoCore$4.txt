@@ -1,0 +1,136 @@
+Compiled from "CryptoCore.java"
+class org.bol.crypto.CryptoCore$4 extends javax.net.ssl.X509ExtendedKeyManager {
+  final javax.net.ssl.X509ExtendedKeyManager val$origkm;
+
+  final org.bol.crypto.CryptoCore this$0;
+
+  org.bol.crypto.CryptoCore$4(org.bol.crypto.CryptoCore, javax.net.ssl.X509ExtendedKeyManager);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #1                  // Field this$0:Lorg/bol/crypto/CryptoCore;
+       5: aload_0
+       6: aload_2
+       7: putfield      #2                  // Field val$origkm:Ljavax/net/ssl/X509ExtendedKeyManager;
+      10: aload_0
+      11: invokespecial #3                  // Method javax/net/ssl/X509ExtendedKeyManager."<init>":()V
+      14: return
+
+  public java.lang.String chooseClientAlias(java.lang.String[], java.security.Principal[], java.net.Socket);
+    Code:
+       0: aconst_null
+       1: aload_0
+       2: getfield      #1                  // Field this$0:Lorg/bol/crypto/CryptoCore;
+       5: getfield      #4                  // Field org/bol/crypto/CryptoCore.signCert:Ljava/security/cert/X509Certificate;
+       8: if_acmpeq     139
+      11: aconst_null
+      12: aload_0
+      13: getfield      #1                  // Field this$0:Lorg/bol/crypto/CryptoCore;
+      16: getfield      #5                  // Field org/bol/crypto/CryptoCore.signCertAlias:Ljava/lang/String;
+      19: if_acmpeq     139
+      22: getstatic     #6                  // Field org/bol/crypto/CryptoCore.log:Lorg/slf4j/Logger;
+      25: getstatic     #7                  // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      28: aload_0
+      29: getfield      #1                  // Field this$0:Lorg/bol/crypto/CryptoCore;
+      32: getfield      #4                  // Field org/bol/crypto/CryptoCore.signCert:Ljava/security/cert/X509Certificate;
+      35: invokevirtual #8                  // Method java/security/cert/X509Certificate.getIssuerX500Principal:()Ljavax/security/auth/x500/X500Principal;
+      38: invokedynamic #9,  0              // InvokeDynamic #0:makeConcatWithConstants:(Ljavax/security/auth/x500/X500Principal;)Ljava/lang/String;
+      43: invokestatic  #10                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      46: getstatic     #6                  // Field org/bol/crypto/CryptoCore.log:Lorg/slf4j/Logger;
+      49: getstatic     #7                  // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      52: aload_2
+      53: invokestatic  #11                 // Method java/util/Arrays.toString:([Ljava/lang/Object;)Ljava/lang/String;
+      56: invokestatic  #10                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      59: aload_2
+      60: astore        4
+      62: aload         4
+      64: arraylength
+      65: istore        5
+      67: iconst_0
+      68: istore        6
+      70: iload         6
+      72: iload         5
+      74: if_icmpge     139
+      77: aload         4
+      79: iload         6
+      81: aaload
+      82: astore        7
+      84: aload         7
+      86: aload_0
+      87: getfield      #1                  // Field this$0:Lorg/bol/crypto/CryptoCore;
+      90: getfield      #4                  // Field org/bol/crypto/CryptoCore.signCert:Ljava/security/cert/X509Certificate;
+      93: invokevirtual #8                  // Method java/security/cert/X509Certificate.getIssuerX500Principal:()Ljavax/security/auth/x500/X500Principal;
+      96: invokeinterface #12,  2           // InterfaceMethod java/security/Principal.equals:(Ljava/lang/Object;)Z
+     101: ifeq          133
+     104: getstatic     #6                  // Field org/bol/crypto/CryptoCore.log:Lorg/slf4j/Logger;
+     107: getstatic     #7                  // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     110: aload_0
+     111: getfield      #1                  // Field this$0:Lorg/bol/crypto/CryptoCore;
+     114: getfield      #5                  // Field org/bol/crypto/CryptoCore.signCertAlias:Ljava/lang/String;
+     117: invokedynamic #13,  0             // InvokeDynamic #1:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     122: invokestatic  #10                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     125: aload_0
+     126: getfield      #1                  // Field this$0:Lorg/bol/crypto/CryptoCore;
+     129: getfield      #5                  // Field org/bol/crypto/CryptoCore.signCertAlias:Ljava/lang/String;
+     132: areturn
+     133: iinc          6, 1
+     136: goto          70
+     139: aconst_null
+     140: getstatic     #14                 // Field org/bol/crypto/CryptoCore.signCertPath:Ljava/lang/String;
+     143: if_acmpne     157
+     146: getstatic     #6                  // Field org/bol/crypto/CryptoCore.log:Lorg/slf4j/Logger;
+     149: getstatic     #15                 // Field org/slf4j/event/Level.ERROR:Lorg/slf4j/event/Level;
+     152: ldc           #16                 // String Unable to locate SSL client keystore alias
+     154: invokestatic  #10                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     157: aload_0
+     158: getfield      #2                  // Field val$origkm:Ljavax/net/ssl/X509ExtendedKeyManager;
+     161: aload_1
+     162: aload_2
+     163: aload_3
+     164: invokevirtual #17                 // Method javax/net/ssl/X509ExtendedKeyManager.chooseClientAlias:([Ljava/lang/String;[Ljava/security/Principal;Ljava/net/Socket;)Ljava/lang/String;
+     167: areturn
+
+  public java.lang.String chooseServerAlias(java.lang.String, java.security.Principal[], java.net.Socket);
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field val$origkm:Ljavax/net/ssl/X509ExtendedKeyManager;
+       4: aload_1
+       5: aload_2
+       6: aload_3
+       7: invokevirtual #18                 // Method javax/net/ssl/X509ExtendedKeyManager.chooseServerAlias:(Ljava/lang/String;[Ljava/security/Principal;Ljava/net/Socket;)Ljava/lang/String;
+      10: areturn
+
+  public java.security.cert.X509Certificate[] getCertificateChain(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field val$origkm:Ljavax/net/ssl/X509ExtendedKeyManager;
+       4: aload_1
+       5: invokevirtual #19                 // Method javax/net/ssl/X509ExtendedKeyManager.getCertificateChain:(Ljava/lang/String;)[Ljava/security/cert/X509Certificate;
+       8: areturn
+
+  public java.lang.String[] getClientAliases(java.lang.String, java.security.Principal[]);
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field val$origkm:Ljavax/net/ssl/X509ExtendedKeyManager;
+       4: aload_1
+       5: aload_2
+       6: invokevirtual #20                 // Method javax/net/ssl/X509ExtendedKeyManager.getClientAliases:(Ljava/lang/String;[Ljava/security/Principal;)[Ljava/lang/String;
+       9: areturn
+
+  public java.security.PrivateKey getPrivateKey(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field val$origkm:Ljavax/net/ssl/X509ExtendedKeyManager;
+       4: aload_1
+       5: invokevirtual #21                 // Method javax/net/ssl/X509ExtendedKeyManager.getPrivateKey:(Ljava/lang/String;)Ljava/security/PrivateKey;
+       8: areturn
+
+  public java.lang.String[] getServerAliases(java.lang.String, java.security.Principal[]);
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field val$origkm:Ljavax/net/ssl/X509ExtendedKeyManager;
+       4: aload_1
+       5: aload_2
+       6: invokevirtual #22                 // Method javax/net/ssl/X509ExtendedKeyManager.getServerAliases:(Ljava/lang/String;[Ljava/security/Principal;)[Ljava/lang/String;
+       9: areturn
+}

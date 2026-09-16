@@ -1,0 +1,84 @@
+Compiled from "CustomUriDereferencer.java"
+class org.bol.xml.CustomUriDereferencer$1 implements java.util.Iterator<org.w3c.dom.Node> {
+  private final java.util.Queue queue;
+
+  final org.w3c.dom.Node val$root;
+
+  org.bol.xml.CustomUriDereferencer$1(org.w3c.dom.Node);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #1                  // Field val$root:Lorg/w3c/dom/Node;
+       5: aload_0
+       6: invokespecial #2                  // Method java/lang/Object."<init>":()V
+       9: aload_0
+      10: aload_0
+      11: aload_0
+      12: getfield      #1                  // Field val$root:Lorg/w3c/dom/Node;
+      15: invokevirtual #3                  // Method initQueue:(Lorg/w3c/dom/Node;)Ljava/util/Queue;
+      18: putfield      #4                  // Field queue:Ljava/util/Queue;
+      21: return
+
+  private java.util.Queue<org.w3c.dom.Node> initQueue(org.w3c.dom.Node);
+    Code:
+       0: new           #5                  // class java/util/LinkedList
+       3: dup
+       4: invokespecial #6                  // Method java/util/LinkedList."<init>":()V
+       7: astore_2
+       8: aload_2
+       9: aload_1
+      10: invokeinterface #7,  2            // InterfaceMethod java/util/Queue.add:(Ljava/lang/Object;)Z
+      15: pop
+      16: aload_2
+      17: areturn
+
+  public boolean hasNext();
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field queue:Ljava/util/Queue;
+       4: invokeinterface #8,  1            // InterfaceMethod java/util/Queue.isEmpty:()Z
+       9: ifne          16
+      12: iconst_1
+      13: goto          17
+      16: iconst_0
+      17: ireturn
+
+  public org.w3c.dom.Node next();
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field queue:Ljava/util/Queue;
+       4: invokeinterface #8,  1            // InterfaceMethod java/util/Queue.isEmpty:()Z
+       9: ifeq          22
+      12: new           #9                  // class java/util/NoSuchElementException
+      15: dup
+      16: ldc           #10                 // String No more nodes in the iterator
+      18: invokespecial #11                 // Method java/util/NoSuchElementException."<init>":(Ljava/lang/String;)V
+      21: athrow
+      22: aload_0
+      23: getfield      #4                  // Field queue:Ljava/util/Queue;
+      26: invokeinterface #12,  1           // InterfaceMethod java/util/Queue.poll:()Ljava/lang/Object;
+      31: checkcast     #13                 // class org/w3c/dom/Node
+      34: astore_1
+      35: aload_1
+      36: invokeinterface #14,  1           // InterfaceMethod org/w3c/dom/Node.getFirstChild:()Lorg/w3c/dom/Node;
+      41: astore_2
+      42: aload_2
+      43: ifnull        67
+      46: aload_0
+      47: getfield      #4                  // Field queue:Ljava/util/Queue;
+      50: aload_2
+      51: invokeinterface #7,  2            // InterfaceMethod java/util/Queue.add:(Ljava/lang/Object;)Z
+      56: pop
+      57: aload_2
+      58: invokeinterface #15,  1           // InterfaceMethod org/w3c/dom/Node.getNextSibling:()Lorg/w3c/dom/Node;
+      63: astore_2
+      64: goto          42
+      67: aload_1
+      68: areturn
+
+  public java.lang.Object next();
+    Code:
+       0: aload_0
+       1: invokevirtual #16                 // Method next:()Lorg/w3c/dom/Node;
+       4: areturn
+}

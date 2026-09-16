@@ -1,0 +1,1303 @@
+Compiled from "VerifyXmlSignature.java"
+public class org.bol.crypto.xml.VerifyXmlSignature {
+  private static org.slf4j.Logger log;
+
+  private static final java.util.Map<org.bouncycastle.asn1.ASN1ObjectIdentifier, java.lang.String> digestOidToUriMappings;
+
+  private org.bol.crypto.xml.VerifyXmlSignature();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public static int[] bytearray2unsignedshort(byte[]);
+    Code:
+       0: aload_0
+       1: arraylength
+       2: newarray       int
+       4: astore_1
+       5: iconst_0
+       6: istore_2
+       7: aload_0
+       8: astore_3
+       9: aload_3
+      10: arraylength
+      11: istore        4
+      13: iconst_0
+      14: istore        5
+      16: iload         5
+      18: iload         4
+      20: if_icmpge     57
+      23: aload_3
+      24: iload         5
+      26: baload
+      27: istore        6
+      29: aload_1
+      30: iload_2
+      31: iinc          2, 1
+      34: iload         6
+      36: iflt          44
+      39: iload         6
+      41: goto          50
+      44: sipush        256
+      47: iload         6
+      49: iadd
+      50: iastore
+      51: iinc          5, 1
+      54: goto          16
+      57: aload_1
+      58: areturn
+
+  protected static java.util.Map<java.lang.String, java.lang.Object> dumpSignatureValidationData(javax.xml.crypto.dsig.XMLSignature, javax.xml.crypto.dsig.dom.DOMValidateContext, java.security.cert.X509Certificate, boolean, boolean) throws java.security.NoSuchAlgorithmException, javax.crypto.NoSuchPaddingException, javax.crypto.IllegalBlockSizeException, javax.crypto.BadPaddingException, javax.xml.crypto.dsig.XMLSignatureException, java.security.InvalidKeyException, java.io.IOException;
+    Code:
+       0: new           #2                  // class java/util/HashMap
+       3: dup
+       4: invokespecial #3                  // Method java/util/HashMap."<init>":()V
+       7: astore        5
+       9: iload         4
+      11: ifeq          125
+      14: ldc           #4                  // String RSA/ECB/PKCS1Padding
+      16: invokestatic  #5                  // Method javax/crypto/Cipher.getInstance:(Ljava/lang/String;)Ljavax/crypto/Cipher;
+      19: astore        6
+      21: aload         6
+      23: iconst_2
+      24: aload_2
+      25: invokevirtual #7                  // Method java/security/cert/X509Certificate.getPublicKey:()Ljava/security/PublicKey;
+      28: invokevirtual #8                  // Method javax/crypto/Cipher.init:(ILjava/security/Key;)V
+      31: aload         6
+      33: aload_0
+      34: invokeinterface #9,  1            // InterfaceMethod javax/xml/crypto/dsig/XMLSignature.getSignatureValue:()Ljavax/xml/crypto/dsig/XMLSignature$SignatureValue;
+      39: invokeinterface #10,  1           // InterfaceMethod javax/xml/crypto/dsig/XMLSignature$SignatureValue.getValue:()[B
+      44: invokevirtual #11                 // Method javax/crypto/Cipher.doFinal:([B)[B
+      47: astore        7
+      49: getstatic     #12                 // Field log:Lorg/slf4j/Logger;
+      52: getstatic     #13                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      55: aload         7
+      57: arraylength
+      58: invokedynamic #14,  0             // InvokeDynamic #0:makeConcatWithConstants:(I)Ljava/lang/String;
+      63: invokestatic  #15                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      66: getstatic     #12                 // Field log:Lorg/slf4j/Logger;
+      69: getstatic     #13                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      72: aload         7
+      74: invokestatic  #16                 // Method bytearray2unsignedshort:([B)[I
+      77: invokestatic  #17                 // Method java/util/Arrays.toString:([I)Ljava/lang/String;
+      80: invokestatic  #15                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      83: aload         5
+      85: ldc           #18                 // String hash
+      87: invokestatic  #19                 // Method java/util/Base64.getEncoder:()Ljava/util/Base64$Encoder;
+      90: aload         7
+      92: invokevirtual #20                 // Method java/util/Base64$Encoder.encodeToString:([B)Ljava/lang/String;
+      95: invokeinterface #21,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     100: pop
+     101: goto          125
+     104: astore        6
+     106: getstatic     #12                 // Field log:Lorg/slf4j/Logger;
+     109: getstatic     #23                 // Field org/slf4j/event/Level.WARN:Lorg/slf4j/event/Level;
+     112: aload         6
+     114: invokevirtual #24                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+     117: invokedynamic #25,  0             // InvokeDynamic #1:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     122: invokestatic  #15                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     125: aload_1
+     126: ldc           #26                 // String javax.xml.crypto.dsig.cacheReference
+     128: getstatic     #27                 // Field java/lang/Boolean.TRUE:Ljava/lang/Boolean;
+     131: invokevirtual #28                 // Method javax/xml/crypto/dsig/dom/DOMValidateContext.setProperty:(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;
+     134: pop
+     135: aload_0
+     136: invokeinterface #9,  1            // InterfaceMethod javax/xml/crypto/dsig/XMLSignature.getSignatureValue:()Ljavax/xml/crypto/dsig/XMLSignature$SignatureValue;
+     141: aload_1
+     142: invokeinterface #29,  2           // InterfaceMethod javax/xml/crypto/dsig/XMLSignature$SignatureValue.validate:(Ljavax/xml/crypto/dsig/XMLValidateContext;)Z
+     147: istore        6
+     149: getstatic     #12                 // Field log:Lorg/slf4j/Logger;
+     152: getstatic     #30                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     155: iload_3
+     156: ifeq          164
+     159: ldc           #31                 // String Reversed
+     161: goto          166
+     164: ldc           #32                 // String
+     166: iload         6
+     168: invokedynamic #33,  0             // InvokeDynamic #2:makeConcatWithConstants:(Ljava/lang/String;Z)Ljava/lang/String;
+     173: invokestatic  #15                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     176: new           #34                 // class java/util/ArrayList
+     179: dup
+     180: invokespecial #35                 // Method java/util/ArrayList."<init>":()V
+     183: astore        7
+     185: aload         5
+     187: ldc           #36                 // String core
+     189: iload         6
+     191: invokestatic  #37                 // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+     194: invokeinterface #21,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     199: pop
+     200: aload_0
+     201: invokeinterface #38,  1           // InterfaceMethod javax/xml/crypto/dsig/XMLSignature.getSignedInfo:()Ljavax/xml/crypto/dsig/SignedInfo;
+     206: invokeinterface #39,  1           // InterfaceMethod javax/xml/crypto/dsig/SignedInfo.getReferences:()Ljava/util/List;
+     211: invokeinterface #40,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     216: astore        8
+     218: iconst_0
+     219: istore        9
+     221: aload         8
+     223: invokeinterface #41,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     228: ifeq          811
+     231: aload         8
+     233: invokeinterface #42,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     238: checkcast     #43                 // class javax/xml/crypto/dsig/Reference
+     241: astore        10
+     243: aload         10
+     245: aload_1
+     246: invokeinterface #44,  2           // InterfaceMethod javax/xml/crypto/dsig/Reference.validate:(Ljavax/xml/crypto/dsig/XMLValidateContext;)Z
+     251: istore        11
+     253: invokestatic  #19                 // Method java/util/Base64.getEncoder:()Ljava/util/Base64$Encoder;
+     256: aload         10
+     258: invokeinterface #45,  1           // InterfaceMethod javax/xml/crypto/dsig/Reference.getDigestValue:()[B
+     263: invokevirtual #20                 // Method java/util/Base64$Encoder.encodeToString:([B)Ljava/lang/String;
+     266: astore        12
+     268: invokestatic  #19                 // Method java/util/Base64.getEncoder:()Ljava/util/Base64$Encoder;
+     271: aload         10
+     273: invokeinterface #46,  1           // InterfaceMethod javax/xml/crypto/dsig/Reference.getCalculatedDigestValue:()[B
+     278: invokevirtual #20                 // Method java/util/Base64$Encoder.encodeToString:([B)Ljava/lang/String;
+     281: astore        13
+     283: getstatic     #12                 // Field log:Lorg/slf4j/Logger;
+     286: getstatic     #30                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     289: iload         9
+     291: aload         10
+     293: invokevirtual #47                 // Method java/lang/Object.toString:()Ljava/lang/String;
+     296: invokedynamic #48,  0             // InvokeDynamic #3:makeConcatWithConstants:(ILjava/lang/String;)Ljava/lang/String;
+     301: invokestatic  #15                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     304: getstatic     #12                 // Field log:Lorg/slf4j/Logger;
+     307: getstatic     #30                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     310: iload         9
+     312: aload         10
+     314: invokeinterface #49,  1           // InterfaceMethod javax/xml/crypto/dsig/Reference.getId:()Ljava/lang/String;
+     319: invokedynamic #50,  0             // InvokeDynamic #4:makeConcatWithConstants:(ILjava/lang/String;)Ljava/lang/String;
+     324: invokestatic  #15                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     327: getstatic     #12                 // Field log:Lorg/slf4j/Logger;
+     330: getstatic     #30                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     333: iload         9
+     335: aload         10
+     337: invokeinterface #51,  1           // InterfaceMethod javax/xml/crypto/dsig/Reference.getType:()Ljava/lang/String;
+     342: invokedynamic #52,  0             // InvokeDynamic #5:makeConcatWithConstants:(ILjava/lang/String;)Ljava/lang/String;
+     347: invokestatic  #15                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     350: getstatic     #12                 // Field log:Lorg/slf4j/Logger;
+     353: getstatic     #30                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     356: iload         9
+     358: aload         10
+     360: invokeinterface #53,  1           // InterfaceMethod javax/xml/crypto/dsig/Reference.getURI:()Ljava/lang/String;
+     365: invokedynamic #54,  0             // InvokeDynamic #6:makeConcatWithConstants:(ILjava/lang/String;)Ljava/lang/String;
+     370: invokestatic  #15                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     373: getstatic     #12                 // Field log:Lorg/slf4j/Logger;
+     376: getstatic     #30                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     379: iload         9
+     381: aload         10
+     383: invokeinterface #55,  1           // InterfaceMethod javax/xml/crypto/dsig/Reference.getTransforms:()Ljava/util/List;
+     388: invokedynamic #56,  0             // InvokeDynamic #7:makeConcatWithConstants:(ILjava/util/List;)Ljava/lang/String;
+     393: invokestatic  #15                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     396: new           #2                  // class java/util/HashMap
+     399: dup
+     400: invokespecial #3                  // Method java/util/HashMap."<init>":()V
+     403: astore        14
+     405: aload         14
+     407: ldc           #57                 // String valid
+     409: iload         11
+     411: invokestatic  #37                 // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+     414: invokeinterface #21,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     419: pop
+     420: aload         14
+     422: ldc           #58                 // String id
+     424: aload         10
+     426: invokeinterface #49,  1           // InterfaceMethod javax/xml/crypto/dsig/Reference.getId:()Ljava/lang/String;
+     431: invokeinterface #21,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     436: pop
+     437: aload         14
+     439: ldc           #59                 // String type
+     441: aload         10
+     443: invokeinterface #51,  1           // InterfaceMethod javax/xml/crypto/dsig/Reference.getType:()Ljava/lang/String;
+     448: invokeinterface #21,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     453: pop
+     454: aload         14
+     456: ldc           #60                 // String uri
+     458: aload         10
+     460: invokeinterface #53,  1           // InterfaceMethod javax/xml/crypto/dsig/Reference.getURI:()Ljava/lang/String;
+     465: invokeinterface #21,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     470: pop
+     471: aload         10
+     473: invokeinterface #55,  1           // InterfaceMethod javax/xml/crypto/dsig/Reference.getTransforms:()Ljava/util/List;
+     478: astore        15
+     480: aconst_null
+     481: aload         15
+     483: if_acmpeq     581
+     486: new           #34                 // class java/util/ArrayList
+     489: dup
+     490: invokespecial #35                 // Method java/util/ArrayList."<init>":()V
+     493: astore        16
+     495: aload         15
+     497: invokeinterface #40,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     502: astore        17
+     504: aload         17
+     506: invokeinterface #41,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     511: ifeq          569
+     514: aload         17
+     516: invokeinterface #42,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     521: checkcast     #61                 // class javax/xml/crypto/dsig/Transform
+     524: astore        18
+     526: aload         18
+     528: invokeinterface #62,  1           // InterfaceMethod javax/xml/crypto/dsig/Transform.getAlgorithm:()Ljava/lang/String;
+     533: astore        19
+     535: new           #2                  // class java/util/HashMap
+     538: dup
+     539: invokespecial #3                  // Method java/util/HashMap."<init>":()V
+     542: astore        20
+     544: aload         20
+     546: ldc           #63                 // String algorithm
+     548: aload         19
+     550: invokeinterface #21,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     555: pop
+     556: aload         16
+     558: aload         20
+     560: invokeinterface #64,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     565: pop
+     566: goto          504
+     569: aload         14
+     571: ldc           #65                 // String transforms
+     573: aload         16
+     575: invokeinterface #21,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     580: pop
+     581: aload         14
+     583: ldc           #66                 // String digest
+     585: aload         12
+     587: invokeinterface #21,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     592: pop
+     593: aload         14
+     595: ldc           #67                 // String calculated
+     597: aload         13
+     599: invokeinterface #21,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     604: pop
+     605: iload         11
+     607: ifne          633
+     610: getstatic     #12                 // Field log:Lorg/slf4j/Logger;
+     613: getstatic     #30                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     616: iload         9
+     618: aload         12
+     620: aload         13
+     622: invokedynamic #68,  0             // InvokeDynamic #8:makeConcatWithConstants:(ILjava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     627: invokestatic  #15                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     630: goto          653
+     633: getstatic     #12                 // Field log:Lorg/slf4j/Logger;
+     636: getstatic     #30                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     639: iload         9
+     641: aload         12
+     643: aload         13
+     645: invokedynamic #69,  0             // InvokeDynamic #9:makeConcatWithConstants:(ILjava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     650: invokestatic  #15                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     653: aconst_null
+     654: aload         10
+     656: invokeinterface #70,  1           // InterfaceMethod javax/xml/crypto/dsig/Reference.getDigestInputStream:()Ljava/io/InputStream;
+     661: if_acmpeq     795
+     664: sipush        4096
+     667: newarray       byte
+     669: astore        16
+     671: new           #71                 // class java/io/BufferedInputStream
+     674: dup
+     675: aload         10
+     677: invokeinterface #70,  1           // InterfaceMethod javax/xml/crypto/dsig/Reference.getDigestInputStream:()Ljava/io/InputStream;
+     682: invokespecial #72                 // Method java/io/BufferedInputStream."<init>":(Ljava/io/InputStream;)V
+     685: astore        17
+     687: new           #73                 // class java/io/ByteArrayOutputStream
+     690: dup
+     691: invokespecial #74                 // Method java/io/ByteArrayOutputStream."<init>":()V
+     694: astore        18
+     696: iconst_0
+     697: istore        19
+     699: aload         17
+     701: aload         16
+     703: iconst_0
+     704: aload         16
+     706: arraylength
+     707: invokevirtual #75                 // Method java/io/BufferedInputStream.read:([BII)I
+     710: dup
+     711: istore        19
+     713: ifle          729
+     716: aload         18
+     718: aload         16
+     720: iconst_0
+     721: iload         19
+     723: invokevirtual #76                 // Method java/io/ByteArrayOutputStream.write:([BII)V
+     726: goto          699
+     729: aload         17
+     731: invokevirtual #77                 // Method java/io/BufferedInputStream.close:()V
+     734: aload         18
+     736: invokevirtual #78                 // Method java/io/ByteArrayOutputStream.close:()V
+     739: getstatic     #12                 // Field log:Lorg/slf4j/Logger;
+     742: getstatic     #30                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     745: iload         9
+     747: aload         10
+     749: invokeinterface #53,  1           // InterfaceMethod javax/xml/crypto/dsig/Reference.getURI:()Ljava/lang/String;
+     754: aload         18
+     756: invokevirtual #79                 // Method java/io/ByteArrayOutputStream.size:()I
+     759: invokedynamic #80,  0             // InvokeDynamic #10:makeConcatWithConstants:(ILjava/lang/String;I)Ljava/lang/String;
+     764: invokestatic  #15                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     767: getstatic     #12                 // Field log:Lorg/slf4j/Logger;
+     770: getstatic     #30                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     773: iload         9
+     775: aload         10
+     777: invokeinterface #53,  1           // InterfaceMethod javax/xml/crypto/dsig/Reference.getURI:()Ljava/lang/String;
+     782: invokedynamic #81,  0             // InvokeDynamic #11:makeConcatWithConstants:(ILjava/lang/String;)Ljava/lang/String;
+     787: aload         18
+     789: invokevirtual #82                 // Method java/io/ByteArrayOutputStream.toByteArray:()[B
+     792: invokestatic  #83                 // Method org/bol/server/LogWrapper.dumpBytes:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;[B)V
+     795: aload         7
+     797: aload         14
+     799: invokeinterface #64,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     804: pop
+     805: iinc          9, 1
+     808: goto          221
+     811: aload         5
+     813: ldc           #84                 // String references
+     815: aload         7
+     817: invokeinterface #21,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     822: pop
+     823: aload         5
+     825: areturn
+    Exception table:
+       from    to  target type
+          14   101   104   Class java/lang/Exception
+
+  protected static void verifyEdocCertificateSerialNumber(org.w3c.dom.Element, java.math.BigInteger);
+    Code:
+       0: aload_0
+       1: ldc           #85                 // String *
+       3: ldc           #86                 // String SigningCertificate
+       5: invokeinterface #87,  3           // InterfaceMethod org/w3c/dom/Element.getElementsByTagNameNS:(Ljava/lang/String;Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+      10: iconst_0
+      11: invokeinterface #88,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+      16: checkcast     #89                 // class org/w3c/dom/Element
+      19: astore_2
+      20: aconst_null
+      21: aload_2
+      22: if_acmpeq     126
+      25: getstatic     #12                 // Field log:Lorg/slf4j/Logger;
+      28: getstatic     #30                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+      31: ldc           #90                 // String Verifying certificate nr...
+      33: invokestatic  #15                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      36: aload_0
+      37: ldc           #85                 // String *
+      39: ldc           #91                 // String X509SerialNumber
+      41: invokeinterface #87,  3           // InterfaceMethod org/w3c/dom/Element.getElementsByTagNameNS:(Ljava/lang/String;Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+      46: iconst_0
+      47: invokeinterface #88,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+      52: checkcast     #89                 // class org/w3c/dom/Element
+      55: astore_3
+      56: aconst_null
+      57: aload_3
+      58: if_acmpeq     116
+      61: aload_3
+      62: invokestatic  #92                 // Method org/bol/xml/XmlHelper.getCharacterDataFromElement:(Lorg/w3c/dom/Element;)Ljava/lang/String;
+      65: astore        4
+      67: new           #93                 // class java/math/BigInteger
+      70: dup
+      71: aload         4
+      73: invokespecial #94                 // Method java/math/BigInteger."<init>":(Ljava/lang/String;)V
+      76: astore        5
+      78: aload         5
+      80: aload_1
+      81: invokevirtual #95                 // Method java/math/BigInteger.equals:(Ljava/lang/Object;)Z
+      84: ifne          113
+      87: new           #96                 // class java/lang/IllegalStateException
+      90: dup
+      91: aload_1
+      92: bipush        16
+      94: invokevirtual #97                 // Method java/math/BigInteger.toString:(I)Ljava/lang/String;
+      97: aload         5
+      99: bipush        16
+     101: invokevirtual #97                 // Method java/math/BigInteger.toString:(I)Ljava/lang/String;
+     104: invokedynamic #98,  0             // InvokeDynamic #12:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     109: invokespecial #99                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     112: athrow
+     113: goto          126
+     116: new           #96                 // class java/lang/IllegalStateException
+     119: dup
+     120: ldc           #100                // String X509SerialNumber not found in SigningCertificate
+     122: invokespecial #99                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     125: athrow
+     126: return
+
+  private static java.lang.String getNodePath(org.w3c.dom.Document, org.w3c.dom.Node);
+    Code:
+       0: aload_0
+       1: invokeinterface #101,  1          // InterfaceMethod org/w3c/dom/Document.getDocumentElement:()Lorg/w3c/dom/Element;
+       6: astore_2
+       7: aconst_null
+       8: astore_3
+       9: aload_1
+      10: astore        4
+      12: aconst_null
+      13: aload         4
+      15: if_acmpeq     81
+      18: aconst_null
+      19: aload_3
+      20: if_acmpne     39
+      23: aload         4
+      25: invokeinterface #102,  1          // InterfaceMethod org/w3c/dom/Node.getLocalName:()Ljava/lang/String;
+      30: invokedynamic #103,  0            // InvokeDynamic #13:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      35: astore_3
+      36: goto          53
+      39: aload         4
+      41: invokeinterface #102,  1          // InterfaceMethod org/w3c/dom/Node.getLocalName:()Ljava/lang/String;
+      46: aload_3
+      47: invokedynamic #104,  0            // InvokeDynamic #14:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      52: astore_3
+      53: aload         4
+      55: invokeinterface #105,  1          // InterfaceMethod org/w3c/dom/Node.getParentNode:()Lorg/w3c/dom/Node;
+      60: ifnull        81
+      63: aload         4
+      65: aload_2
+      66: if_acmpeq     81
+      69: aload         4
+      71: invokeinterface #105,  1          // InterfaceMethod org/w3c/dom/Node.getParentNode:()Lorg/w3c/dom/Node;
+      76: astore        4
+      78: goto          12
+      81: aload_3
+      82: areturn
+
+  public static org.w3c.dom.Element getSignatureElementFromDocument(org.w3c.dom.Document) throws javax.xml.xpath.XPathExpressionException;
+    Code:
+       0: aload_0
+       1: invokeinterface #101,  1          // InterfaceMethod org/w3c/dom/Document.getDocumentElement:()Lorg/w3c/dom/Element;
+       6: astore_1
+       7: aload_1
+       8: ldc           #85                 // String *
+      10: ldc           #106                // String Signature
+      12: invokeinterface #87,  3           // InterfaceMethod org/w3c/dom/Element.getElementsByTagNameNS:(Ljava/lang/String;Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+      17: astore_2
+      18: aconst_null
+      19: astore_3
+      20: iconst_0
+      21: istore        4
+      23: iload         4
+      25: aload_2
+      26: invokeinterface #107,  1          // InterfaceMethod org/w3c/dom/NodeList.getLength:()I
+      31: if_icmpge     139
+      34: aload_2
+      35: iload         4
+      37: invokeinterface #88,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+      42: invokeinterface #105,  1          // InterfaceMethod org/w3c/dom/Node.getParentNode:()Lorg/w3c/dom/Node;
+      47: astore        5
+      49: aload_0
+      50: aload_2
+      51: iload         4
+      53: invokeinterface #88,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+      58: invokeinterface #105,  1          // InterfaceMethod org/w3c/dom/Node.getParentNode:()Lorg/w3c/dom/Node;
+      63: invokestatic  #108                // Method getNodePath:(Lorg/w3c/dom/Document;Lorg/w3c/dom/Node;)Ljava/lang/String;
+      66: astore        6
+      68: aload         5
+      70: aload_1
+      71: if_acmpne     88
+      74: aload_1
+      75: invokeinterface #109,  1          // InterfaceMethod org/w3c/dom/Element.getNodeName:()Ljava/lang/String;
+      80: ldc           #110                // String EDoc
+      82: invokevirtual #111                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      85: ifne          118
+      88: aload_1
+      89: invokeinterface #109,  1          // InterfaceMethod org/w3c/dom/Element.getNodeName:()Ljava/lang/String;
+      94: ldc           #112                // String Xchg
+      96: invokevirtual #111                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      99: ifeq          133
+     102: aconst_null
+     103: aload         6
+     105: if_acmpeq     133
+     108: aload         6
+     110: ldc           #113                // String /Xchg/PyldDesc/ApplSpcfcInf/Sgntr
+     112: invokevirtual #111                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     115: ifeq          133
+     118: aload_2
+     119: iload         4
+     121: invokeinterface #88,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     126: checkcast     #89                 // class org/w3c/dom/Element
+     129: astore_3
+     130: goto          139
+     133: iinc          4, 1
+     136: goto          23
+     139: aload_3
+     140: areturn
+
+  public static java.util.Map<java.lang.String, java.lang.Object> verifySignature(org.w3c.dom.Document, java.security.cert.X509Certificate, boolean, boolean) throws javax.xml.crypto.MarshalException, javax.xml.crypto.dsig.XMLSignatureException, javax.xml.xpath.XPathExpressionException, java.security.InvalidKeyException, java.security.NoSuchAlgorithmException, javax.crypto.NoSuchPaddingException, javax.crypto.IllegalBlockSizeException, javax.crypto.BadPaddingException, java.io.IOException;
+    Code:
+       0: aconst_null
+       1: astore        4
+       3: aload_0
+       4: invokeinterface #101,  1          // InterfaceMethod org/w3c/dom/Document.getDocumentElement:()Lorg/w3c/dom/Element;
+       9: astore        5
+      11: aload_0
+      12: invokestatic  #114                // Method getSignatureElementFromDocument:(Lorg/w3c/dom/Document;)Lorg/w3c/dom/Element;
+      15: astore        6
+      17: aconst_null
+      18: aload         6
+      20: if_acmpeq     495
+      23: aload         6
+      25: ldc           #85                 // String *
+      27: ldc           #115                // String SignatureValue
+      29: invokeinterface #87,  3           // InterfaceMethod org/w3c/dom/Element.getElementsByTagNameNS:(Ljava/lang/String;Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+      34: iconst_0
+      35: invokeinterface #88,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+      40: checkcast     #89                 // class org/w3c/dom/Element
+      43: astore        7
+      45: invokestatic  #116                // Method java/util/Base64.getDecoder:()Ljava/util/Base64$Decoder;
+      48: aload         7
+      50: invokestatic  #92                 // Method org/bol/xml/XmlHelper.getCharacterDataFromElement:(Lorg/w3c/dom/Element;)Ljava/lang/String;
+      53: ldc           #117                // String \\s+
+      55: ldc           #32                 // String
+      57: invokevirtual #118                // Method java/lang/String.replaceAll:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      60: invokevirtual #119                // Method java/util/Base64$Decoder.decode:(Ljava/lang/String;)[B
+      63: astore        8
+      65: iload_2
+      66: ifeq          100
+      69: getstatic     #12                 // Field log:Lorg/slf4j/Logger;
+      72: getstatic     #30                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+      75: ldc           #120                // String Verification with REVERSED SignatureValue
+      77: invokestatic  #15                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      80: aload         8
+      82: invokestatic  #121                // Method org/apache/commons/lang3/ArrayUtils.reverse:([B)V
+      85: aload         7
+      87: invokestatic  #19                 // Method java/util/Base64.getEncoder:()Ljava/util/Base64$Encoder;
+      90: aload         8
+      92: invokevirtual #20                 // Method java/util/Base64$Encoder.encodeToString:([B)Ljava/lang/String;
+      95: invokeinterface #122,  2          // InterfaceMethod org/w3c/dom/Element.setTextContent:(Ljava/lang/String;)V
+     100: getstatic     #12                 // Field log:Lorg/slf4j/Logger;
+     103: getstatic     #30                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     106: aload         8
+     108: invokestatic  #16                 // Method bytearray2unsignedshort:([B)[I
+     111: invokestatic  #17                 // Method java/util/Arrays.toString:([I)Ljava/lang/String;
+     114: invokestatic  #15                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     117: aload         6
+     119: aload_1
+     120: invokevirtual #123                // Method java/security/cert/X509Certificate.getSerialNumber:()Ljava/math/BigInteger;
+     123: invokestatic  #124                // Method verifyEdocCertificateSerialNumber:(Lorg/w3c/dom/Element;Ljava/math/BigInteger;)V
+     126: new           #125                // class javax/xml/crypto/dsig/dom/DOMValidateContext
+     129: dup
+     130: aload_1
+     131: invokevirtual #7                  // Method java/security/cert/X509Certificate.getPublicKey:()Ljava/security/PublicKey;
+     134: aload         6
+     136: invokespecial #126                // Method javax/xml/crypto/dsig/dom/DOMValidateContext."<init>":(Ljava/security/Key;Lorg/w3c/dom/Node;)V
+     139: astore        9
+     141: aload         9
+     143: ldc           #127                // String org.apache.jcp.xml.dsig.secureValidation
+     145: getstatic     #128                // Field org/bol/server/ConsoleServlet.SECURE_VALIDATION:Z
+     148: ifeq          157
+     151: getstatic     #27                 // Field java/lang/Boolean.TRUE:Ljava/lang/Boolean;
+     154: goto          160
+     157: getstatic     #129                // Field java/lang/Boolean.FALSE:Ljava/lang/Boolean;
+     160: invokevirtual #28                 // Method javax/xml/crypto/dsig/dom/DOMValidateContext.setProperty:(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;
+     163: pop
+     164: aload         9
+     166: ldc           #130                // String org.jcp.xml.dsig.secureValidation
+     168: getstatic     #128                // Field org/bol/server/ConsoleServlet.SECURE_VALIDATION:Z
+     171: ifeq          180
+     174: getstatic     #27                 // Field java/lang/Boolean.TRUE:Ljava/lang/Boolean;
+     177: goto          183
+     180: getstatic     #129                // Field java/lang/Boolean.FALSE:Ljava/lang/Boolean;
+     183: invokevirtual #28                 // Method javax/xml/crypto/dsig/dom/DOMValidateContext.setProperty:(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;
+     186: pop
+     187: ldc           #131                // String DOM
+     189: invokestatic  #132                // Method javax/xml/crypto/dsig/XMLSignatureFactory.getInstance:(Ljava/lang/String;)Ljavax/xml/crypto/dsig/XMLSignatureFactory;
+     192: astore        10
+     194: aload         10
+     196: aload         9
+     198: invokevirtual #133                // Method javax/xml/crypto/dsig/XMLSignatureFactory.unmarshalXMLSignature:(Ljavax/xml/crypto/dsig/XMLValidateContext;)Ljavax/xml/crypto/dsig/XMLSignature;
+     201: astore        11
+     203: invokestatic  #134                // Method javax/xml/xpath/XPathFactory.newInstance:()Ljavax/xml/xpath/XPathFactory;
+     206: astore        12
+     208: aload         12
+     210: invokevirtual #135                // Method javax/xml/xpath/XPathFactory.newXPath:()Ljavax/xml/xpath/XPath;
+     213: astore        13
+     215: aload         13
+     217: ldc           #136                // String //*[@Id]
+     219: aload         5
+     221: getstatic     #137                // Field javax/xml/xpath/XPathConstants.NODESET:Ljavax/xml/namespace/QName;
+     224: invokeinterface #138,  4          // InterfaceMethod javax/xml/xpath/XPath.evaluate:(Ljava/lang/String;Ljava/lang/Object;Ljavax/xml/namespace/QName;)Ljava/lang/Object;
+     229: checkcast     #139                // class org/w3c/dom/NodeList
+     232: astore        14
+     234: iconst_0
+     235: istore        15
+     237: iload         15
+     239: aload         14
+     241: invokeinterface #107,  1          // InterfaceMethod org/w3c/dom/NodeList.getLength:()I
+     246: if_icmpge     338
+     249: aload         14
+     251: iload         15
+     253: invokeinterface #88,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     258: invokeinterface #140,  1          // InterfaceMethod org/w3c/dom/Node.getAttributes:()Lorg/w3c/dom/NamedNodeMap;
+     263: ldc           #141                // String Id
+     265: invokeinterface #142,  2          // InterfaceMethod org/w3c/dom/NamedNodeMap.getNamedItem:(Ljava/lang/String;)Lorg/w3c/dom/Node;
+     270: invokeinterface #143,  1          // InterfaceMethod org/w3c/dom/Node.getNodeValue:()Ljava/lang/String;
+     275: invokevirtual #144                // Method java/lang/String.isEmpty:()Z
+     278: ifne          332
+     281: getstatic     #12                 // Field log:Lorg/slf4j/Logger;
+     284: getstatic     #30                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     287: aload         14
+     289: iload         15
+     291: invokeinterface #88,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     296: checkcast     #89                 // class org/w3c/dom/Element
+     299: invokeinterface #109,  1          // InterfaceMethod org/w3c/dom/Element.getNodeName:()Ljava/lang/String;
+     304: invokedynamic #145,  0            // InvokeDynamic #15:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     309: invokestatic  #15                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     312: aload         9
+     314: aload         14
+     316: iload         15
+     318: invokeinterface #88,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     323: checkcast     #89                 // class org/w3c/dom/Element
+     326: aconst_null
+     327: ldc           #141                // String Id
+     329: invokevirtual #146                // Method javax/xml/crypto/dsig/dom/DOMValidateContext.setIdAttributeNS:(Lorg/w3c/dom/Element;Ljava/lang/String;Ljava/lang/String;)V
+     332: iinc          15, 1
+     335: goto          237
+     338: aload         9
+     340: new           #147                // class org/bol/xml/CustomUriDereferencer
+     343: dup
+     344: aload_0
+     345: invokespecial #148                // Method org/bol/xml/CustomUriDereferencer."<init>":(Lorg/w3c/dom/Document;)V
+     348: invokevirtual #149                // Method javax/xml/crypto/dsig/dom/DOMValidateContext.setURIDereferencer:(Ljavax/xml/crypto/URIDereferencer;)V
+     351: new           #150                // class java/io/PrintStream
+     354: dup
+     355: new           #151                // class java/io/FileOutputStream
+     358: dup
+     359: new           #152                // class java/io/FileDescriptor
+     362: dup
+     363: invokespecial #153                // Method java/io/FileDescriptor."<init>":()V
+     366: invokespecial #154                // Method java/io/FileOutputStream."<init>":(Ljava/io/FileDescriptor;)V
+     369: invokespecial #155                // Method java/io/PrintStream."<init>":(Ljava/io/OutputStream;)V
+     372: invokestatic  #156                // Method java/lang/System.setErr:(Ljava/io/PrintStream;)V
+     375: aload         11
+     377: aload         9
+     379: invokeinterface #157,  2          // InterfaceMethod javax/xml/crypto/dsig/XMLSignature.validate:(Ljavax/xml/crypto/dsig/XMLValidateContext;)Z
+     384: istore        15
+     386: new           #150                // class java/io/PrintStream
+     389: dup
+     390: new           #151                // class java/io/FileOutputStream
+     393: dup
+     394: getstatic     #158                // Field java/io/FileDescriptor.err:Ljava/io/FileDescriptor;
+     397: invokespecial #154                // Method java/io/FileOutputStream."<init>":(Ljava/io/FileDescriptor;)V
+     400: invokespecial #155                // Method java/io/PrintStream."<init>":(Ljava/io/OutputStream;)V
+     403: invokestatic  #156                // Method java/lang/System.setErr:(Ljava/io/PrintStream;)V
+     406: getstatic     #12                 // Field log:Lorg/slf4j/Logger;
+     409: getstatic     #30                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     412: iload_2
+     413: ifeq          421
+     416: ldc           #159                // String Reversed
+     418: goto          423
+     421: ldc           #160                // String Regular
+     423: iload         15
+     425: invokedynamic #161,  0            // InvokeDynamic #16:makeConcatWithConstants:(Ljava/lang/String;Z)Ljava/lang/String;
+     430: invokestatic  #15                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     433: iload         15
+     435: ifne          468
+     438: aload         11
+     440: aload         9
+     442: aload_1
+     443: iload_2
+     444: iload_3
+     445: invokestatic  #162                // Method dumpSignatureValidationData:(Ljavax/xml/crypto/dsig/XMLSignature;Ljavax/xml/crypto/dsig/dom/DOMValidateContext;Ljava/security/cert/X509Certificate;ZZ)Ljava/util/Map;
+     448: astore        4
+     450: iload_3
+     451: ifeq          468
+     454: getstatic     #12                 // Field log:Lorg/slf4j/Logger;
+     457: getstatic     #30                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     460: aload         4
+     462: invokestatic  #163                // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+     465: invokestatic  #15                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     468: iload_2
+     469: ifeq          492
+     472: aload         8
+     474: invokestatic  #121                // Method org/apache/commons/lang3/ArrayUtils.reverse:([B)V
+     477: aload         7
+     479: invokestatic  #19                 // Method java/util/Base64.getEncoder:()Ljava/util/Base64$Encoder;
+     482: aload         8
+     484: invokevirtual #20                 // Method java/util/Base64$Encoder.encodeToString:([B)Ljava/lang/String;
+     487: invokeinterface #122,  2          // InterfaceMethod org/w3c/dom/Element.setTextContent:(Ljava/lang/String;)V
+     492: goto          506
+     495: getstatic     #12                 // Field log:Lorg/slf4j/Logger;
+     498: getstatic     #13                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     501: ldc           #164                // String XML Root is not [EDoc,Xchg] or Signature missing
+     503: invokestatic  #15                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     506: aload         4
+     508: areturn
+
+  private static byte[] generateTimestampDigestInput(org.w3c.dom.Element, java.lang.String);
+    Code:
+       0: aload_1
+       1: invokestatic  #165                // Method org/apache/xml/security/c14n/Canonicalizer.getInstance:(Ljava/lang/String;)Lorg/apache/xml/security/c14n/Canonicalizer;
+       4: astore_2
+       5: new           #73                 // class java/io/ByteArrayOutputStream
+       8: dup
+       9: invokespecial #74                 // Method java/io/ByteArrayOutputStream."<init>":()V
+      12: astore_3
+      13: aload_2
+      14: aload_0
+      15: aload_3
+      16: invokevirtual #166                // Method org/apache/xml/security/c14n/Canonicalizer.canonicalizeSubtree:(Lorg/w3c/dom/Node;Ljava/io/OutputStream;)V
+      19: aload_3
+      20: invokevirtual #82                 // Method java/io/ByteArrayOutputStream.toByteArray:()[B
+      23: areturn
+      24: astore_2
+      25: new           #167                // class java/lang/IllegalArgumentException
+      28: dup
+      29: ldc           #168                // String Unable to calculateDigest
+      31: aload_2
+      32: invokespecial #169                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      35: athrow
+    Exception table:
+       from    to  target type
+           0    23    24   Class java/lang/Exception
+
+  private static java.lang.String uriForDigest(org.bouncycastle.asn1.ASN1ObjectIdentifier);
+    Code:
+       0: getstatic     #170                // Field digestOidToUriMappings:Ljava/util/Map;
+       3: aload_0
+       4: invokeinterface #171,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+       9: checkcast     #172                // class java/lang/String
+      12: areturn
+
+  public static org.bouncycastle.asn1.tsp.TSTInfo verifyTimeStampLB(org.bouncycastle.cms.CMSSignedData, byte[], java.util.Map<java.lang.String, java.lang.Object>) throws xades4j.providers.TimeStampTokenVerificationException, xades4j.UnsupportedAlgorithmException;
+    Code:
+       0: aload_0
+       1: invokevirtual #173                // Method org/bouncycastle/cms/CMSSignedData.getSignedContent:()Lorg/bouncycastle/cms/CMSTypedData;
+       4: invokeinterface #174,  1          // InterfaceMethod org/bouncycastle/cms/CMSTypedData.getContent:()Ljava/lang/Object;
+       9: invokestatic  #175                // Method org/bouncycastle/asn1/tsp/TSTInfo.getInstance:(Ljava/lang/Object;)Lorg/bouncycastle/asn1/tsp/TSTInfo;
+      12: astore_3
+      13: aload_3
+      14: invokevirtual #176                // Method org/bouncycastle/asn1/tsp/TSTInfo.getMessageImprint:()Lorg/bouncycastle/asn1/tsp/MessageImprint;
+      17: invokevirtual #177                // Method org/bouncycastle/asn1/tsp/MessageImprint.getHashAlgorithm:()Lorg/bouncycastle/asn1/x509/AlgorithmIdentifier;
+      20: invokevirtual #178                // Method org/bouncycastle/asn1/x509/AlgorithmIdentifier.getAlgorithm:()Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+      23: invokestatic  #179                // Method uriForDigest:(Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;)Ljava/lang/String;
+      26: astore        4
+      28: aload_2
+      29: ldc           #180                // String digest_alg_uri
+      31: aload         4
+      33: invokeinterface #21,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      38: pop
+      39: new           #181                // class xades4j/providers/impl/DefaultMessageDigestProvider
+      42: dup
+      43: invokespecial #182                // Method xades4j/providers/impl/DefaultMessageDigestProvider."<init>":()V
+      46: astore        5
+      48: aload         5
+      50: aload         4
+      52: invokeinterface #183,  2          // InterfaceMethod xades4j/providers/MessageDigestEngineProvider.getEngine:(Ljava/lang/String;)Ljava/security/MessageDigest;
+      57: astore        6
+      59: aload         6
+      61: aload_1
+      62: invokevirtual #184                // Method java/security/MessageDigest.digest:([B)[B
+      65: astore        7
+      67: aload_3
+      68: invokevirtual #176                // Method org/bouncycastle/asn1/tsp/TSTInfo.getMessageImprint:()Lorg/bouncycastle/asn1/tsp/MessageImprint;
+      71: invokevirtual #185                // Method org/bouncycastle/asn1/tsp/MessageImprint.getHashedMessage:()[B
+      74: astore        8
+      76: aload         7
+      78: aload         8
+      80: invokestatic  #186                // Method java/util/Arrays.equals:([B[B)Z
+      83: ifne          94
+      86: new           #187                // class xades4j/providers/TimeStampTokenDigestException
+      89: dup
+      90: invokespecial #188                // Method xades4j/providers/TimeStampTokenDigestException."<init>":()V
+      93: athrow
+      94: aload_3
+      95: areturn
+      96: astore_3
+      97: new           #189                // class xades4j/providers/TimeStampTokenStructureException
+     100: dup
+     101: ldc           #190                // String Invalid token
+     103: aload_3
+     104: invokespecial #191                // Method xades4j/providers/TimeStampTokenStructureException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     107: athrow
+    Exception table:
+       from    to  target type
+           0    95    96   Class java/lang/Exception
+
+  public static org.bouncycastle.asn1.tsp.TSTInfo verifyTimeStampDefault(org.bouncycastle.cms.CMSSignedData, byte[], java.util.Map<java.lang.String, java.lang.Object>) throws xades4j.providers.TimeStampTokenVerificationException, xades4j.UnsupportedAlgorithmException, java.io.IOException, org.bouncycastle.tsp.TSPException;
+    Code:
+       0: aconst_null
+       1: astore_3
+       2: new           #192                // class org/bouncycastle/tsp/TimeStampToken
+       5: dup
+       6: aload_0
+       7: invokespecial #193                // Method org/bouncycastle/tsp/TimeStampToken."<init>":(Lorg/bouncycastle/cms/CMSSignedData;)V
+      10: astore_3
+      11: goto          42
+      14: astore        4
+      16: new           #189                // class xades4j/providers/TimeStampTokenStructureException
+      19: dup
+      20: ldc           #195                // String Error parsing encoded token
+      22: aload         4
+      24: invokespecial #191                // Method xades4j/providers/TimeStampTokenStructureException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      27: athrow
+      28: astore        4
+      30: new           #189                // class xades4j/providers/TimeStampTokenStructureException
+      33: dup
+      34: ldc           #190                // String Invalid token
+      36: aload         4
+      38: invokespecial #191                // Method xades4j/providers/TimeStampTokenStructureException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      41: athrow
+      42: aload_3
+      43: invokevirtual #196                // Method org/bouncycastle/tsp/TimeStampToken.getTimeStampInfo:()Lorg/bouncycastle/tsp/TimeStampTokenInfo;
+      46: astore        4
+      48: aload         4
+      50: invokevirtual #197                // Method org/bouncycastle/tsp/TimeStampTokenInfo.getMessageImprintAlgOID:()Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+      53: invokestatic  #179                // Method uriForDigest:(Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;)Ljava/lang/String;
+      56: astore        5
+      58: aload_2
+      59: ldc           #180                // String digest_alg_uri
+      61: aload         5
+      63: invokeinterface #21,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      68: pop
+      69: new           #181                // class xades4j/providers/impl/DefaultMessageDigestProvider
+      72: dup
+      73: invokespecial #182                // Method xades4j/providers/impl/DefaultMessageDigestProvider."<init>":()V
+      76: astore        6
+      78: aload         6
+      80: aload         5
+      82: invokeinterface #183,  2          // InterfaceMethod xades4j/providers/MessageDigestEngineProvider.getEngine:(Ljava/lang/String;)Ljava/security/MessageDigest;
+      87: astore        7
+      89: aload         7
+      91: aload_1
+      92: invokevirtual #184                // Method java/security/MessageDigest.digest:([B)[B
+      95: astore        8
+      97: aload         4
+      99: invokevirtual #198                // Method org/bouncycastle/tsp/TimeStampTokenInfo.getMessageImprintDigest:()[B
+     102: astore        9
+     104: aload         8
+     106: aload         9
+     108: invokestatic  #186                // Method java/util/Arrays.equals:([B[B)Z
+     111: ifne          122
+     114: new           #187                // class xades4j/providers/TimeStampTokenDigestException
+     117: dup
+     118: invokespecial #188                // Method xades4j/providers/TimeStampTokenDigestException."<init>":()V
+     121: athrow
+     122: goto          139
+     125: astore        5
+     127: new           #200                // class xades4j/providers/TimeStampTokenVerificationException
+     130: dup
+     131: ldc           #201                // String The token\'s digest algorithm is not supported
+     133: aload         5
+     135: invokespecial #202                // Method xades4j/providers/TimeStampTokenVerificationException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     138: athrow
+     139: aload         4
+     141: invokevirtual #203                // Method org/bouncycastle/tsp/TimeStampTokenInfo.toASN1Structure:()Lorg/bouncycastle/asn1/tsp/TSTInfo;
+     144: areturn
+    Exception table:
+       from    to  target type
+           2    11    14   Class java/io/IOException
+           2    11    28   Class java/lang/Exception
+          48   122   125   Class xades4j/UnsupportedAlgorithmException
+
+  public static org.bouncycastle.asn1.tsp.TSTInfo verifyTimeStamp(org.w3c.dom.Document, org.bol.certs.CertTrustStore, java.util.Collection<java.security.cert.X509CRL>, java.util.Map<java.lang.String, java.lang.Object>) throws xades4j.providers.TimeStampTokenVerificationException, xades4j.UnsupportedAlgorithmException, org.bouncycastle.operator.OperatorCreationException, java.security.cert.CertificateException, java.io.IOException, org.bouncycastle.cms.CMSException, java.security.InvalidAlgorithmParameterException, java.security.NoSuchAlgorithmException, org.bouncycastle.tsp.TSPValidationException, org.bouncycastle.tsp.TSPException, java.security.NoSuchProviderException, java.text.ParseException, java.security.KeyStoreException, xades4j.providers.CertificateValidationException, xades4j.verification.UnexpectedJCAException, javax.xml.xpath.XPathExpressionException, java.security.InvalidKeyException, java.security.cert.CRLException, java.security.SignatureException, java.security.cert.CertPathBuilderException, java.security.cert.CertPathValidatorException;
+    Code:
+       0: aload_0
+       1: invokestatic  #114                // Method getSignatureElementFromDocument:(Lorg/w3c/dom/Document;)Lorg/w3c/dom/Element;
+       4: astore        4
+       6: aconst_null
+       7: aload         4
+       9: if_acmpne     22
+      12: new           #167                // class java/lang/IllegalArgumentException
+      15: dup
+      16: ldc           #204                // String Unable to locate signature element
+      18: invokespecial #205                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      21: athrow
+      22: aload         4
+      24: ldc           #85                 // String *
+      26: ldc           #115                // String SignatureValue
+      28: invokeinterface #87,  3           // InterfaceMethod org/w3c/dom/Element.getElementsByTagNameNS:(Ljava/lang/String;Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+      33: iconst_0
+      34: invokeinterface #88,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+      39: checkcast     #89                 // class org/w3c/dom/Element
+      42: astore        5
+      44: aload         4
+      46: ldc           #85                 // String *
+      48: ldc           #206                // String SignatureTimeStamp
+      50: invokeinterface #87,  3           // InterfaceMethod org/w3c/dom/Element.getElementsByTagNameNS:(Ljava/lang/String;Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+      55: iconst_0
+      56: invokeinterface #88,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+      61: checkcast     #89                 // class org/w3c/dom/Element
+      64: astore        6
+      66: aload         6
+      68: ldc           #85                 // String *
+      70: ldc           #207                // String EncapsulatedTimeStamp
+      72: invokeinterface #87,  3           // InterfaceMethod org/w3c/dom/Element.getElementsByTagNameNS:(Ljava/lang/String;Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+      77: iconst_0
+      78: invokeinterface #88,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+      83: checkcast     #89                 // class org/w3c/dom/Element
+      86: astore        7
+      88: aconst_null
+      89: aload         7
+      91: if_acmpeq     110
+      94: aconst_null
+      95: aload         7
+      97: invokestatic  #92                 // Method org/bol/xml/XmlHelper.getCharacterDataFromElement:(Lorg/w3c/dom/Element;)Ljava/lang/String;
+     100: ldc           #117                // String \\s+
+     102: ldc           #32                 // String
+     104: invokevirtual #118                // Method java/lang/String.replaceAll:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     107: if_acmpne     120
+     110: new           #200                // class xades4j/providers/TimeStampTokenVerificationException
+     113: dup
+     114: ldc           #208                // String Error getting timestamp token value
+     116: invokespecial #209                // Method xades4j/providers/TimeStampTokenVerificationException."<init>":(Ljava/lang/String;)V
+     119: athrow
+     120: invokestatic  #116                // Method java/util/Base64.getDecoder:()Ljava/util/Base64$Decoder;
+     123: aload         7
+     125: invokestatic  #92                 // Method org/bol/xml/XmlHelper.getCharacterDataFromElement:(Lorg/w3c/dom/Element;)Ljava/lang/String;
+     128: ldc           #117                // String \\s+
+     130: ldc           #32                 // String
+     132: invokevirtual #118                // Method java/lang/String.replaceAll:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     135: invokevirtual #119                // Method java/util/Base64$Decoder.decode:(Ljava/lang/String;)[B
+     138: astore        8
+     140: new           #210                // class xades4j/algorithms/ExclusiveCanonicalXMLWithoutComments
+     143: dup
+     144: iconst_0
+     145: anewarray     #172                // class java/lang/String
+     148: invokespecial #211                // Method xades4j/algorithms/ExclusiveCanonicalXMLWithoutComments."<init>":([Ljava/lang/String;)V
+     151: invokevirtual #212                // Method xades4j/algorithms/ExclusiveCanonicalXMLWithoutComments.getUri:()Ljava/lang/String;
+     154: astore        9
+     156: aload         6
+     158: ldc           #85                 // String *
+     160: ldc           #213                // String CanonicalizationMethod
+     162: invokeinterface #87,  3           // InterfaceMethod org/w3c/dom/Element.getElementsByTagNameNS:(Ljava/lang/String;Ljava/lang/String;)Lorg/w3c/dom/NodeList;
+     167: iconst_0
+     168: invokeinterface #88,  2           // InterfaceMethod org/w3c/dom/NodeList.item:(I)Lorg/w3c/dom/Node;
+     173: checkcast     #89                 // class org/w3c/dom/Element
+     176: astore        10
+     178: aconst_null
+     179: aload         10
+     181: if_acmpeq     207
+     184: aload         10
+     186: ldc           #214                // String Algorithm
+     188: invokeinterface #215,  2          // InterfaceMethod org/w3c/dom/Element.hasAttribute:(Ljava/lang/String;)Z
+     193: ifeq          207
+     196: aload         10
+     198: ldc           #214                // String Algorithm
+     200: invokeinterface #216,  2          // InterfaceMethod org/w3c/dom/Element.getAttribute:(Ljava/lang/String;)Ljava/lang/String;
+     205: astore        9
+     207: aload         5
+     209: aload         9
+     211: invokestatic  #217                // Method generateTimestampDigestInput:(Lorg/w3c/dom/Element;Ljava/lang/String;)[B
+     214: astore        11
+     216: aload_1
+     217: invokevirtual #218                // Method org/bol/certs/CertTrustStore.getTimeStampCertificates:()Ljava/util/Collection;
+     220: astore        12
+     222: aload         8
+     224: invokestatic  #219                // Method org/bouncycastle/asn1/ASN1Primitive.fromByteArray:([B)Lorg/bouncycastle/asn1/ASN1Primitive;
+     227: invokestatic  #220                // Method org/bouncycastle/asn1/cms/ContentInfo.getInstance:(Ljava/lang/Object;)Lorg/bouncycastle/asn1/cms/ContentInfo;
+     230: astore        13
+     232: new           #221                // class org/bouncycastle/cms/CMSSignedData
+     235: dup
+     236: aload         13
+     238: invokespecial #222                // Method org/bouncycastle/cms/CMSSignedData."<init>":(Lorg/bouncycastle/asn1/cms/ContentInfo;)V
+     241: astore        14
+     243: aload         14
+     245: invokevirtual #223                // Method org/bouncycastle/cms/CMSSignedData.getSignerInfos:()Lorg/bouncycastle/cms/SignerInformationStore;
+     248: astore        15
+     250: aload         15
+     252: invokevirtual #224                // Method org/bouncycastle/cms/SignerInformationStore.getSigners:()Ljava/util/Collection;
+     255: astore        16
+     257: aload         14
+     259: invokevirtual #225                // Method org/bouncycastle/cms/CMSSignedData.getCertificates:()Lorg/bouncycastle/util/Store;
+     262: astore        17
+     264: aload         16
+     266: invokeinterface #226,  1          // InterfaceMethod java/util/Collection.iterator:()Ljava/util/Iterator;
+     271: astore        18
+     273: aload         18
+     275: invokeinterface #41,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     280: ifeq          879
+     283: aload         18
+     285: invokeinterface #42,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     290: checkcast     #227                // class org/bouncycastle/cms/SignerInformation
+     293: astore        19
+     295: aload         19
+     297: invokevirtual #228                // Method org/bouncycastle/cms/SignerInformation.getSID:()Lorg/bouncycastle/cms/SignerId;
+     300: astore        20
+     302: new           #34                 // class java/util/ArrayList
+     305: dup
+     306: invokespecial #35                 // Method java/util/ArrayList."<init>":()V
+     309: astore        21
+     311: aload         17
+     313: aload         20
+     315: invokeinterface #229,  2          // InterfaceMethod org/bouncycastle/util/Store.getMatches:(Lorg/bouncycastle/util/Selector;)Ljava/util/Collection;
+     320: astore        22
+     322: aload         22
+     324: invokeinterface #230,  1          // InterfaceMethod java/util/Collection.isEmpty:()Z
+     329: ifeq          418
+     332: aconst_null
+     333: aload         12
+     335: if_acmpeq     398
+     338: aload         12
+     340: invokeinterface #226,  1          // InterfaceMethod java/util/Collection.iterator:()Ljava/util/Iterator;
+     345: astore        23
+     347: aload         23
+     349: invokeinterface #41,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     354: ifeq          398
+     357: aload         23
+     359: invokeinterface #42,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     364: checkcast     #231                // class java/security/cert/X509Certificate
+     367: astore        24
+     369: aload         20
+     371: invokevirtual #232                // Method org/bouncycastle/cms/SignerId.getSerialNumber:()Ljava/math/BigInteger;
+     374: aload         24
+     376: invokevirtual #123                // Method java/security/cert/X509Certificate.getSerialNumber:()Ljava/math/BigInteger;
+     379: invokevirtual #95                 // Method java/math/BigInteger.equals:(Ljava/lang/Object;)Z
+     382: ifeq          395
+     385: aload         21
+     387: aload         24
+     389: invokeinterface #64,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     394: pop
+     395: goto          347
+     398: aload         21
+     400: invokeinterface #233,  1          // InterfaceMethod java/util/List.isEmpty:()Z
+     405: ifeq          477
+     408: new           #200                // class xades4j/providers/TimeStampTokenVerificationException
+     411: dup
+     412: ldc           #234                // String Error locating timestamp certificate
+     414: invokespecial #209                // Method xades4j/providers/TimeStampTokenVerificationException."<init>":(Ljava/lang/String;)V
+     417: athrow
+     418: aload         22
+     420: invokeinterface #226,  1          // InterfaceMethod java/util/Collection.iterator:()Ljava/util/Iterator;
+     425: astore        23
+     427: aload         23
+     429: invokeinterface #41,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     434: ifeq          477
+     437: aload         23
+     439: invokeinterface #42,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     444: checkcast     #235                // class org/bouncycastle/cert/X509CertificateHolder
+     447: astore        24
+     449: aload         21
+     451: new           #236                // class org/bouncycastle/cert/jcajce/JcaX509CertificateConverter
+     454: dup
+     455: invokespecial #237                // Method org/bouncycastle/cert/jcajce/JcaX509CertificateConverter."<init>":()V
+     458: ldc           #239                // String BC
+     460: invokevirtual #240                // Method org/bouncycastle/cert/jcajce/JcaX509CertificateConverter.setProvider:(Ljava/lang/String;)Lorg/bouncycastle/cert/jcajce/JcaX509CertificateConverter;
+     463: aload         24
+     465: invokevirtual #241                // Method org/bouncycastle/cert/jcajce/JcaX509CertificateConverter.getCertificate:(Lorg/bouncycastle/cert/X509CertificateHolder;)Ljava/security/cert/X509Certificate;
+     468: invokeinterface #64,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     473: pop
+     474: goto          427
+     477: aload         21
+     479: invokeinterface #233,  1          // InterfaceMethod java/util/List.isEmpty:()Z
+     484: ifne          876
+     487: aload         21
+     489: iconst_0
+     490: invokeinterface #242,  2          // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+     495: checkcast     #231                // class java/security/cert/X509Certificate
+     498: astore        23
+     500: new           #2                  // class java/util/HashMap
+     503: dup
+     504: invokespecial #3                  // Method java/util/HashMap."<init>":()V
+     507: astore        24
+     509: aload         23
+     511: invokevirtual #123                // Method java/security/cert/X509Certificate.getSerialNumber:()Ljava/math/BigInteger;
+     514: astore        25
+     516: aload         24
+     518: ldc           #243                // String serNrBInt
+     520: aload         25
+     522: invokevirtual #244                // Method java/math/BigInteger.toString:()Ljava/lang/String;
+     525: invokevirtual #245                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     528: pop
+     529: aload         24
+     531: ldc           #246                // String serNrHex
+     533: aload         25
+     535: bipush        16
+     537: invokevirtual #97                 // Method java/math/BigInteger.toString:(I)Ljava/lang/String;
+     540: invokevirtual #245                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     543: pop
+     544: aload         24
+     546: ldc           #247                // String subject
+     548: aload         23
+     550: invokevirtual #248                // Method java/security/cert/X509Certificate.getSubjectX500Principal:()Ljavax/security/auth/x500/X500Principal;
+     553: invokevirtual #245                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     556: pop
+     557: aload         24
+     559: ldc           #249                // String issuer
+     561: aload         23
+     563: invokevirtual #250                // Method java/security/cert/X509Certificate.getIssuerX500Principal:()Ljavax/security/auth/x500/X500Principal;
+     566: invokevirtual #245                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     569: pop
+     570: aload         24
+     572: ldc           #251                // String trusted_ca
+     574: aload_1
+     575: aload         23
+     577: invokevirtual #252                // Method org/bol/certs/CertTrustStore.certificateIssuedByTrustedCA:(Ljava/security/cert/X509Certificate;)Z
+     580: invokestatic  #37                 // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+     583: invokevirtual #245                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     586: pop
+     587: aload         24
+     589: ldc           #253                // String valid_from
+     591: aload         23
+     593: invokevirtual #254                // Method java/security/cert/X509Certificate.getNotBefore:()Ljava/util/Date;
+     596: invokevirtual #255                // Method java/util/Date.toInstant:()Ljava/time/Instant;
+     599: invokevirtual #245                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     602: pop
+     603: aload         24
+     605: ldc_w         #256                // String valid_to
+     608: aload         23
+     610: invokevirtual #257                // Method java/security/cert/X509Certificate.getNotAfter:()Ljava/util/Date;
+     613: invokevirtual #255                // Method java/util/Date.toInstant:()Ljava/time/Instant;
+     616: invokevirtual #245                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     619: pop
+     620: new           #2                  // class java/util/HashMap
+     623: dup
+     624: invokespecial #3                  // Method java/util/HashMap."<init>":()V
+     627: astore        26
+     629: aload         26
+     631: ldc_w         #258                // String certificate
+     634: aload         24
+     636: invokeinterface #21,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     641: pop
+     642: new           #34                 // class java/util/ArrayList
+     645: dup
+     646: invokespecial #35                 // Method java/util/ArrayList."<init>":()V
+     649: astore        27
+     651: aload         27
+     653: aload         26
+     655: invokeinterface #64,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     660: pop
+     661: aload_3
+     662: ldc_w         #259                // String signers
+     665: aload         27
+     667: invokeinterface #21,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     672: pop
+     673: aconst_null
+     674: astore        28
+     676: aconst_null
+     677: aload         12
+     679: if_acmpeq     873
+     682: aload         12
+     684: invokeinterface #260,  1          // InterfaceMethod java/util/Collection.stream:()Ljava/util/stream/Stream;
+     689: aload         20
+     691: invokedynamic #261,  0            // InvokeDynamic #17:test:(Lorg/bouncycastle/cms/SignerId;)Ljava/util/function/Predicate;
+     696: invokeinterface #262,  2          // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+     701: invokeinterface #263,  1          // InterfaceMethod java/util/stream/Stream.findAny:()Ljava/util/Optional;
+     706: aconst_null
+     707: invokevirtual #264                // Method java/util/Optional.orElse:(Ljava/lang/Object;)Ljava/lang/Object;
+     710: checkcast     #231                // class java/security/cert/X509Certificate
+     713: astore        29
+     715: aconst_null
+     716: aload         29
+     718: if_acmpeq     750
+     721: aload         20
+     723: invokevirtual #232                // Method org/bouncycastle/cms/SignerId.getSerialNumber:()Ljava/math/BigInteger;
+     726: aload         29
+     728: invokevirtual #123                // Method java/security/cert/X509Certificate.getSerialNumber:()Ljava/math/BigInteger;
+     731: invokevirtual #95                 // Method java/math/BigInteger.equals:(Ljava/lang/Object;)Z
+     734: ifeq          750
+     737: aload         14
+     739: aload         11
+     741: aload_3
+     742: invokestatic  #265                // Method verifyTimeStampLB:(Lorg/bouncycastle/cms/CMSSignedData;[BLjava/util/Map;)Lorg/bouncycastle/asn1/tsp/TSTInfo;
+     745: astore        28
+     747: goto          760
+     750: aload         14
+     752: aload         11
+     754: aload_3
+     755: invokestatic  #266                // Method verifyTimeStampDefault:(Lorg/bouncycastle/cms/CMSSignedData;[BLjava/util/Map;)Lorg/bouncycastle/asn1/tsp/TSTInfo;
+     758: astore        28
+     760: aload         26
+     762: ldc_w         #267                // String signing_time
+     765: aload         28
+     767: invokevirtual #268                // Method org/bouncycastle/asn1/tsp/TSTInfo.getGenTime:()Lorg/bouncycastle/asn1/ASN1GeneralizedTime;
+     770: invokevirtual #269                // Method org/bouncycastle/asn1/ASN1GeneralizedTime.getDate:()Ljava/util/Date;
+     773: invokevirtual #255                // Method java/util/Date.toInstant:()Ljava/time/Instant;
+     776: invokeinterface #21,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     781: pop
+     782: aload_1
+     783: aload         23
+     785: invokevirtual #252                // Method org/bol/certs/CertTrustStore.certificateIssuedByTrustedCA:(Ljava/security/cert/X509Certificate;)Z
+     788: ifeq          873
+     791: aload_1
+     792: aload         23
+     794: aload_2
+     795: invokevirtual #270                // Method org/bol/certs/CertTrustStore.findCAIssuerCertCRL:(Ljava/security/cert/X509Certificate;Ljava/util/Collection;)Ljava/security/cert/X509CRL;
+     798: astore        30
+     800: aconst_null
+     801: aload         30
+     803: if_acmpne     833
+     806: aload_1
+     807: aload         23
+     809: aload_1
+     810: invokevirtual #271                // Method org/bol/certs/CertTrustStore.getCrlList:()Ljava/util/Collection;
+     813: invokevirtual #270                // Method org/bol/certs/CertTrustStore.findCAIssuerCertCRL:(Ljava/security/cert/X509Certificate;Ljava/util/Collection;)Ljava/security/cert/X509CRL;
+     816: astore        30
+     818: aconst_null
+     819: aload         30
+     821: if_acmpeq     833
+     824: aload_2
+     825: aload         30
+     827: invokeinterface #272,  2          // InterfaceMethod java/util/Collection.add:(Ljava/lang/Object;)Z
+     832: pop
+     833: aconst_null
+     834: aload         30
+     836: if_acmpne     858
+     839: getstatic     #12                 // Field log:Lorg/slf4j/Logger;
+     842: getstatic     #23                 // Field org/slf4j/event/Level.WARN:Lorg/slf4j/event/Level;
+     845: aload         23
+     847: invokevirtual #248                // Method java/security/cert/X509Certificate.getSubjectX500Principal:()Ljavax/security/auth/x500/X500Principal;
+     850: invokedynamic #273,  0            // InvokeDynamic #18:makeConcatWithConstants:(Ljavax/security/auth/x500/X500Principal;)Ljava/lang/String;
+     855: invokestatic  #15                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     858: aload_1
+     859: aload         23
+     861: aload         28
+     863: invokevirtual #268                // Method org/bouncycastle/asn1/tsp/TSTInfo.getGenTime:()Lorg/bouncycastle/asn1/ASN1GeneralizedTime;
+     866: invokevirtual #269                // Method org/bouncycastle/asn1/ASN1GeneralizedTime.getDate:()Ljava/util/Date;
+     869: aload_2
+     870: invokevirtual #274                // Method org/bol/certs/CertTrustStore.validateCertificate:(Ljava/security/cert/X509Certificate;Ljava/util/Date;Ljava/util/Collection;)V
+     873: aload         28
+     875: areturn
+     876: goto          273
+     879: new           #200                // class xades4j/providers/TimeStampTokenVerificationException
+     882: dup
+     883: ldc_w         #275                // String Cannot locate timestamp SignerInformation
+     886: invokespecial #209                // Method xades4j/providers/TimeStampTokenVerificationException."<init>":(Ljava/lang/String;)V
+     889: athrow
+
+  private static boolean lambda$verifyTimeStamp$0(org.bouncycastle.cms.SignerId, java.security.cert.X509Certificate);
+    Code:
+       0: aload_0
+       1: invokevirtual #232                // Method org/bouncycastle/cms/SignerId.getSerialNumber:()Ljava/math/BigInteger;
+       4: aload_1
+       5: invokevirtual #123                // Method java/security/cert/X509Certificate.getSerialNumber:()Ljava/math/BigInteger;
+       8: invokevirtual #95                 // Method java/math/BigInteger.equals:(Ljava/lang/Object;)Z
+      11: ireturn
+
+  static {};
+    Code:
+       0: ldc_w         #276                // class org/bol/crypto/xml/VerifyXmlSignature
+       3: invokestatic  #277                // Method org/slf4j/LoggerFactory.getLogger:(Ljava/lang/Class;)Lorg/slf4j/Logger;
+       6: putstatic     #12                 // Field log:Lorg/slf4j/Logger;
+       9: new           #2                  // class java/util/HashMap
+      12: dup
+      13: iconst_5
+      14: invokespecial #278                // Method java/util/HashMap."<init>":(I)V
+      17: putstatic     #170                // Field digestOidToUriMappings:Ljava/util/Map;
+      20: getstatic     #170                // Field digestOidToUriMappings:Ljava/util/Map;
+      23: getstatic     #279                // Field org/bouncycastle/tsp/TSPAlgorithms.MD5:Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+      26: ldc_w         #281                // String http://www.w3.org/2001/04/xmldsig-more#md5
+      29: invokeinterface #21,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      34: pop
+      35: getstatic     #170                // Field digestOidToUriMappings:Ljava/util/Map;
+      38: getstatic     #282                // Field org/bouncycastle/tsp/TSPAlgorithms.RIPEMD160:Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+      41: ldc_w         #283                // String http://www.w3.org/2001/04/xmlenc#ripemd160
+      44: invokeinterface #21,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      49: pop
+      50: getstatic     #170                // Field digestOidToUriMappings:Ljava/util/Map;
+      53: getstatic     #284                // Field org/bouncycastle/tsp/TSPAlgorithms.SHA1:Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+      56: ldc_w         #285                // String http://www.w3.org/2000/09/xmldsig#sha1
+      59: invokeinterface #21,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      64: pop
+      65: getstatic     #170                // Field digestOidToUriMappings:Ljava/util/Map;
+      68: getstatic     #286                // Field org/bouncycastle/tsp/TSPAlgorithms.SHA256:Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+      71: ldc_w         #287                // String http://www.w3.org/2001/04/xmlenc#sha256
+      74: invokeinterface #21,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      79: pop
+      80: getstatic     #170                // Field digestOidToUriMappings:Ljava/util/Map;
+      83: getstatic     #288                // Field org/bouncycastle/tsp/TSPAlgorithms.SHA384:Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+      86: ldc_w         #289                // String http://www.w3.org/2001/04/xmldsig-more#sha384
+      89: invokeinterface #21,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      94: pop
+      95: getstatic     #170                // Field digestOidToUriMappings:Ljava/util/Map;
+      98: getstatic     #290                // Field org/bouncycastle/tsp/TSPAlgorithms.SHA512:Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+     101: ldc_w         #291                // String http://www.w3.org/2001/04/xmlenc#sha512
+     104: invokeinterface #21,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     109: pop
+     110: return
+}

@@ -1,0 +1,71 @@
+Compiled from "CertTrustStore.java"
+public class org.bol.certs.CertTrustStore$IgnoringOidChecker extends java.security.cert.PKIXCertPathChecker {
+  private final java.util.Set<java.lang.String> ignoredOids;
+
+  final org.bol.certs.CertTrustStore this$0;
+
+  public org.bol.certs.CertTrustStore$IgnoringOidChecker(java.util.Set<java.lang.String>);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #1                  // Field this$0:Lorg/bol/certs/CertTrustStore;
+       5: aload_0
+       6: invokespecial #2                  // Method java/security/cert/PKIXCertPathChecker."<init>":()V
+       9: aload_0
+      10: aload_2
+      11: putfield      #3                  // Field ignoredOids:Ljava/util/Set;
+      14: return
+
+  public void init(boolean);
+    Code:
+       0: return
+
+  public boolean isForwardCheckingSupported();
+    Code:
+       0: iconst_1
+       1: ireturn
+
+  public java.util.Set<java.lang.String> getSupportedExtensions();
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field ignoredOids:Ljava/util/Set;
+       4: areturn
+
+  public void check(java.security.cert.Certificate, java.util.Collection<java.lang.String>) throws java.security.cert.CertPathValidatorException;
+    Code:
+       0: aload_1
+       1: instanceof    #4                  // class java/security/cert/X509Certificate
+       4: ifeq          85
+       7: aload_1
+       8: checkcast     #4                  // class java/security/cert/X509Certificate
+      11: astore_3
+      12: aload_3
+      13: invokevirtual #5                  // Method java/security/cert/X509Certificate.getCriticalExtensionOIDs:()Ljava/util/Set;
+      16: astore        4
+      18: aload         4
+      20: ifnull        85
+      23: new           #6                  // class java/util/HashSet
+      26: dup
+      27: aload         4
+      29: invokespecial #7                  // Method java/util/HashSet."<init>":(Ljava/util/Collection;)V
+      32: invokevirtual #8                  // Method java/util/HashSet.iterator:()Ljava/util/Iterator;
+      35: astore        5
+      37: aload         5
+      39: invokeinterface #9,  1            // InterfaceMethod java/util/Iterator.hasNext:()Z
+      44: ifeq          85
+      47: aload         5
+      49: invokeinterface #10,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      54: checkcast     #11                 // class java/lang/String
+      57: astore        6
+      59: aload_0
+      60: getfield      #3                  // Field ignoredOids:Ljava/util/Set;
+      63: aload         6
+      65: invokeinterface #12,  2           // InterfaceMethod java/util/Set.contains:(Ljava/lang/Object;)Z
+      70: ifeq          82
+      73: aload_2
+      74: aload         6
+      76: invokeinterface #13,  2           // InterfaceMethod java/util/Collection.remove:(Ljava/lang/Object;)Z
+      81: pop
+      82: goto          37
+      85: return
+}

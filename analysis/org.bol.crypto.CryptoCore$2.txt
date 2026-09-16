@@ -1,0 +1,57 @@
+Compiled from "CryptoCore.java"
+class org.bol.crypto.CryptoCore$2 extends javax.net.ssl.X509ExtendedKeyManager {
+  final org.bol.crypto.CryptoCore this$0;
+
+  org.bol.crypto.CryptoCore$2(org.bol.crypto.CryptoCore);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #1                  // Field this$0:Lorg/bol/crypto/CryptoCore;
+       5: aload_0
+       6: invokespecial #2                  // Method javax/net/ssl/X509ExtendedKeyManager."<init>":()V
+       9: return
+
+  public java.lang.String chooseClientAlias(java.lang.String[], java.security.Principal[], java.net.Socket);
+    Code:
+       0: ldc           #3                  // String HARDWARE_TOKEN_ALIAS
+       2: areturn
+
+  public java.security.PrivateKey getPrivateKey(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #1                  // Field this$0:Lorg/bol/crypto/CryptoCore;
+       4: getfield      #4                  // Field org/bol/crypto/CryptoCore.signPk:Ljava/security/PrivateKey;
+       7: areturn
+
+  public java.security.cert.X509Certificate[] getCertificateChain(java.lang.String);
+    Code:
+       0: iconst_1
+       1: anewarray     #5                  // class java/security/cert/X509Certificate
+       4: dup
+       5: iconst_0
+       6: aload_0
+       7: getfield      #1                  // Field this$0:Lorg/bol/crypto/CryptoCore;
+      10: getfield      #6                  // Field org/bol/crypto/CryptoCore.signCert:Ljava/security/cert/X509Certificate;
+      13: aastore
+      14: areturn
+
+  public java.lang.String[] getClientAliases(java.lang.String, java.security.Principal[]);
+    Code:
+       0: iconst_1
+       1: anewarray     #7                  // class java/lang/String
+       4: dup
+       5: iconst_0
+       6: ldc           #3                  // String HARDWARE_TOKEN_ALIAS
+       8: aastore
+       9: areturn
+
+  public java.lang.String chooseServerAlias(java.lang.String, java.security.Principal[], java.net.Socket);
+    Code:
+       0: aconst_null
+       1: areturn
+
+  public java.lang.String[] getServerAliases(java.lang.String, java.security.Principal[]);
+    Code:
+       0: aconst_null
+       1: areturn
+}

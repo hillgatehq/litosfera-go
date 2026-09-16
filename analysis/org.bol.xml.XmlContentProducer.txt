@@ -1,0 +1,4 @@
+Compiled from "XmlContentProducer.java"
+public interface org.bol.xml.XmlContentProducer {
+  public abstract byte[] onProduceXml(java.lang.String) throws java.io.IOException, javax.xml.xpath.XPathExpressionException, org.xml.sax.SAXException, javax.xml.parsers.ParserConfigurationException, javax.xml.crypto.MarshalException, javax.xml.crypto.dsig.XMLSignatureException, javax.xml.transform.TransformerException, xades4j.XAdES4jException, java.security.GeneralSecurityException, java.lang.NoSuchMethodException, java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException, java.lang.ClassNotFoundException, java.lang.InstantiationException, java.lang.NoSuchFieldException;
+}

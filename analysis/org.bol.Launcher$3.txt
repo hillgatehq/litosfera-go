@@ -1,0 +1,56 @@
+Compiled from "Launcher.java"
+class org.bol.Launcher$3 extends org.bol.crypto.SignCryptoCore {
+  final org.bol.certs.CertTrustStore val$trustStore;
+
+  org.bol.Launcher$3(org.bol.certs.CertTrustStore) throws java.io.IOException, java.security.cert.CRLException, java.security.cert.CertificateException, java.security.cert.CertStoreException, java.security.NoSuchAlgorithmException, java.security.KeyStoreException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #1                  // Field val$trustStore:Lorg/bol/certs/CertTrustStore;
+       5: aload_0
+       6: invokespecial #2                  // Method org/bol/crypto/SignCryptoCore."<init>":()V
+       9: return
+
+  protected boolean checkSignCertOrAlias(java.security.cert.X509Certificate, java.lang.String) throws java.security.KeyStoreException;
+    Code:
+       0: aconst_null
+       1: getstatic     #3                  // Field ETOKEN_ALIAS:Ljava/lang/String;
+       4: if_acmpne     54
+       7: iconst_3
+       8: anewarray     #4                  // class org/bol/Launcher$SYSTEM_GROUP_TYPES
+      11: dup
+      12: iconst_0
+      13: getstatic     #5                  // Field org/bol/Launcher$SYSTEM_GROUP_TYPES.LITAS:Lorg/bol/Launcher$SYSTEM_GROUP_TYPES;
+      16: aastore
+      17: dup
+      18: iconst_1
+      19: getstatic     #6                  // Field org/bol/Launcher$SYSTEM_GROUP_TYPES.NEOLITAS:Lorg/bol/Launcher$SYSTEM_GROUP_TYPES;
+      22: aastore
+      23: dup
+      24: iconst_2
+      25: getstatic     #7                  // Field org/bol/Launcher$SYSTEM_GROUP_TYPES.TAKO:Lorg/bol/Launcher$SYSTEM_GROUP_TYPES;
+      28: aastore
+      29: invokestatic  #8                  // Method java/util/Arrays.asList:([Ljava/lang/Object;)Ljava/util/List;
+      32: getstatic     #9                  // Field org/bol/Launcher.SYSTEM_GROUP:Lorg/bol/Launcher$SYSTEM_GROUP_TYPES;
+      35: invokeinterface #10,  2           // InterfaceMethod java/util/List.contains:(Ljava/lang/Object;)Z
+      40: ifeq          54
+      43: aload_0
+      44: getfield      #1                  // Field val$trustStore:Lorg/bol/certs/CertTrustStore;
+      47: aload_1
+      48: invokevirtual #11                 // Method org/bol/certs/CertTrustStore.certificateIssuedByTrustedCA:(Ljava/security/cert/X509Certificate;)Z
+      51: ifne          79
+      54: aconst_null
+      55: getstatic     #3                  // Field ETOKEN_ALIAS:Ljava/lang/String;
+      58: if_acmpne     83
+      61: getstatic     #12                 // Field org/bol/Launcher$SYSTEM_GROUP_TYPES.LBINDIVIDUALS:Lorg/bol/Launcher$SYSTEM_GROUP_TYPES;
+      64: getstatic     #9                  // Field org/bol/Launcher.SYSTEM_GROUP:Lorg/bol/Launcher$SYSTEM_GROUP_TYPES;
+      67: if_acmpne     83
+      70: aload_2
+      71: ldc           #13                 // String lp-
+      73: invokevirtual #14                 // Method java/lang/String.startsWith:(Ljava/lang/String;)Z
+      76: ifeq          83
+      79: iconst_1
+      80: goto          84
+      83: iconst_0
+      84: ireturn
+}

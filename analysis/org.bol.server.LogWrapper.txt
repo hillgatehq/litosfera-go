@@ -1,0 +1,723 @@
+Compiled from "LogWrapper.java"
+public class org.bol.server.LogWrapper {
+  private static org.slf4j.event.Level LogLevel;
+
+  private static final java.util.concurrent.locks.ReentrantLock printLock;
+
+  private org.bol.server.LogWrapper();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public static org.slf4j.event.Level getLogLevel();
+    Code:
+       0: getstatic     #2                  // Field LogLevel:Lorg/slf4j/event/Level;
+       3: areturn
+
+  public static void setLogLevel(org.slf4j.event.Level);
+    Code:
+       0: aload_0
+       1: putstatic     #2                  // Field LogLevel:Lorg/slf4j/event/Level;
+       4: return
+
+  public static org.slf4j.event.Level strToLevel(java.lang.String);
+    Code:
+       0: aconst_null
+       1: astore_1
+       2: aload_0
+       3: invokevirtual #3                  // Method java/lang/String.toLowerCase:()Ljava/lang/String;
+       6: astore_2
+       7: iconst_m1
+       8: istore_3
+       9: aload_2
+      10: invokevirtual #4                  // Method java/lang/String.hashCode:()I
+      13: lookupswitch  { // 5
+               3237038: 92
+               3641990: 106
+              95458899: 78
+              96784904: 120
+             110620997: 64
+               default: 131
+          }
+      64: aload_2
+      65: ldc           #5                  // String trace
+      67: invokevirtual #6                  // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      70: ifeq          131
+      73: iconst_0
+      74: istore_3
+      75: goto          131
+      78: aload_2
+      79: ldc           #7                  // String debug
+      81: invokevirtual #6                  // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      84: ifeq          131
+      87: iconst_1
+      88: istore_3
+      89: goto          131
+      92: aload_2
+      93: ldc           #8                  // String info
+      95: invokevirtual #6                  // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      98: ifeq          131
+     101: iconst_2
+     102: istore_3
+     103: goto          131
+     106: aload_2
+     107: ldc           #9                  // String warn
+     109: invokevirtual #6                  // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     112: ifeq          131
+     115: iconst_3
+     116: istore_3
+     117: goto          131
+     120: aload_2
+     121: ldc           #10                 // String error
+     123: invokevirtual #6                  // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     126: ifeq          131
+     129: iconst_4
+     130: istore_3
+     131: iload_3
+     132: tableswitch   { // 0 to 4
+                     0: 168
+                     1: 175
+                     2: 182
+                     3: 189
+                     4: 196
+               default: 203
+          }
+     168: getstatic     #11                 // Field org/slf4j/event/Level.TRACE:Lorg/slf4j/event/Level;
+     171: astore_1
+     172: goto          217
+     175: getstatic     #12                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     178: astore_1
+     179: goto          217
+     182: getstatic     #13                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     185: astore_1
+     186: goto          217
+     189: getstatic     #14                 // Field org/slf4j/event/Level.WARN:Lorg/slf4j/event/Level;
+     192: astore_1
+     193: goto          217
+     196: getstatic     #15                 // Field org/slf4j/event/Level.ERROR:Lorg/slf4j/event/Level;
+     199: astore_1
+     200: goto          217
+     203: new           #16                 // class java/lang/IllegalStateException
+     206: dup
+     207: aload_0
+     208: invokedynamic #17,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     213: invokespecial #18                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     216: athrow
+     217: aload_1
+     218: areturn
+
+  public static void log(org.slf4j.Logger, org.slf4j.event.Level, java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: ldc           #19                 // String {}
+       4: iconst_1
+       5: anewarray     #20                 // class java/lang/Object
+       8: dup
+       9: iconst_0
+      10: aload_2
+      11: aastore
+      12: invokestatic  #21                 // Method log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;[Ljava/lang/Object;)V
+      15: return
+
+  public static void logException(org.slf4j.Logger, java.lang.Throwable);
+    Code:
+       0: aconst_null
+       1: astore_2
+       2: aload_1
+       3: astore_3
+       4: new           #22                 // class java/lang/StringBuilder
+       7: dup
+       8: aload_1
+       9: invokevirtual #23                 // Method java/lang/Throwable.toString:()Ljava/lang/String;
+      12: invokespecial #24                 // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+      15: astore        4
+      17: aconst_null
+      18: aload_3
+      19: invokevirtual #25                 // Method java/lang/Throwable.getCause:()Ljava/lang/Throwable;
+      22: dup
+      23: astore_2
+      24: if_acmpeq     52
+      27: aload_3
+      28: aload_2
+      29: if_acmpeq     52
+      32: aload         4
+      34: aload_2
+      35: invokevirtual #23                 // Method java/lang/Throwable.toString:()Ljava/lang/String;
+      38: invokedynamic #26,  0             // InvokeDynamic #1:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      43: invokevirtual #27                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      46: pop
+      47: aload_2
+      48: astore_3
+      49: goto          17
+      52: aload_0
+      53: getstatic     #15                 // Field org/slf4j/event/Level.ERROR:Lorg/slf4j/event/Level;
+      56: ldc           #19                 // String {}
+      58: iconst_1
+      59: anewarray     #20                 // class java/lang/Object
+      62: dup
+      63: iconst_0
+      64: aload         4
+      66: invokevirtual #28                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      69: aastore
+      70: invokestatic  #21                 // Method log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;[Ljava/lang/Object;)V
+      73: new           #29                 // class java/io/CharArrayWriter
+      76: dup
+      77: invokespecial #30                 // Method java/io/CharArrayWriter."<init>":()V
+      80: astore        5
+      82: new           #31                 // class java/io/PrintWriter
+      85: dup
+      86: aload         5
+      88: invokespecial #32                 // Method java/io/PrintWriter."<init>":(Ljava/io/Writer;)V
+      91: astore        6
+      93: aload_1
+      94: aload         6
+      96: invokevirtual #33                 // Method java/lang/Throwable.printStackTrace:(Ljava/io/PrintWriter;)V
+      99: aload         6
+     101: invokevirtual #34                 // Method java/io/PrintWriter.close:()V
+     104: aload         5
+     106: invokevirtual #35                 // Method java/io/CharArrayWriter.toString:()Ljava/lang/String;
+     109: astore        7
+     111: aload_0
+     112: getstatic     #12                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     115: ldc           #19                 // String {}
+     117: iconst_1
+     118: anewarray     #20                 // class java/lang/Object
+     121: dup
+     122: iconst_0
+     123: aload         7
+     125: aastore
+     126: invokestatic  #21                 // Method log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;[Ljava/lang/Object;)V
+     129: aload_0
+     130: ldc           #36                 // String Exception
+     132: aload_1
+     133: invokeinterface #37,  3           // InterfaceMethod org/slf4j/Logger.error:(Ljava/lang/String;Ljava/lang/Throwable;)V
+     138: return
+
+  public static void dumpStr(org.slf4j.Logger, org.slf4j.event.Level, java.lang.String);
+    Code:
+       0: getstatic     #38                 // Field printLock:Ljava/util/concurrent/locks/ReentrantLock;
+       3: invokevirtual #39                 // Method java/util/concurrent/locks/ReentrantLock.lock:()V
+       6: getstatic     #2                  // Field LogLevel:Lorg/slf4j/event/Level;
+       9: aload_1
+      10: invokevirtual #40                 // Method org/slf4j/event/Level.compareTo:(Ljava/lang/Enum;)I
+      13: iflt          90
+      16: new           #29                 // class java/io/CharArrayWriter
+      19: dup
+      20: invokespecial #30                 // Method java/io/CharArrayWriter."<init>":()V
+      23: astore_3
+      24: new           #41                 // class org/bol/debug/BinaryDumpOutputStream
+      27: dup
+      28: aload_3
+      29: invokespecial #42                 // Method org/bol/debug/BinaryDumpOutputStream."<init>":(Ljava/io/Writer;)V
+      32: astore        4
+      34: aload         4
+      36: aload_2
+      37: invokevirtual #43                 // Method java/lang/String.getBytes:()[B
+      40: invokevirtual #44                 // Method org/bol/debug/BinaryDumpOutputStream.write:([B)V
+      43: aload         4
+      45: invokevirtual #45                 // Method org/bol/debug/BinaryDumpOutputStream.close:()V
+      48: goto          73
+      51: astore        5
+      53: aload         4
+      55: invokevirtual #45                 // Method org/bol/debug/BinaryDumpOutputStream.close:()V
+      58: goto          70
+      61: astore        6
+      63: aload         5
+      65: aload         6
+      67: invokevirtual #47                 // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+      70: aload         5
+      72: athrow
+      73: aload_0
+      74: aload_1
+      75: invokestatic  #48                 // Method java/lang/System.lineSeparator:()Ljava/lang/String;
+      78: aload_3
+      79: invokevirtual #35                 // Method java/io/CharArrayWriter.toString:()Ljava/lang/String;
+      82: invokedynamic #49,  0             // InvokeDynamic #2:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      87: invokestatic  #50                 // Method log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      90: getstatic     #38                 // Field printLock:Ljava/util/concurrent/locks/ReentrantLock;
+      93: invokevirtual #51                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+      96: goto          125
+      99: astore_3
+     100: aload_0
+     101: aload_3
+     102: invokestatic  #53                 // Method logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+     105: getstatic     #38                 // Field printLock:Ljava/util/concurrent/locks/ReentrantLock;
+     108: invokevirtual #51                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     111: goto          125
+     114: astore        7
+     116: getstatic     #38                 // Field printLock:Ljava/util/concurrent/locks/ReentrantLock;
+     119: invokevirtual #51                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     122: aload         7
+     124: athrow
+     125: return
+    Exception table:
+       from    to  target type
+          34    43    51   Class java/lang/Throwable
+          53    58    61   Class java/lang/Throwable
+           0    90    99   Class java/lang/Exception
+           0    90   114   any
+          99   105   114   any
+         114   116   114   any
+
+  public static void dumpBytes(org.slf4j.Logger, org.slf4j.event.Level, java.lang.String, byte[]);
+    Code:
+       0: getstatic     #38                 // Field printLock:Ljava/util/concurrent/locks/ReentrantLock;
+       3: invokevirtual #39                 // Method java/util/concurrent/locks/ReentrantLock.lock:()V
+       6: getstatic     #2                  // Field LogLevel:Lorg/slf4j/event/Level;
+       9: aload_1
+      10: invokevirtual #40                 // Method org/slf4j/event/Level.compareTo:(Ljava/lang/Enum;)I
+      13: iflt          110
+      16: aload_3
+      17: arraylength
+      18: ifle          99
+      21: new           #29                 // class java/io/CharArrayWriter
+      24: dup
+      25: invokespecial #30                 // Method java/io/CharArrayWriter."<init>":()V
+      28: astore        4
+      30: new           #41                 // class org/bol/debug/BinaryDumpOutputStream
+      33: dup
+      34: aload         4
+      36: invokespecial #42                 // Method org/bol/debug/BinaryDumpOutputStream."<init>":(Ljava/io/Writer;)V
+      39: astore        5
+      41: aload         5
+      43: aload_3
+      44: invokevirtual #44                 // Method org/bol/debug/BinaryDumpOutputStream.write:([B)V
+      47: aload         5
+      49: invokevirtual #45                 // Method org/bol/debug/BinaryDumpOutputStream.close:()V
+      52: goto          77
+      55: astore        6
+      57: aload         5
+      59: invokevirtual #45                 // Method org/bol/debug/BinaryDumpOutputStream.close:()V
+      62: goto          74
+      65: astore        7
+      67: aload         6
+      69: aload         7
+      71: invokevirtual #47                 // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+      74: aload         6
+      76: athrow
+      77: aload_0
+      78: aload_1
+      79: aload_2
+      80: invokestatic  #48                 // Method java/lang/System.lineSeparator:()Ljava/lang/String;
+      83: aload         4
+      85: invokevirtual #35                 // Method java/io/CharArrayWriter.toString:()Ljava/lang/String;
+      88: invokedynamic #54,  0             // InvokeDynamic #3:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      93: invokestatic  #50                 // Method log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      96: goto          110
+      99: aload_0
+     100: aload_1
+     101: aload_2
+     102: invokedynamic #55,  0             // InvokeDynamic #4:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     107: invokestatic  #50                 // Method log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     110: getstatic     #38                 // Field printLock:Ljava/util/concurrent/locks/ReentrantLock;
+     113: invokevirtual #51                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     116: goto          147
+     119: astore        4
+     121: aload_0
+     122: aload         4
+     124: invokestatic  #53                 // Method logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+     127: getstatic     #38                 // Field printLock:Ljava/util/concurrent/locks/ReentrantLock;
+     130: invokevirtual #51                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     133: goto          147
+     136: astore        8
+     138: getstatic     #38                 // Field printLock:Ljava/util/concurrent/locks/ReentrantLock;
+     141: invokevirtual #51                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     144: aload         8
+     146: athrow
+     147: return
+    Exception table:
+       from    to  target type
+          41    47    55   Class java/lang/Throwable
+          57    62    65   Class java/lang/Throwable
+           0   110   119   Class java/lang/Exception
+           0   110   136   any
+         119   127   136   any
+         136   138   136   any
+
+  public static void dumpObj(org.slf4j.Logger, org.slf4j.event.Level, java.lang.Object);
+    Code:
+       0: getstatic     #38                 // Field printLock:Ljava/util/concurrent/locks/ReentrantLock;
+       3: invokevirtual #39                 // Method java/util/concurrent/locks/ReentrantLock.lock:()V
+       6: getstatic     #2                  // Field LogLevel:Lorg/slf4j/event/Level;
+       9: aload_1
+      10: invokevirtual #40                 // Method org/slf4j/event/Level.compareTo:(Ljava/lang/Enum;)I
+      13: iflt          127
+      16: new           #29                 // class java/io/CharArrayWriter
+      19: dup
+      20: invokespecial #30                 // Method java/io/CharArrayWriter."<init>":()V
+      23: astore_3
+      24: new           #41                 // class org/bol/debug/BinaryDumpOutputStream
+      27: dup
+      28: aload_3
+      29: invokespecial #42                 // Method org/bol/debug/BinaryDumpOutputStream."<init>":(Ljava/io/Writer;)V
+      32: astore        4
+      34: new           #56                 // class java/io/ObjectOutputStream
+      37: dup
+      38: new           #57                 // class java/io/BufferedOutputStream
+      41: dup
+      42: aload         4
+      44: invokespecial #58                 // Method java/io/BufferedOutputStream."<init>":(Ljava/io/OutputStream;)V
+      47: invokespecial #59                 // Method java/io/ObjectOutputStream."<init>":(Ljava/io/OutputStream;)V
+      50: astore        5
+      52: aload         5
+      54: aload_2
+      55: invokevirtual #60                 // Method java/io/ObjectOutputStream.writeObject:(Ljava/lang/Object;)V
+      58: aload         5
+      60: invokevirtual #61                 // Method java/io/ObjectOutputStream.close:()V
+      63: goto          88
+      66: astore        6
+      68: aload         5
+      70: invokevirtual #61                 // Method java/io/ObjectOutputStream.close:()V
+      73: goto          85
+      76: astore        7
+      78: aload         6
+      80: aload         7
+      82: invokevirtual #47                 // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+      85: aload         6
+      87: athrow
+      88: aload         4
+      90: invokevirtual #45                 // Method org/bol/debug/BinaryDumpOutputStream.close:()V
+      93: goto          118
+      96: astore        5
+      98: aload         4
+     100: invokevirtual #45                 // Method org/bol/debug/BinaryDumpOutputStream.close:()V
+     103: goto          115
+     106: astore        6
+     108: aload         5
+     110: aload         6
+     112: invokevirtual #47                 // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     115: aload         5
+     117: athrow
+     118: aload_0
+     119: aload_1
+     120: aload_3
+     121: invokevirtual #35                 // Method java/io/CharArrayWriter.toString:()Ljava/lang/String;
+     124: invokestatic  #50                 // Method log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     127: getstatic     #38                 // Field printLock:Ljava/util/concurrent/locks/ReentrantLock;
+     130: invokevirtual #51                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     133: goto          162
+     136: astore_3
+     137: aload_0
+     138: aload_3
+     139: invokestatic  #53                 // Method logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+     142: getstatic     #38                 // Field printLock:Ljava/util/concurrent/locks/ReentrantLock;
+     145: invokevirtual #51                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     148: goto          162
+     151: astore        8
+     153: getstatic     #38                 // Field printLock:Ljava/util/concurrent/locks/ReentrantLock;
+     156: invokevirtual #51                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     159: aload         8
+     161: athrow
+     162: return
+    Exception table:
+       from    to  target type
+          52    58    66   Class java/lang/Throwable
+          68    73    76   Class java/lang/Throwable
+          34    88    96   Class java/lang/Throwable
+          98   103   106   Class java/lang/Throwable
+           0   127   136   Class java/lang/Exception
+           0   127   151   any
+         136   142   151   any
+         151   153   151   any
+
+  public static void logRequest(org.slf4j.Logger, java.net.HttpURLConnection);
+    Code:
+       0: aconst_null
+       1: aload_1
+       2: if_acmpne     15
+       5: aload_0
+       6: getstatic     #13                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+       9: ldc           #62                 // String Invalid REQUEST
+      11: invokestatic  #50                 // Method log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      14: return
+      15: aload_0
+      16: getstatic     #13                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      19: aload_1
+      20: invokevirtual #63                 // Method java/net/HttpURLConnection.getRequestMethod:()Ljava/lang/String;
+      23: aload_1
+      24: invokevirtual #64                 // Method java/net/HttpURLConnection.getURL:()Ljava/net/URL;
+      27: invokevirtual #65                 // Method java/net/URL.toString:()Ljava/lang/String;
+      30: invokedynamic #66,  0             // InvokeDynamic #5:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      35: invokestatic  #50                 // Method log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      38: aload_0
+      39: getstatic     #12                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+      42: ldc           #67                 // String Request Headers:
+      44: invokestatic  #50                 // Method log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      47: aload_1
+      48: invokevirtual #68                 // Method java/net/HttpURLConnection.getRequestProperties:()Ljava/util/Map;
+      51: astore_2
+      52: aload_2
+      53: invokeinterface #69,  1           // InterfaceMethod java/util/Map.keySet:()Ljava/util/Set;
+      58: astore_3
+      59: aload_3
+      60: invokeinterface #70,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      65: astore        4
+      67: aload         4
+      69: invokeinterface #71,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      74: ifeq          181
+      77: aload         4
+      79: invokeinterface #72,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      84: checkcast     #73                 // class java/lang/String
+      87: astore        5
+      89: new           #22                 // class java/lang/StringBuilder
+      92: dup
+      93: invokespecial #74                 // Method java/lang/StringBuilder."<init>":()V
+      96: astore        6
+      98: aload_2
+      99: aload         5
+     101: invokeinterface #75,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     106: checkcast     #76                 // class java/util/List
+     109: invokeinterface #77,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     114: astore        7
+     116: aload         7
+     118: invokeinterface #71,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     123: ifeq          159
+     126: aload         7
+     128: invokeinterface #72,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     133: checkcast     #73                 // class java/lang/String
+     136: astore        8
+     138: aload         6
+     140: ldc           #78                 // String \"
+     142: invokevirtual #27                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     145: aload         8
+     147: invokevirtual #27                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     150: ldc           #79                 // String \"
+     152: invokevirtual #27                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     155: pop
+     156: goto          116
+     159: aload_0
+     160: getstatic     #12                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     163: aload         5
+     165: aload         6
+     167: invokevirtual #28                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     170: invokedynamic #80,  0             // InvokeDynamic #6:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     175: invokestatic  #50                 // Method log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     178: goto          67
+     181: return
+
+  public static void logRequestResponse(org.slf4j.Logger, java.net.HttpURLConnection);
+    Code:
+       0: aload_1
+       1: instanceof    #81                 // class javax/net/ssl/HttpsURLConnection
+       4: ifeq          166
+       7: aload_0
+       8: getstatic     #12                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+      11: aload_1
+      12: checkcast     #81                 // class javax/net/ssl/HttpsURLConnection
+      15: invokevirtual #82                 // Method javax/net/ssl/HttpsURLConnection.getCipherSuite:()Ljava/lang/String;
+      18: invokedynamic #83,  0             // InvokeDynamic #7:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      23: invokestatic  #50                 // Method log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      26: aload_1
+      27: checkcast     #81                 // class javax/net/ssl/HttpsURLConnection
+      30: invokevirtual #84                 // Method javax/net/ssl/HttpsURLConnection.getServerCertificates:()[Ljava/security/cert/Certificate;
+      33: astore_2
+      34: aconst_null
+      35: aload_2
+      36: if_acmpeq     157
+      39: aload_0
+      40: getstatic     #12                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+      43: ldc           #85                 // String Listing SSL request certs
+      45: invokestatic  #50                 // Method log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      48: aload_2
+      49: astore_3
+      50: aload_3
+      51: arraylength
+      52: istore        4
+      54: iconst_0
+      55: istore        5
+      57: iload         5
+      59: iload         4
+      61: if_icmpge     157
+      64: aload_3
+      65: iload         5
+      67: aaload
+      68: astore        6
+      70: aload_0
+      71: getstatic     #12                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+      74: aload         6
+      76: invokevirtual #86                 // Method java/security/cert/Certificate.getType:()Ljava/lang/String;
+      79: invokedynamic #87,  0             // InvokeDynamic #8:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      84: invokestatic  #50                 // Method log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      87: aload_0
+      88: getstatic     #12                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+      91: aload         6
+      93: invokevirtual #88                 // Method java/security/cert/Certificate.hashCode:()I
+      96: invokestatic  #89                 // Method java/lang/Integer.toHexString:(I)Ljava/lang/String;
+      99: invokedynamic #90,  0             // InvokeDynamic #9:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     104: invokestatic  #50                 // Method log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     107: aload_0
+     108: getstatic     #12                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     111: aload         6
+     113: invokevirtual #91                 // Method java/security/cert/Certificate.getPublicKey:()Ljava/security/PublicKey;
+     116: invokeinterface #92,  1           // InterfaceMethod java/security/PublicKey.getAlgorithm:()Ljava/lang/String;
+     121: invokedynamic #93,  0             // InvokeDynamic #10:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     126: invokestatic  #50                 // Method log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     129: aload_0
+     130: getstatic     #12                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     133: aload         6
+     135: invokevirtual #91                 // Method java/security/cert/Certificate.getPublicKey:()Ljava/security/PublicKey;
+     138: invokeinterface #94,  1           // InterfaceMethod java/security/PublicKey.getFormat:()Ljava/lang/String;
+     143: invokedynamic #95,  0             // InvokeDynamic #11:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     148: invokestatic  #50                 // Method log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     151: iinc          5, 1
+     154: goto          57
+     157: goto          166
+     160: astore_2
+     161: aload_0
+     162: aload_2
+     163: invokestatic  #53                 // Method logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+     166: aload_0
+     167: getstatic     #12                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     170: ldc           #97                 // String Response Headers:
+     172: invokestatic  #50                 // Method log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     175: aload_1
+     176: invokevirtual #98                 // Method java/net/HttpURLConnection.getHeaderFields:()Ljava/util/Map;
+     179: astore_2
+     180: aload_2
+     181: invokeinterface #99,  1           // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+     186: invokeinterface #70,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+     191: astore_3
+     192: aload_3
+     193: invokeinterface #71,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     198: ifeq          244
+     201: aload_3
+     202: invokeinterface #72,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     207: checkcast     #100                // class java/util/Map$Entry
+     210: astore        4
+     212: aload_0
+     213: getstatic     #12                 // Field org/slf4j/event/Level.DEBUG:Lorg/slf4j/event/Level;
+     216: aload         4
+     218: invokeinterface #101,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+     223: checkcast     #73                 // class java/lang/String
+     226: aload         4
+     228: invokeinterface #102,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+     233: invokedynamic #103,  0            // InvokeDynamic #12:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/String;
+     238: invokestatic  #50                 // Method log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     241: goto          192
+     244: return
+    Exception table:
+       from    to  target type
+          26   157   160   Class javax/net/ssl/SSLPeerUnverifiedException
+
+  public static void log(org.slf4j.Logger, org.slf4j.event.Level, java.lang.String, java.lang.Object...);
+    Code:
+       0: getstatic     #38                 // Field printLock:Ljava/util/concurrent/locks/ReentrantLock;
+       3: invokevirtual #39                 // Method java/util/concurrent/locks/ReentrantLock.lock:()V
+       6: getstatic     #2                  // Field LogLevel:Lorg/slf4j/event/Level;
+       9: aload_1
+      10: invokevirtual #40                 // Method org/slf4j/event/Level.compareTo:(Ljava/lang/Enum;)I
+      13: iflt          136
+      16: new           #104                // class java/util/LinkedHashMap
+      19: dup
+      20: invokespecial #105                // Method java/util/LinkedHashMap."<init>":()V
+      23: astore        4
+      25: invokestatic  #106                // Method org/bol/server/ConsoleServlet.getApiToken:()Ljava/lang/String;
+      28: ldc           #107                // String service
+      30: invokevirtual #6                  // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      33: ifeq          69
+      36: aload         4
+      38: ldc           #108                // String timestamp
+      40: invokestatic  #109                // Method java/time/ZonedDateTime.now:()Ljava/time/ZonedDateTime;
+      43: getstatic     #110                // Field java/time/format/DateTimeFormatter.ISO_OFFSET_DATE_TIME:Ljava/time/format/DateTimeFormatter;
+      46: invokevirtual #111                // Method java/time/ZonedDateTime.format:(Ljava/time/format/DateTimeFormatter;)Ljava/lang/String;
+      49: invokeinterface #112,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      54: pop
+      55: aload         4
+      57: ldc           #113                // String level
+      59: aload_1
+      60: invokevirtual #114                // Method org/slf4j/event/Level.name:()Ljava/lang/String;
+      63: invokeinterface #112,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      68: pop
+      69: aload         4
+      71: ldc           #115                // String content
+      73: aload_2
+      74: aload_3
+      75: invokestatic  #116                // Method org/slf4j/helpers/MessageFormatter.arrayFormat:(Ljava/lang/String;[Ljava/lang/Object;)Lorg/slf4j/helpers/FormattingTuple;
+      78: invokevirtual #117                // Method org/slf4j/helpers/FormattingTuple.getMessage:()Ljava/lang/String;
+      81: invokeinterface #112,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      86: pop
+      87: aload_1
+      88: getstatic     #15                 // Field org/slf4j/event/Level.ERROR:Lorg/slf4j/event/Level;
+      91: invokevirtual #118                // Method org/slf4j/event/Level.equals:(Ljava/lang/Object;)Z
+      94: ifeq          111
+      97: getstatic     #119                // Field java/lang/System.err:Ljava/io/PrintStream;
+     100: aload         4
+     102: invokestatic  #120                // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+     105: invokevirtual #121                // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+     108: goto          136
+     111: aload         4
+     113: ldc           #113                // String level
+     115: aload_1
+     116: invokevirtual #114                // Method org/slf4j/event/Level.name:()Ljava/lang/String;
+     119: invokeinterface #112,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     124: pop
+     125: getstatic     #122                // Field java/lang/System.out:Ljava/io/PrintStream;
+     128: aload         4
+     130: invokestatic  #120                // Method org/eclipse/jetty/util/ajax/JSON.toString:(Ljava/util/Map;)Ljava/lang/String;
+     133: invokevirtual #121                // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+     136: getstatic     #123                // Field org/bol/server/LogWrapper$1.$SwitchMap$org$slf4j$event$Level:[I
+     139: aload_1
+     140: invokevirtual #124                // Method org/slf4j/event/Level.ordinal:()I
+     143: iaload
+     144: tableswitch   { // 1 to 5
+                     1: 180
+                     2: 191
+                     3: 202
+                     4: 213
+                     5: 224
+               default: 232
+          }
+     180: aload_0
+     181: aload_2
+     182: aload_3
+     183: invokeinterface #125,  3          // InterfaceMethod org/slf4j/Logger.trace:(Ljava/lang/String;[Ljava/lang/Object;)V
+     188: goto          232
+     191: aload_0
+     192: aload_2
+     193: aload_3
+     194: invokeinterface #126,  3          // InterfaceMethod org/slf4j/Logger.debug:(Ljava/lang/String;[Ljava/lang/Object;)V
+     199: goto          232
+     202: aload_0
+     203: aload_2
+     204: aload_3
+     205: invokeinterface #127,  3          // InterfaceMethod org/slf4j/Logger.info:(Ljava/lang/String;[Ljava/lang/Object;)V
+     210: goto          232
+     213: aload_0
+     214: aload_2
+     215: aload_3
+     216: invokeinterface #128,  3          // InterfaceMethod org/slf4j/Logger.warn:(Ljava/lang/String;[Ljava/lang/Object;)V
+     221: goto          232
+     224: aload_0
+     225: aload_2
+     226: aload_3
+     227: invokeinterface #129,  3          // InterfaceMethod org/slf4j/Logger.error:(Ljava/lang/String;[Ljava/lang/Object;)V
+     232: getstatic     #38                 // Field printLock:Ljava/util/concurrent/locks/ReentrantLock;
+     235: invokevirtual #51                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     238: getstatic     #122                // Field java/lang/System.out:Ljava/io/PrintStream;
+     241: invokevirtual #130                // Method java/io/PrintStream.flush:()V
+     244: goto          264
+     247: astore        5
+     249: getstatic     #38                 // Field printLock:Ljava/util/concurrent/locks/ReentrantLock;
+     252: invokevirtual #51                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     255: getstatic     #122                // Field java/lang/System.out:Ljava/io/PrintStream;
+     258: invokevirtual #130                // Method java/io/PrintStream.flush:()V
+     261: aload         5
+     263: athrow
+     264: return
+    Exception table:
+       from    to  target type
+           0   232   247   any
+         247   249   247   any
+
+  static {};
+    Code:
+       0: getstatic     #14                 // Field org/slf4j/event/Level.WARN:Lorg/slf4j/event/Level;
+       3: putstatic     #2                  // Field LogLevel:Lorg/slf4j/event/Level;
+       6: new           #131                // class java/util/concurrent/locks/ReentrantLock
+       9: dup
+      10: invokespecial #132                // Method java/util/concurrent/locks/ReentrantLock."<init>":()V
+      13: putstatic     #38                 // Field printLock:Ljava/util/concurrent/locks/ReentrantLock;
+      16: return
+}

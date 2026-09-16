@@ -1,0 +1,19 @@
+Compiled from "SignCryptoCore.java"
+class org.bol.crypto.SignCryptoCore$2 extends xades4j.production.XadesTSigningProfile {
+  final org.bol.crypto.SignCryptoCore this$0;
+
+  org.bol.crypto.SignCryptoCore$2(org.bol.crypto.SignCryptoCore, xades4j.providers.KeyingDataProvider);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #1                  // Field this$0:Lorg/bol/crypto/SignCryptoCore;
+       5: aload_0
+       6: aload_2
+       7: invokespecial #2                  // Method xades4j/production/XadesTSigningProfile."<init>":(Lxades4j/providers/KeyingDataProvider;)V
+      10: return
+
+  protected java.lang.Class<? extends xades4j.production.XadesSigner> getSignerClass();
+    Code:
+       0: ldc           #3                  // class xades4j/production/SignerBESDefault
+       2: areturn
+}

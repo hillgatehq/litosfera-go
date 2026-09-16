@@ -1,0 +1,82 @@
+Compiled from "CryptoCore.java"
+public final class org.bol.crypto.CryptoCore$PROVIDER_TYPES extends java.lang.Enum<org.bol.crypto.CryptoCore$PROVIDER_TYPES> {
+  public static final org.bol.crypto.CryptoCore$PROVIDER_TYPES PKCS11;
+
+  public static final org.bol.crypto.CryptoCore$PROVIDER_TYPES DEMO;
+
+  public static final org.bol.crypto.CryptoCore$PROVIDER_TYPES TEST;
+
+  public static final org.bol.crypto.CryptoCore$PROVIDER_TYPES PKCS12;
+
+  private static final org.bol.crypto.CryptoCore$PROVIDER_TYPES[] $VALUES;
+
+  public static org.bol.crypto.CryptoCore$PROVIDER_TYPES[] values();
+    Code:
+       0: getstatic     #1                  // Field $VALUES:[Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+       3: invokevirtual #2                  // Method "[Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;".clone:()Ljava/lang/Object;
+       6: checkcast     #3                  // class "[Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;"
+       9: areturn
+
+  public static org.bol.crypto.CryptoCore$PROVIDER_TYPES valueOf(java.lang.String);
+    Code:
+       0: ldc           #4                  // class org/bol/crypto/CryptoCore$PROVIDER_TYPES
+       2: aload_0
+       3: invokestatic  #5                  // Method java/lang/Enum.valueOf:(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;
+       6: checkcast     #4                  // class org/bol/crypto/CryptoCore$PROVIDER_TYPES
+       9: areturn
+
+  private org.bol.crypto.CryptoCore$PROVIDER_TYPES();
+    Code:
+       0: aload_0
+       1: aload_1
+       2: iload_2
+       3: invokespecial #6                  // Method java/lang/Enum."<init>":(Ljava/lang/String;I)V
+       6: return
+
+  static {};
+    Code:
+       0: new           #4                  // class org/bol/crypto/CryptoCore$PROVIDER_TYPES
+       3: dup
+       4: ldc           #7                  // String PKCS11
+       6: iconst_0
+       7: invokespecial #8                  // Method "<init>":(Ljava/lang/String;I)V
+      10: putstatic     #9                  // Field PKCS11:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+      13: new           #4                  // class org/bol/crypto/CryptoCore$PROVIDER_TYPES
+      16: dup
+      17: ldc           #10                 // String DEMO
+      19: iconst_1
+      20: invokespecial #8                  // Method "<init>":(Ljava/lang/String;I)V
+      23: putstatic     #11                 // Field DEMO:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+      26: new           #4                  // class org/bol/crypto/CryptoCore$PROVIDER_TYPES
+      29: dup
+      30: ldc           #12                 // String TEST
+      32: iconst_2
+      33: invokespecial #8                  // Method "<init>":(Ljava/lang/String;I)V
+      36: putstatic     #13                 // Field TEST:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+      39: new           #4                  // class org/bol/crypto/CryptoCore$PROVIDER_TYPES
+      42: dup
+      43: ldc           #14                 // String PKCS12
+      45: iconst_3
+      46: invokespecial #8                  // Method "<init>":(Ljava/lang/String;I)V
+      49: putstatic     #15                 // Field PKCS12:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+      52: iconst_4
+      53: anewarray     #4                  // class org/bol/crypto/CryptoCore$PROVIDER_TYPES
+      56: dup
+      57: iconst_0
+      58: getstatic     #9                  // Field PKCS11:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+      61: aastore
+      62: dup
+      63: iconst_1
+      64: getstatic     #11                 // Field DEMO:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+      67: aastore
+      68: dup
+      69: iconst_2
+      70: getstatic     #13                 // Field TEST:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+      73: aastore
+      74: dup
+      75: iconst_3
+      76: getstatic     #15                 // Field PKCS12:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+      79: aastore
+      80: putstatic     #1                  // Field $VALUES:[Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+      83: return
+}

@@ -1,0 +1,1736 @@
+Compiled from "Launcher.java"
+public class org.bol.Launcher {
+  private static org.slf4j.Logger log;
+
+  private static org.eclipse.jetty.server.Server embeddedServer;
+
+  public static java.lang.String WORK_DIR;
+
+  public static java.lang.String PROJ_NAME;
+
+  public static java.lang.String PROJ_VERSION;
+
+  public static org.bol.Launcher$ENVIRONMENT_TYPES ENVIRONMENT;
+
+  private static int maxThreads;
+
+  private static int minThreads;
+
+  private static int idleTimeout;
+
+  private static boolean heartBeat;
+
+  public static org.bol.Launcher$SYSTEM_GROUP_TYPES SYSTEM_GROUP;
+
+  public org.bol.Launcher();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  private static final org.eclipse.jetty.security.SecurityHandler basicAuth(java.lang.String, java.lang.String, java.lang.String);
+    Code:
+       0: new           #2                  // class org/eclipse/jetty/util/security/Constraint
+       3: dup
+       4: invokespecial #3                  // Method org/eclipse/jetty/util/security/Constraint."<init>":()V
+       7: astore_3
+       8: aload_3
+       9: ldc           #4                  // String BASIC
+      11: invokevirtual #5                  // Method org/eclipse/jetty/util/security/Constraint.setName:(Ljava/lang/String;)V
+      14: aload_3
+      15: iconst_1
+      16: invokevirtual #6                  // Method org/eclipse/jetty/util/security/Constraint.setAuthenticate:(Z)V
+      19: aload_3
+      20: iconst_1
+      21: anewarray     #7                  // class java/lang/String
+      24: dup
+      25: iconst_0
+      26: ldc           #8                  // String user
+      28: aastore
+      29: invokevirtual #9                  // Method org/eclipse/jetty/util/security/Constraint.setRoles:([Ljava/lang/String;)V
+      32: new           #10                 // class org/eclipse/jetty/security/ConstraintMapping
+      35: dup
+      36: invokespecial #11                 // Method org/eclipse/jetty/security/ConstraintMapping."<init>":()V
+      39: astore        4
+      41: aload         4
+      43: iconst_1
+      44: anewarray     #7                  // class java/lang/String
+      47: dup
+      48: iconst_0
+      49: ldc           #12                 // String OPTIONS
+      51: aastore
+      52: invokevirtual #13                 // Method org/eclipse/jetty/security/ConstraintMapping.setMethodOmissions:([Ljava/lang/String;)V
+      55: aload         4
+      57: ldc           #14                 // String /*
+      59: invokevirtual #15                 // Method org/eclipse/jetty/security/ConstraintMapping.setPathSpec:(Ljava/lang/String;)V
+      62: aload         4
+      64: aload_3
+      65: invokevirtual #16                 // Method org/eclipse/jetty/security/ConstraintMapping.setConstraint:(Lorg/eclipse/jetty/util/security/Constraint;)V
+      68: new           #17                 // class org/eclipse/jetty/security/ConstraintSecurityHandler
+      71: dup
+      72: invokespecial #18                 // Method org/eclipse/jetty/security/ConstraintSecurityHandler."<init>":()V
+      75: astore        5
+      77: aload         5
+      79: new           #19                 // class org/eclipse/jetty/security/authentication/BasicAuthenticator
+      82: dup
+      83: invokespecial #20                 // Method org/eclipse/jetty/security/authentication/BasicAuthenticator."<init>":()V
+      86: invokevirtual #21                 // Method org/eclipse/jetty/security/ConstraintSecurityHandler.setAuthenticator:(Lorg/eclipse/jetty/security/Authenticator;)V
+      89: aload         5
+      91: aload_2
+      92: invokevirtual #22                 // Method org/eclipse/jetty/security/ConstraintSecurityHandler.setRealmName:(Ljava/lang/String;)V
+      95: aload         5
+      97: iconst_1
+      98: anewarray     #10                 // class org/eclipse/jetty/security/ConstraintMapping
+     101: dup
+     102: iconst_0
+     103: aload         4
+     105: aastore
+     106: invokevirtual #23                 // Method org/eclipse/jetty/security/ConstraintSecurityHandler.setConstraintMappings:([Lorg/eclipse/jetty/security/ConstraintMapping;)V
+     109: new           #24                 // class org/eclipse/jetty/security/UserStore
+     112: dup
+     113: invokespecial #25                 // Method org/eclipse/jetty/security/UserStore."<init>":()V
+     116: astore        6
+     118: aload         6
+     120: aload_0
+     121: new           #26                 // class org/eclipse/jetty/util/security/Password
+     124: dup
+     125: aload_1
+     126: invokespecial #27                 // Method org/eclipse/jetty/util/security/Password."<init>":(Ljava/lang/String;)V
+     129: iconst_1
+     130: anewarray     #7                  // class java/lang/String
+     133: dup
+     134: iconst_0
+     135: ldc           #8                  // String user
+     137: aastore
+     138: invokevirtual #28                 // Method org/eclipse/jetty/security/UserStore.addUser:(Ljava/lang/String;Lorg/eclipse/jetty/util/security/Credential;[Ljava/lang/String;)V
+     141: new           #29                 // class org/eclipse/jetty/security/HashLoginService
+     144: dup
+     145: aload_2
+     146: invokespecial #30                 // Method org/eclipse/jetty/security/HashLoginService."<init>":(Ljava/lang/String;)V
+     149: astore        7
+     151: aload         7
+     153: aload         6
+     155: invokevirtual #31                 // Method org/eclipse/jetty/security/HashLoginService.setUserStore:(Lorg/eclipse/jetty/security/UserStore;)V
+     158: aload         5
+     160: aload         7
+     162: invokevirtual #32                 // Method org/eclipse/jetty/security/ConstraintSecurityHandler.setLoginService:(Lorg/eclipse/jetty/security/LoginService;)V
+     165: aload         5
+     167: areturn
+
+  public static void stop(java.lang.String[]) throws java.lang.Exception;
+    Code:
+       0: getstatic     #33                 // Field embeddedServer:Lorg/eclipse/jetty/server/Server;
+       3: invokevirtual #34                 // Method org/eclipse/jetty/server/Server.isStopped:()Z
+       6: ifne          38
+       9: getstatic     #33                 // Field embeddedServer:Lorg/eclipse/jetty/server/Server;
+      12: invokevirtual #35                 // Method org/eclipse/jetty/server/Server.isStopping:()Z
+      15: ifne          38
+      18: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+      21: getstatic     #37                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      24: ldc           #38                 // String Stopping server
+      26: invokestatic  #39                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      29: getstatic     #33                 // Field embeddedServer:Lorg/eclipse/jetty/server/Server;
+      32: invokevirtual #40                 // Method org/eclipse/jetty/server/Server.stop:()V
+      35: goto          49
+      38: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+      41: getstatic     #37                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+      44: ldc           #41                 // String Server is already stopped or stopping
+      46: invokestatic  #39                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+      49: return
+
+  public static void disableAccessWarnings();
+    Code:
+       0: ldc           #42                 // String sun.misc.Unsafe
+       2: invokestatic  #43                 // Method java/lang/Class.forName:(Ljava/lang/String;)Ljava/lang/Class;
+       5: astore_0
+       6: aload_0
+       7: ldc           #44                 // String theUnsafe
+       9: invokevirtual #45                 // Method java/lang/Class.getDeclaredField:(Ljava/lang/String;)Ljava/lang/reflect/Field;
+      12: astore_1
+      13: aload_1
+      14: iconst_1
+      15: invokevirtual #46                 // Method java/lang/reflect/Field.setAccessible:(Z)V
+      18: aload_1
+      19: aconst_null
+      20: invokevirtual #47                 // Method java/lang/reflect/Field.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      23: astore_2
+      24: aload_0
+      25: ldc           #48                 // String putObjectVolatile
+      27: iconst_3
+      28: anewarray     #49                 // class java/lang/Class
+      31: dup
+      32: iconst_0
+      33: ldc           #50                 // class java/lang/Object
+      35: aastore
+      36: dup
+      37: iconst_1
+      38: getstatic     #51                 // Field java/lang/Long.TYPE:Ljava/lang/Class;
+      41: aastore
+      42: dup
+      43: iconst_2
+      44: ldc           #50                 // class java/lang/Object
+      46: aastore
+      47: invokevirtual #52                 // Method java/lang/Class.getDeclaredMethod:(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;
+      50: astore_3
+      51: aload_0
+      52: ldc           #53                 // String staticFieldOffset
+      54: iconst_1
+      55: anewarray     #49                 // class java/lang/Class
+      58: dup
+      59: iconst_0
+      60: ldc           #54                 // class java/lang/reflect/Field
+      62: aastore
+      63: invokevirtual #52                 // Method java/lang/Class.getDeclaredMethod:(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;
+      66: astore        4
+      68: ldc           #55                 // String jdk.internal.module.IllegalAccessLogger
+      70: invokestatic  #43                 // Method java/lang/Class.forName:(Ljava/lang/String;)Ljava/lang/Class;
+      73: astore        5
+      75: aload         5
+      77: ldc           #56                 // String logger
+      79: invokevirtual #45                 // Method java/lang/Class.getDeclaredField:(Ljava/lang/String;)Ljava/lang/reflect/Field;
+      82: astore        6
+      84: aload         4
+      86: aload_2
+      87: iconst_1
+      88: anewarray     #50                 // class java/lang/Object
+      91: dup
+      92: iconst_0
+      93: aload         6
+      95: aastore
+      96: invokevirtual #57                 // Method java/lang/reflect/Method.invoke:(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;
+      99: checkcast     #58                 // class java/lang/Long
+     102: astore        7
+     104: aload_3
+     105: aload_2
+     106: iconst_3
+     107: anewarray     #50                 // class java/lang/Object
+     110: dup
+     111: iconst_0
+     112: aload         5
+     114: aastore
+     115: dup
+     116: iconst_1
+     117: aload         7
+     119: aastore
+     120: dup
+     121: iconst_2
+     122: aconst_null
+     123: aastore
+     124: invokevirtual #57                 // Method java/lang/reflect/Method.invoke:(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;
+     127: pop
+     128: goto          132
+     131: astore_0
+     132: return
+    Exception table:
+       from    to  target type
+           0   128   131   Class java/lang/Exception
+
+  public static void main(java.lang.String[]) throws java.io.IOException, java.lang.InterruptedException, javax.xml.xpath.XPathExpressionException, java.lang.NoSuchMethodException, java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException, java.lang.ClassNotFoundException, java.lang.InstantiationException, org.xml.sax.SAXException, javax.xml.parsers.ParserConfigurationException, javax.xml.crypto.MarshalException, javax.xml.crypto.dsig.XMLSignatureException, xades4j.XAdES4jException, java.text.ParseException, java.security.GeneralSecurityException;
+    Code:
+       0: invokestatic  #60                 // Method disableAccessWarnings:()V
+       3: ldc           #61                 // class org/bol/Launcher
+       5: invokevirtual #62                 // Method java/lang/Class.getPackage:()Ljava/lang/Package;
+       8: astore_1
+       9: aload_1
+      10: invokevirtual #63                 // Method java/lang/Package.getImplementationTitle:()Ljava/lang/String;
+      13: putstatic     #64                 // Field PROJ_NAME:Ljava/lang/String;
+      16: aload_1
+      17: invokevirtual #65                 // Method java/lang/Package.getImplementationVersion:()Ljava/lang/String;
+      20: putstatic     #66                 // Field PROJ_VERSION:Ljava/lang/String;
+      23: new           #67                 // class java/io/PrintStream
+      26: dup
+      27: getstatic     #68                 // Field java/lang/System.out:Ljava/io/PrintStream;
+      30: iconst_1
+      31: getstatic     #69                 // Field java/nio/charset/StandardCharsets.UTF_8:Ljava/nio/charset/Charset;
+      34: invokevirtual #70                 // Method java/nio/charset/Charset.toString:()Ljava/lang/String;
+      37: invokespecial #71                 // Method java/io/PrintStream."<init>":(Ljava/io/OutputStream;ZLjava/lang/String;)V
+      40: invokestatic  #72                 // Method java/lang/System.setOut:(Ljava/io/PrintStream;)V
+      43: new           #67                 // class java/io/PrintStream
+      46: dup
+      47: getstatic     #73                 // Field java/lang/System.err:Ljava/io/PrintStream;
+      50: iconst_1
+      51: getstatic     #69                 // Field java/nio/charset/StandardCharsets.UTF_8:Ljava/nio/charset/Charset;
+      54: invokevirtual #70                 // Method java/nio/charset/Charset.toString:()Ljava/lang/String;
+      57: invokespecial #71                 // Method java/io/PrintStream."<init>":(Ljava/io/OutputStream;ZLjava/lang/String;)V
+      60: invokestatic  #74                 // Method java/lang/System.setErr:(Ljava/io/PrintStream;)V
+      63: aload_0
+      64: arraylength
+      65: ifle          88
+      68: aload_0
+      69: iconst_0
+      70: aaload
+      71: invokestatic  #75                 // Method org/bol/server/ConsoleServlet.setApiToken:(Ljava/lang/String;)V
+      74: aload_0
+      75: iconst_0
+      76: aaload
+      77: ldc           #76                 // String service
+      79: invokevirtual #77                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      82: putstatic     #78                 // Field org/bol/server/ConsoleServlet.SERVICE:Z
+      85: goto          98
+      88: new           #79                 // class java/lang/IllegalStateException
+      91: dup
+      92: ldc           #80                 // String Unspecified mode of operation
+      94: invokespecial #81                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      97: athrow
+      98: aload_0
+      99: arraylength
+     100: iconst_2
+     101: if_icmple     113
+     104: aload_0
+     105: iconst_2
+     106: aaload
+     107: invokestatic  #82                 // Method org/bol/server/LogWrapper.strToLevel:(Ljava/lang/String;)Lorg/slf4j/event/Level;
+     110: invokestatic  #83                 // Method org/bol/server/LogWrapper.setLogLevel:(Lorg/slf4j/event/Level;)V
+     113: getstatic     #84                 // Field heartBeat:Z
+     116: ifeq          147
+     119: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+     122: getstatic     #37                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     125: ldc           #85                 // String Binding to parent input...
+     127: invokestatic  #39                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     130: new           #86                 // class org/bol/Launcher$StdinListenerThread
+     133: dup
+     134: invokespecial #87                 // Method org/bol/Launcher$StdinListenerThread."<init>":()V
+     137: astore_2
+     138: aload_2
+     139: iconst_1
+     140: invokevirtual #88                 // Method org/bol/Launcher$StdinListenerThread.setDaemon:(Z)V
+     143: aload_2
+     144: invokevirtual #89                 // Method org/bol/Launcher$StdinListenerThread.start:()V
+     147: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+     150: getstatic     #37                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     153: ldc           #90                 // String Setting up default authentificator for proxy operations
+     155: invokestatic  #39                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     158: new           #91                 // class org/bol/Launcher$1
+     161: dup
+     162: invokespecial #92                 // Method org/bol/Launcher$1."<init>":()V
+     165: invokestatic  #93                 // Method java/net/Authenticator.setDefault:(Ljava/net/Authenticator;)V
+     168: ldc           #94                 // String java.version
+     170: invokestatic  #95                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+     173: astore_2
+     174: getstatic     #68                 // Field java/lang/System.out:Ljava/io/PrintStream;
+     177: aload_2
+     178: invokedynamic #96,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     183: invokevirtual #97                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+     186: ldc           #98                 // String java.vendor
+     188: invokestatic  #95                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+     191: astore_3
+     192: getstatic     #68                 // Field java/lang/System.out:Ljava/io/PrintStream;
+     195: aload_3
+     196: invokedynamic #99,  0             // InvokeDynamic #1:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     201: invokevirtual #97                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+     204: ldc           #100                // String java.vm.name
+     206: invokestatic  #95                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+     209: astore        4
+     211: getstatic     #68                 // Field java/lang/System.out:Ljava/io/PrintStream;
+     214: aload         4
+     216: invokedynamic #101,  0            // InvokeDynamic #2:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     221: invokevirtual #97                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+     224: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+     227: getstatic     #37                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     230: ldc           #102                // String Server starting...
+     232: invokestatic  #39                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     235: aload_0
+     236: arraylength
+     237: iconst_1
+     238: if_icmple     280
+     241: aload_0
+     242: iconst_1
+     243: aaload
+     244: bipush        92
+     246: getstatic     #103                // Field java/io/File.separatorChar:C
+     249: invokevirtual #104                // Method java/lang/String.replace:(CC)Ljava/lang/String;
+     252: bipush        47
+     254: getstatic     #103                // Field java/io/File.separatorChar:C
+     257: invokevirtual #104                // Method java/lang/String.replace:(CC)Ljava/lang/String;
+     260: putstatic     #105                // Field org/bol/crypto/CryptoCore.SERVER_CONF:Ljava/lang/String;
+     263: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+     266: getstatic     #37                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     269: getstatic     #105                // Field org/bol/crypto/CryptoCore.SERVER_CONF:Ljava/lang/String;
+     272: invokedynamic #106,  0            // InvokeDynamic #3:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     277: invokestatic  #39                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     280: invokestatic  #107                // Method org/apache/xml/security/Init.init:()V
+     283: new           #108                // class org/bouncycastle/jce/provider/BouncyCastleProvider
+     286: dup
+     287: invokespecial #109                // Method org/bouncycastle/jce/provider/BouncyCastleProvider."<init>":()V
+     290: invokestatic  #110                // Method java/security/Security.addProvider:(Ljava/security/Provider;)I
+     293: pop
+     294: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+     297: getstatic     #37                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     300: ldc           #111                // String user.dir
+     302: invokestatic  #95                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+     305: invokedynamic #112,  0            // InvokeDynamic #4:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     310: invokestatic  #39                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     313: new           #113                // class java/io/File
+     316: dup
+     317: getstatic     #114                // Field WORK_DIR:Ljava/lang/String;
+     320: invokespecial #115                // Method java/io/File."<init>":(Ljava/lang/String;)V
+     323: invokevirtual #116                // Method java/io/File.getCanonicalPath:()Ljava/lang/String;
+     326: bipush        92
+     328: getstatic     #103                // Field java/io/File.separatorChar:C
+     331: invokevirtual #104                // Method java/lang/String.replace:(CC)Ljava/lang/String;
+     334: bipush        47
+     336: getstatic     #103                // Field java/io/File.separatorChar:C
+     339: invokevirtual #104                // Method java/lang/String.replace:(CC)Ljava/lang/String;
+     342: putstatic     #114                // Field WORK_DIR:Ljava/lang/String;
+     345: getstatic     #114                // Field WORK_DIR:Ljava/lang/String;
+     348: invokedynamic #117,  0            // InvokeDynamic #5:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     353: putstatic     #118                // Field org/bol/certs/CertTrustStore.TRUSTED_CA_KEY_STORE_PATH:Ljava/lang/String;
+     356: getstatic     #114                // Field WORK_DIR:Ljava/lang/String;
+     359: invokedynamic #119,  0            // InvokeDynamic #6:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     364: putstatic     #120                // Field org/bol/certs/CertTrustStore.DEFAULT_CERT_STORE_PATH:Ljava/lang/String;
+     367: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+     370: getstatic     #37                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     373: aload_0
+     374: invokestatic  #121                // Method java/util/Arrays.toString:([Ljava/lang/Object;)Ljava/lang/String;
+     377: invokedynamic #122,  0            // InvokeDynamic #7:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     382: invokestatic  #39                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     385: getstatic     #105                // Field org/bol/crypto/CryptoCore.SERVER_CONF:Ljava/lang/String;
+     388: astore        5
+     390: new           #113                // class java/io/File
+     393: dup
+     394: aload         5
+     396: invokespecial #115                // Method java/io/File."<init>":(Ljava/lang/String;)V
+     399: astore        6
+     401: aload         6
+     403: invokevirtual #123                // Method java/io/File.exists:()Z
+     406: ifne          424
+     409: new           #79                 // class java/lang/IllegalStateException
+     412: dup
+     413: aload         5
+     415: invokedynamic #124,  0            // InvokeDynamic #8:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     420: invokespecial #81                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     423: athrow
+     424: new           #125                // class java/io/FileInputStream
+     427: dup
+     428: aload         6
+     430: invokespecial #126                // Method java/io/FileInputStream."<init>":(Ljava/io/File;)V
+     433: astore        7
+     435: new           #127                // class java/io/BufferedReader
+     438: dup
+     439: new           #128                // class java/io/InputStreamReader
+     442: dup
+     443: aload         7
+     445: getstatic     #69                 // Field java/nio/charset/StandardCharsets.UTF_8:Ljava/nio/charset/Charset;
+     448: invokespecial #129                // Method java/io/InputStreamReader."<init>":(Ljava/io/InputStream;Ljava/nio/charset/Charset;)V
+     451: invokespecial #130                // Method java/io/BufferedReader."<init>":(Ljava/io/Reader;)V
+     454: astore        8
+     456: aload         8
+     458: invokevirtual #131                // Method java/io/BufferedReader.readLine:()Ljava/lang/String;
+     461: dup
+     462: astore        9
+     464: ifnull        1885
+     467: aload         9
+     469: bipush        61
+     471: invokevirtual #132                // Method java/lang/String.indexOf:(I)I
+     474: istore        10
+     476: iload         10
+     478: iflt          1866
+     481: aload         9
+     483: iconst_0
+     484: iload         10
+     486: invokevirtual #133                // Method java/lang/String.substring:(II)Ljava/lang/String;
+     489: astore        11
+     491: aload         9
+     493: iload         10
+     495: iconst_1
+     496: iadd
+     497: invokevirtual #134                // Method java/lang/String.substring:(I)Ljava/lang/String;
+     500: astore        12
+     502: iconst_0
+     503: aload         11
+     505: ldc           #135                // String type
+     507: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+     510: if_icmpne     608
+     513: iconst_0
+     514: aload         12
+     516: ldc           #137                // String PKCS11
+     518: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+     521: if_icmpne     533
+     524: getstatic     #138                // Field org/bol/crypto/CryptoCore$PROVIDER_TYPES.PKCS11:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+     527: putstatic     #139                // Field org/bol/crypto/CryptoCore.PROVIDER_TYPE:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+     530: goto          1863
+     533: iconst_0
+     534: aload         12
+     536: ldc           #140                // String DEMO
+     538: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+     541: if_icmpne     553
+     544: getstatic     #141                // Field org/bol/crypto/CryptoCore$PROVIDER_TYPES.DEMO:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+     547: putstatic     #139                // Field org/bol/crypto/CryptoCore.PROVIDER_TYPE:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+     550: goto          1863
+     553: iconst_0
+     554: aload         12
+     556: ldc           #142                // String TEST
+     558: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+     561: if_icmpne     573
+     564: getstatic     #143                // Field org/bol/crypto/CryptoCore$PROVIDER_TYPES.TEST:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+     567: putstatic     #139                // Field org/bol/crypto/CryptoCore.PROVIDER_TYPE:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+     570: goto          1863
+     573: iconst_0
+     574: aload         12
+     576: ldc           #144                // String PKCS12
+     578: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+     581: if_icmpne     593
+     584: getstatic     #145                // Field org/bol/crypto/CryptoCore$PROVIDER_TYPES.PKCS12:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+     587: putstatic     #139                // Field org/bol/crypto/CryptoCore.PROVIDER_TYPE:Lorg/bol/crypto/CryptoCore$PROVIDER_TYPES;
+     590: goto          1863
+     593: new           #79                 // class java/lang/IllegalStateException
+     596: dup
+     597: aload         12
+     599: invokedynamic #146,  0            // InvokeDynamic #9:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     604: invokespecial #81                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     607: athrow
+     608: iconst_0
+     609: aload         11
+     611: ldc           #147                // String demo_sn
+     613: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+     616: if_icmpne     636
+     619: new           #148                // class java/math/BigInteger
+     622: dup
+     623: aload         12
+     625: bipush        16
+     627: invokespecial #149                // Method java/math/BigInteger."<init>":(Ljava/lang/String;I)V
+     630: putstatic     #150                // Field org/bol/crypto/CryptoCore.DEMO_SN:Ljava/math/BigInteger;
+     633: goto          1863
+     636: iconst_0
+     637: aload         11
+     639: ldc           #151                // String demo_subj
+     641: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+     644: if_icmpne     655
+     647: aload         12
+     649: putstatic     #152                // Field org/bol/crypto/CryptoCore.DEMO_SUBJ:Ljava/lang/String;
+     652: goto          1863
+     655: iconst_0
+     656: aload         11
+     658: ldc           #153                // String library
+     660: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+     663: if_icmpne     674
+     666: aload         12
+     668: putstatic     #154                // Field org/bol/crypto/CryptoCore.PKCS11_DLL:Ljava/lang/String;
+     671: goto          1863
+     674: iconst_0
+     675: aload         11
+     677: ldc           #155                // String slot
+     679: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+     682: if_icmpne     718
+     685: aload         12
+     687: invokevirtual #156                // Method java/lang/String.isEmpty:()Z
+     690: ifne          704
+     693: aload         12
+     695: invokestatic  #157                // Method java/lang/Long.parseUnsignedLong:(Ljava/lang/String;)J
+     698: putstatic     #158                // Field org/bol/crypto/CryptoCore.PKCS11_SLOT:J
+     701: goto          1863
+     704: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+     707: getstatic     #37                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     710: ldc           #159                // String Slot value is not provided
+     712: invokestatic  #39                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     715: goto          1863
+     718: iconst_0
+     719: aload         11
+     721: ldc           #160                // String use_slot_index
+     723: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+     726: if_icmpne     773
+     729: aload         12
+     731: invokevirtual #156                // Method java/lang/String.isEmpty:()Z
+     734: ifne          759
+     737: iconst_0
+     738: aload         12
+     740: ldc           #161                // String on
+     742: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+     745: if_icmpne     752
+     748: iconst_1
+     749: goto          753
+     752: iconst_0
+     753: putstatic     #162                // Field org/bol/crypto/CryptoCore.PKCS11_USE_SLOT_INDEX:Z
+     756: goto          1863
+     759: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+     762: getstatic     #37                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     765: ldc           #159                // String Slot value is not provided
+     767: invokestatic  #39                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     770: goto          1863
+     773: iconst_0
+     774: aload         11
+     776: ldc           #163                // String alias
+     778: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+     781: if_icmpne     814
+     784: aload         12
+     786: invokevirtual #156                // Method java/lang/String.isEmpty:()Z
+     789: ifne          800
+     792: aload         12
+     794: putstatic     #164                // Field org/bol/crypto/CryptoCore.ETOKEN_ALIAS:Ljava/lang/String;
+     797: goto          1863
+     800: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+     803: getstatic     #37                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+     806: ldc           #165                // String Alias value is not provided
+     808: invokestatic  #39                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+     811: goto          1863
+     814: iconst_0
+     815: aload         11
+     817: ldc           #166                // String name
+     819: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+     822: if_icmpne     833
+     825: aload         12
+     827: putstatic     #167                // Field org/bol/crypto/CryptoCore.ETOKEN:Ljava/lang/String;
+     830: goto          1863
+     833: iconst_0
+     834: aload         11
+     836: ldc           #168                // String pin
+     838: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+     841: if_icmpne     852
+     844: aload         12
+     846: putstatic     #169                // Field org/bol/crypto/CryptoCore.ETOKEN_PASS:Ljava/lang/String;
+     849: goto          1863
+     852: iconst_0
+     853: aload         11
+     855: ldc           #170                // String signing
+     857: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+     860: if_icmpne     885
+     863: iconst_0
+     864: aload         12
+     866: ldc           #161                // String on
+     868: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+     871: if_icmpne     878
+     874: iconst_1
+     875: goto          879
+     878: iconst_0
+     879: putstatic     #171                // Field org/bol/crypto/CryptoCore.WITH_SIGNING:Z
+     882: goto          1863
+     885: iconst_0
+     886: aload         11
+     888: ldc           #172                // String tsa_url
+     890: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+     893: if_icmpne     912
+     896: aload         12
+     898: invokevirtual #156                // Method java/lang/String.isEmpty:()Z
+     901: ifne          1863
+     904: aload         12
+     906: putstatic     #173                // Field org/bol/crypto/CryptoCore.TSA_URL:Ljava/lang/String;
+     909: goto          1863
+     912: iconst_0
+     913: aload         11
+     915: ldc           #174                // String signing_cert
+     917: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+     920: if_icmpne     939
+     923: aload         12
+     925: invokevirtual #156                // Method java/lang/String.isEmpty:()Z
+     928: ifne          1863
+     931: aload         12
+     933: putstatic     #175                // Field org/bol/crypto/CryptoCore.signCertPath:Ljava/lang/String;
+     936: goto          1863
+     939: iconst_0
+     940: aload         11
+     942: ldc           #176                // String enabled_mechanisms
+     944: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+     947: if_icmpne     966
+     950: aload         12
+     952: invokevirtual #156                // Method java/lang/String.isEmpty:()Z
+     955: ifne          1863
+     958: aload         12
+     960: putstatic     #177                // Field org/bol/crypto/CryptoCore.enabledMechanisms:Ljava/lang/String;
+     963: goto          1863
+     966: iconst_0
+     967: aload         11
+     969: ldc           #178                // String pki_url
+     971: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+     974: if_icmpne     993
+     977: aload         12
+     979: invokevirtual #156                // Method java/lang/String.isEmpty:()Z
+     982: ifne          1863
+     985: aload         12
+     987: putstatic     #179                // Field org/bol/certs/CertTrustStore.PKI_DOMAIN:Ljava/lang/String;
+     990: goto          1863
+     993: iconst_0
+     994: aload         11
+     996: ldc           #180                // String exclude_crl_url_list
+     998: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1001: if_icmpne     1028
+    1004: aload         12
+    1006: invokevirtual #156                // Method java/lang/String.isEmpty:()Z
+    1009: ifne          1863
+    1012: aload         12
+    1014: ldc           #181                // String ,
+    1016: invokestatic  #182                // Method org/apache/commons/lang3/StringUtils.split:(Ljava/lang/String;Ljava/lang/String;)[Ljava/lang/String;
+    1019: invokestatic  #183                // Method java/util/Arrays.asList:([Ljava/lang/Object;)Ljava/util/List;
+    1022: putstatic     #184                // Field org/bol/certs/CertTrustStore.CRL_EXCLUDE_LIST:Ljava/util/List;
+    1025: goto          1863
+    1028: iconst_0
+    1029: aload         11
+    1031: ldc           #185                // String ca_keystore
+    1033: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1036: if_icmpne     1055
+    1039: aload         12
+    1041: invokevirtual #156                // Method java/lang/String.isEmpty:()Z
+    1044: ifne          1863
+    1047: aload         12
+    1049: putstatic     #118                // Field org/bol/certs/CertTrustStore.TRUSTED_CA_KEY_STORE_PATH:Ljava/lang/String;
+    1052: goto          1863
+    1055: iconst_0
+    1056: aload         11
+    1058: ldc           #186                // String ca_keystore_pass
+    1060: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1063: if_icmpne     1082
+    1066: aload         12
+    1068: invokevirtual #156                // Method java/lang/String.isEmpty:()Z
+    1071: ifne          1863
+    1074: aload         12
+    1076: putstatic     #187                // Field org/bol/certs/CertTrustStore.TRUSTED_CA_KEY_STORE_PASSWORD:Ljava/lang/String;
+    1079: goto          1863
+    1082: iconst_0
+    1083: aload         11
+    1085: ldc           #188                // String cert_store
+    1087: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1090: if_icmpne     1109
+    1093: aload         12
+    1095: invokevirtual #156                // Method java/lang/String.isEmpty:()Z
+    1098: ifne          1863
+    1101: aload         12
+    1103: putstatic     #120                // Field org/bol/certs/CertTrustStore.DEFAULT_CERT_STORE_PATH:Ljava/lang/String;
+    1106: goto          1863
+    1109: iconst_0
+    1110: aload         11
+    1112: ldc           #189                // String cache_enabled
+    1114: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1117: if_icmpne     1150
+    1120: aload         12
+    1122: invokevirtual #156                // Method java/lang/String.isEmpty:()Z
+    1125: ifne          1143
+    1128: iconst_0
+    1129: aload         12
+    1131: ldc           #161                // String on
+    1133: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1136: if_icmpne     1143
+    1139: iconst_1
+    1140: goto          1144
+    1143: iconst_0
+    1144: putstatic     #190                // Field org/bol/transport/HttpTransport.cache_enabled:Z
+    1147: goto          1863
+    1150: iconst_0
+    1151: aload         11
+    1153: ldc           #191                // String environment
+    1155: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1158: if_icmpne     1256
+    1161: iconst_0
+    1162: aload         12
+    1164: ldc           #192                // String DEV
+    1166: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1169: if_icmpne     1181
+    1172: getstatic     #193                // Field org/bol/Launcher$ENVIRONMENT_TYPES.DEV:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    1175: putstatic     #194                // Field ENVIRONMENT:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    1178: goto          1863
+    1181: iconst_0
+    1182: aload         12
+    1184: ldc           #142                // String TEST
+    1186: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1189: if_icmpne     1201
+    1192: getstatic     #195                // Field org/bol/Launcher$ENVIRONMENT_TYPES.TEST:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    1195: putstatic     #194                // Field ENVIRONMENT:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    1198: goto          1863
+    1201: iconst_0
+    1202: aload         12
+    1204: ldc           #196                // String PROD
+    1206: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1209: if_icmpne     1221
+    1212: getstatic     #197                // Field org/bol/Launcher$ENVIRONMENT_TYPES.PROD:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    1215: putstatic     #194                // Field ENVIRONMENT:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    1218: goto          1863
+    1221: iconst_0
+    1222: aload         12
+    1224: ldc           #198                // String TEST3
+    1226: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1229: if_icmpne     1241
+    1232: getstatic     #199                // Field org/bol/Launcher$ENVIRONMENT_TYPES.TEST3:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    1235: putstatic     #194                // Field ENVIRONMENT:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    1238: goto          1863
+    1241: new           #79                 // class java/lang/IllegalStateException
+    1244: dup
+    1245: aload         12
+    1247: invokedynamic #200,  0            // InvokeDynamic #10:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+    1252: invokespecial #81                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+    1255: athrow
+    1256: iconst_0
+    1257: aload         11
+    1259: ldc           #201                // String sysgroup
+    1261: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1264: if_icmpne     1362
+    1267: iconst_0
+    1268: aload         12
+    1270: ldc           #202                // String LITAS
+    1272: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1275: if_icmpne     1287
+    1278: getstatic     #203                // Field org/bol/Launcher$SYSTEM_GROUP_TYPES.LITAS:Lorg/bol/Launcher$SYSTEM_GROUP_TYPES;
+    1281: putstatic     #204                // Field SYSTEM_GROUP:Lorg/bol/Launcher$SYSTEM_GROUP_TYPES;
+    1284: goto          1863
+    1287: iconst_0
+    1288: aload         12
+    1290: ldc           #205                // String NEOLITAS
+    1292: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1295: if_icmpne     1307
+    1298: getstatic     #206                // Field org/bol/Launcher$SYSTEM_GROUP_TYPES.NEOLITAS:Lorg/bol/Launcher$SYSTEM_GROUP_TYPES;
+    1301: putstatic     #204                // Field SYSTEM_GROUP:Lorg/bol/Launcher$SYSTEM_GROUP_TYPES;
+    1304: goto          1863
+    1307: iconst_0
+    1308: aload         12
+    1310: ldc           #207                // String TAKO
+    1312: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1315: if_icmpne     1327
+    1318: getstatic     #208                // Field org/bol/Launcher$SYSTEM_GROUP_TYPES.TAKO:Lorg/bol/Launcher$SYSTEM_GROUP_TYPES;
+    1321: putstatic     #204                // Field SYSTEM_GROUP:Lorg/bol/Launcher$SYSTEM_GROUP_TYPES;
+    1324: goto          1863
+    1327: iconst_0
+    1328: aload         12
+    1330: ldc           #209                // String LBINDIVIDUALS
+    1332: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1335: if_icmpne     1347
+    1338: getstatic     #210                // Field org/bol/Launcher$SYSTEM_GROUP_TYPES.LBINDIVIDUALS:Lorg/bol/Launcher$SYSTEM_GROUP_TYPES;
+    1341: putstatic     #204                // Field SYSTEM_GROUP:Lorg/bol/Launcher$SYSTEM_GROUP_TYPES;
+    1344: goto          1863
+    1347: new           #79                 // class java/lang/IllegalStateException
+    1350: dup
+    1351: aload         12
+    1353: invokedynamic #211,  0            // InvokeDynamic #11:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+    1358: invokespecial #81                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+    1361: athrow
+    1362: iconst_0
+    1363: aload         11
+    1365: ldc           #212                // String dps_url
+    1367: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1370: if_icmpne     1381
+    1373: aload         12
+    1375: putstatic     #213                // Field org/bol/transport/DpsScheduler.DPS_BASE_URL:Ljava/lang/String;
+    1378: goto          1863
+    1381: iconst_0
+    1382: aload         11
+    1384: ldc           #214                // String dps_config_url
+    1386: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1389: if_icmpne     1400
+    1392: aload         12
+    1394: putstatic     #215                // Field org/bol/transport/DpsScheduler.DPS_CONFIG_URL:Ljava/lang/String;
+    1397: goto          1863
+    1400: iconst_0
+    1401: aload         11
+    1403: ldc           #216                // String identity_url
+    1405: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1408: if_icmpne     1419
+    1411: aload         12
+    1413: putstatic     #217                // Field org/bol/server/XenolitasToken.IDENTITY_SERVER:Ljava/lang/String;
+    1416: goto          1863
+    1419: iconst_0
+    1420: aload         11
+    1422: ldc           #218                // String identity_user
+    1424: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1427: if_icmpne     1438
+    1430: aload         12
+    1432: putstatic     #219                // Field org/bol/server/XenolitasToken.IDENTITY_SERVER_USER:Ljava/lang/String;
+    1435: goto          1863
+    1438: iconst_0
+    1439: aload         11
+    1441: ldc           #220                // String identity_pass
+    1443: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1446: if_icmpne     1457
+    1449: aload         12
+    1451: putstatic     #221                // Field org/bol/server/XenolitasToken.IDENTITY_SERVER_PASS:Ljava/lang/String;
+    1454: goto          1863
+    1457: iconst_0
+    1458: aload         11
+    1460: ldc           #222                // String bind_address
+    1462: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1465: if_icmpne     1476
+    1468: aload         12
+    1470: putstatic     #223                // Field org/bol/server/ConsoleServlet.BIND_ADDRESS:Ljava/lang/String;
+    1473: goto          1863
+    1476: iconst_0
+    1477: aload         11
+    1479: ldc           #224                // String port
+    1481: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1484: if_icmpne     1498
+    1487: aload         12
+    1489: invokestatic  #225                // Method java/lang/Integer.parseInt:(Ljava/lang/String;)I
+    1492: putstatic     #226                // Field org/bol/server/ConsoleServlet.PORT:I
+    1495: goto          1863
+    1498: iconst_0
+    1499: aload         11
+    1501: ldc           #227                // String threads_max
+    1503: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1506: if_icmpne     1520
+    1509: aload         12
+    1511: invokestatic  #225                // Method java/lang/Integer.parseInt:(Ljava/lang/String;)I
+    1514: putstatic     #228                // Field maxThreads:I
+    1517: goto          1863
+    1520: iconst_0
+    1521: aload         11
+    1523: ldc           #229                // String threads_min
+    1525: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1528: if_icmpne     1542
+    1531: aload         12
+    1533: invokestatic  #225                // Method java/lang/Integer.parseInt:(Ljava/lang/String;)I
+    1536: putstatic     #230                // Field minThreads:I
+    1539: goto          1863
+    1542: iconst_0
+    1543: aload         11
+    1545: ldc           #231                // String threads_idle_timeout
+    1547: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1550: if_icmpne     1564
+    1553: aload         12
+    1555: invokestatic  #225                // Method java/lang/Integer.parseInt:(Ljava/lang/String;)I
+    1558: putstatic     #232                // Field idleTimeout:I
+    1561: goto          1863
+    1564: iconst_0
+    1565: aload         11
+    1567: ldc           #233                // String async
+    1569: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1572: if_icmpne     1597
+    1575: iconst_0
+    1576: aload         12
+    1578: ldc           #161                // String on
+    1580: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1583: if_icmpne     1590
+    1586: iconst_1
+    1587: goto          1591
+    1590: iconst_0
+    1591: putstatic     #234                // Field org/bol/server/ConsoleServlet.ASYNC:Z
+    1594: goto          1863
+    1597: iconst_0
+    1598: aload         11
+    1600: ldc           #235                // String security
+    1602: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1605: if_icmpne     1630
+    1608: iconst_0
+    1609: aload         12
+    1611: ldc           #161                // String on
+    1613: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1616: if_icmpne     1623
+    1619: iconst_1
+    1620: goto          1624
+    1623: iconst_0
+    1624: putstatic     #236                // Field org/bol/server/ConsoleServlet.SECURITY:Z
+    1627: goto          1863
+    1630: iconst_0
+    1631: aload         11
+    1633: ldc           #237                // String basic_auth_user
+    1635: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1638: if_icmpne     1649
+    1641: aload         12
+    1643: putstatic     #238                // Field org/bol/server/ConsoleServlet.BASIC_AUTH_USER:Ljava/lang/String;
+    1646: goto          1863
+    1649: iconst_0
+    1650: aload         11
+    1652: ldc           #239                // String basic_auth_pass
+    1654: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1657: if_icmpne     1668
+    1660: aload         12
+    1662: putstatic     #240                // Field org/bol/server/ConsoleServlet.BASIC_AUTH_PASS:Ljava/lang/String;
+    1665: goto          1863
+    1668: iconst_0
+    1669: aload         11
+    1671: ldc           #241                // String schedule
+    1673: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1676: if_icmpne     1701
+    1679: iconst_0
+    1680: aload         12
+    1682: ldc           #161                // String on
+    1684: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1687: if_icmpne     1694
+    1690: iconst_1
+    1691: goto          1695
+    1694: iconst_0
+    1695: putstatic     #242                // Field org/bol/server/ConsoleServlet.SCHEDULE:Z
+    1698: goto          1863
+    1701: iconst_0
+    1702: aload         11
+    1704: ldc           #243                // String schedule_start
+    1706: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1709: if_icmpne     1734
+    1712: iconst_0
+    1713: aload         12
+    1715: ldc           #161                // String on
+    1717: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1720: if_icmpne     1727
+    1723: iconst_1
+    1724: goto          1728
+    1727: iconst_0
+    1728: putstatic     #244                // Field org/bol/server/ConsoleServlet.SCHEDULE_START:Z
+    1731: goto          1863
+    1734: iconst_0
+    1735: aload         11
+    1737: ldc           #245                // String validate
+    1739: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1742: if_icmpne     1767
+    1745: iconst_0
+    1746: aload         12
+    1748: ldc           #161                // String on
+    1750: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1753: if_icmpne     1760
+    1756: iconst_1
+    1757: goto          1761
+    1760: iconst_0
+    1761: putstatic     #246                // Field org/bol/server/ConsoleServlet.VALIDATE:Z
+    1764: goto          1863
+    1767: iconst_0
+    1768: aload         11
+    1770: ldc           #247                // String secure_validation
+    1772: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1775: if_icmpne     1800
+    1778: iconst_0
+    1779: aload         12
+    1781: ldc           #161                // String on
+    1783: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1786: if_icmpne     1793
+    1789: iconst_1
+    1790: goto          1794
+    1793: iconst_0
+    1794: putstatic     #248                // Field org/bol/server/ConsoleServlet.SECURE_VALIDATION:Z
+    1797: goto          1863
+    1800: iconst_0
+    1801: aload         11
+    1803: ldc           #249                // String heart_beat
+    1805: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1808: if_icmpne     1833
+    1811: iconst_0
+    1812: aload         12
+    1814: ldc           #161                // String on
+    1816: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1819: if_icmpne     1826
+    1822: iconst_1
+    1823: goto          1827
+    1826: iconst_0
+    1827: putstatic     #84                 // Field heartBeat:Z
+    1830: goto          1863
+    1833: iconst_0
+    1834: aload         11
+    1836: ldc           #250                // String show_on_startup
+    1838: invokevirtual #136                // Method java/lang/String.compareToIgnoreCase:(Ljava/lang/String;)I
+    1841: if_icmpne     1847
+    1844: goto          1863
+    1847: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+    1850: getstatic     #251                // Field org/slf4j/event/Level.WARN:Lorg/slf4j/event/Level;
+    1853: aload         9
+    1855: invokedynamic #252,  0            // InvokeDynamic #12:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+    1860: invokestatic  #39                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+    1863: goto          1882
+    1866: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+    1869: getstatic     #253                // Field org/slf4j/event/Level.ERROR:Lorg/slf4j/event/Level;
+    1872: aload         9
+    1874: invokedynamic #254,  0            // InvokeDynamic #13:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+    1879: invokestatic  #39                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+    1882: goto          456
+    1885: aload         8
+    1887: invokevirtual #255                // Method java/io/BufferedReader.close:()V
+    1890: goto          1915
+    1893: astore        9
+    1895: aload         8
+    1897: invokevirtual #255                // Method java/io/BufferedReader.close:()V
+    1900: goto          1912
+    1903: astore        10
+    1905: aload         9
+    1907: aload         10
+    1909: invokevirtual #257                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+    1912: aload         9
+    1914: athrow
+    1915: aload         7
+    1917: invokevirtual #258                // Method java/io/FileInputStream.close:()V
+    1920: goto          1945
+    1923: astore        8
+    1925: aload         7
+    1927: invokevirtual #258                // Method java/io/FileInputStream.close:()V
+    1930: goto          1942
+    1933: astore        9
+    1935: aload         8
+    1937: aload         9
+    1939: invokevirtual #257                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+    1942: aload         8
+    1944: athrow
+    1945: getstatic     #190                // Field org/bol/transport/HttpTransport.cache_enabled:Z
+    1948: ifeq          2067
+    1951: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+    1954: getstatic     #37                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+    1957: ldc_w         #259                // String Cleaning cert/crl cache...
+    1960: invokestatic  #39                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+    1963: new           #113                // class java/io/File
+    1966: dup
+    1967: getstatic     #120                // Field org/bol/certs/CertTrustStore.DEFAULT_CERT_STORE_PATH:Ljava/lang/String;
+    1970: invokedynamic #260,  0            // InvokeDynamic #14:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+    1975: invokespecial #115                // Method java/io/File."<init>":(Ljava/lang/String;)V
+    1978: astore        7
+    1980: aload         7
+    1982: invokevirtual #123                // Method java/io/File.exists:()Z
+    1985: ifeq          2056
+    1988: aload         7
+    1990: invokevirtual #261                // Method java/io/File.listFiles:()[Ljava/io/File;
+    1993: astore        8
+    1995: aload         8
+    1997: arraylength
+    1998: istore        9
+    2000: iconst_0
+    2001: istore        10
+    2003: iload         10
+    2005: iload         9
+    2007: if_icmpge     2053
+    2010: aload         8
+    2012: iload         10
+    2014: aaload
+    2015: astore        11
+    2017: aload         11
+    2019: invokevirtual #262                // Method java/io/File.isDirectory:()Z
+    2022: ifne          2047
+    2025: aload         11
+    2027: invokevirtual #263                // Method java/io/File.getName:()Ljava/lang/String;
+    2030: ldc_w         #264                // String cached-storage
+    2033: invokevirtual #77                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+    2036: ifne          2047
+    2039: aload         11
+    2041: invokevirtual #265                // Method java/io/File.toPath:()Ljava/nio/file/Path;
+    2044: invokestatic  #266                // Method java/nio/file/Files.delete:(Ljava/nio/file/Path;)V
+    2047: iinc          10, 1
+    2050: goto          2003
+    2053: goto          2067
+    2056: new           #79                 // class java/lang/IllegalStateException
+    2059: dup
+    2060: ldc_w         #267                // String Invalid cached certificate directory
+    2063: invokespecial #81                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+    2066: athrow
+    2067: new           #268                // class org/bol/Launcher$2
+    2070: dup
+    2071: invokespecial #269                // Method org/bol/Launcher$2."<init>":()V
+    2074: astore        7
+    2076: new           #270                // class org/bol/Launcher$3
+    2079: dup
+    2080: aload         7
+    2082: invokespecial #271                // Method org/bol/Launcher$3."<init>":(Lorg/bol/certs/CertTrustStore;)V
+    2085: astore        8
+    2087: new           #272                // class org/bol/transport/HttpsTransport
+    2090: dup
+    2091: aload         8
+    2093: aload         7
+    2095: invokespecial #273                // Method org/bol/transport/HttpsTransport."<init>":(Lorg/bol/crypto/SignCryptoCore;Lorg/bol/certs/CertTrustStore;)V
+    2098: astore        9
+    2100: aload         9
+    2102: invokestatic  #274                // Method org/bol/server/ConsoleServlet.setHttpsTransport:(Lorg/bol/transport/HttpsTransport;)V
+    2105: aconst_null
+    2106: getstatic     #217                // Field org/bol/server/XenolitasToken.IDENTITY_SERVER:Ljava/lang/String;
+    2109: if_acmpne     2181
+    2112: getstatic     #193                // Field org/bol/Launcher$ENVIRONMENT_TYPES.DEV:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2115: getstatic     #194                // Field ENVIRONMENT:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2118: if_acmpne     2130
+    2121: ldc_w         #275                // String http://dev.litas.lb.lt/idsvc
+    2124: putstatic     #217                // Field org/bol/server/XenolitasToken.IDENTITY_SERVER:Ljava/lang/String;
+    2127: goto          2181
+    2130: getstatic     #195                // Field org/bol/Launcher$ENVIRONMENT_TYPES.TEST:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2133: getstatic     #194                // Field ENVIRONMENT:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2136: if_acmpne     2148
+    2139: ldc_w         #276                // String https://dstestlitas.lb.lt/idsvc
+    2142: putstatic     #217                // Field org/bol/server/XenolitasToken.IDENTITY_SERVER:Ljava/lang/String;
+    2145: goto          2181
+    2148: getstatic     #197                // Field org/bol/Launcher$ENVIRONMENT_TYPES.PROD:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2151: getstatic     #194                // Field ENVIRONMENT:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2154: if_acmpne     2166
+    2157: ldc_w         #277                // String https://dslitas.lb.lt/idsvc
+    2160: putstatic     #217                // Field org/bol/server/XenolitasToken.IDENTITY_SERVER:Ljava/lang/String;
+    2163: goto          2181
+    2166: getstatic     #199                // Field org/bol/Launcher$ENVIRONMENT_TYPES.TEST3:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2169: getstatic     #194                // Field ENVIRONMENT:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2172: if_acmpne     2181
+    2175: ldc_w         #278                // String http://test.tako.litas.lb.lt/idsvc
+    2178: putstatic     #217                // Field org/bol/server/XenolitasToken.IDENTITY_SERVER:Ljava/lang/String;
+    2181: aconst_null
+    2182: getstatic     #215                // Field org/bol/transport/DpsScheduler.DPS_CONFIG_URL:Ljava/lang/String;
+    2185: if_acmpne     2338
+    2188: getstatic     #204                // Field SYSTEM_GROUP:Lorg/bol/Launcher$SYSTEM_GROUP_TYPES;
+    2191: getstatic     #208                // Field org/bol/Launcher$SYSTEM_GROUP_TYPES.TAKO:Lorg/bol/Launcher$SYSTEM_GROUP_TYPES;
+    2194: if_acmpne     2269
+    2197: getstatic     #193                // Field org/bol/Launcher$ENVIRONMENT_TYPES.DEV:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2200: getstatic     #194                // Field ENVIRONMENT:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2203: if_acmpne     2215
+    2206: ldc_w         #279                // String http://dev.litas.lb.lt/t2bu
+    2209: putstatic     #215                // Field org/bol/transport/DpsScheduler.DPS_CONFIG_URL:Ljava/lang/String;
+    2212: goto          2338
+    2215: getstatic     #195                // Field org/bol/Launcher$ENVIRONMENT_TYPES.TEST:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2218: getstatic     #194                // Field ENVIRONMENT:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2221: if_acmpne     2233
+    2224: ldc_w         #280                // String https://dstestlitas.lb.lt/t2bu
+    2227: putstatic     #215                // Field org/bol/transport/DpsScheduler.DPS_CONFIG_URL:Ljava/lang/String;
+    2230: goto          2338
+    2233: getstatic     #197                // Field org/bol/Launcher$ENVIRONMENT_TYPES.PROD:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2236: getstatic     #194                // Field ENVIRONMENT:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2239: if_acmpne     2251
+    2242: ldc_w         #281                // String https://dslitas.lb.lt/t2bu
+    2245: putstatic     #215                // Field org/bol/transport/DpsScheduler.DPS_CONFIG_URL:Ljava/lang/String;
+    2248: goto          2338
+    2251: getstatic     #199                // Field org/bol/Launcher$ENVIRONMENT_TYPES.TEST3:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2254: getstatic     #194                // Field ENVIRONMENT:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2257: if_acmpne     2338
+    2260: ldc_w         #282                // String http://test.tako.litas.lb.lt/t2bu
+    2263: putstatic     #215                // Field org/bol/transport/DpsScheduler.DPS_CONFIG_URL:Ljava/lang/String;
+    2266: goto          2338
+    2269: getstatic     #193                // Field org/bol/Launcher$ENVIRONMENT_TYPES.DEV:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2272: getstatic     #194                // Field ENVIRONMENT:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2275: if_acmpne     2287
+    2278: ldc_w         #283                // String http://dev.litas.lb.lt
+    2281: putstatic     #215                // Field org/bol/transport/DpsScheduler.DPS_CONFIG_URL:Ljava/lang/String;
+    2284: goto          2338
+    2287: getstatic     #195                // Field org/bol/Launcher$ENVIRONMENT_TYPES.TEST:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2290: getstatic     #194                // Field ENVIRONMENT:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2293: if_acmpne     2305
+    2296: ldc_w         #284                // String https://dstestlitas.lb.lt
+    2299: putstatic     #215                // Field org/bol/transport/DpsScheduler.DPS_CONFIG_URL:Ljava/lang/String;
+    2302: goto          2338
+    2305: getstatic     #197                // Field org/bol/Launcher$ENVIRONMENT_TYPES.PROD:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2308: getstatic     #194                // Field ENVIRONMENT:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2311: if_acmpne     2323
+    2314: ldc_w         #285                // String https://dslitas.lb.lt
+    2317: putstatic     #215                // Field org/bol/transport/DpsScheduler.DPS_CONFIG_URL:Ljava/lang/String;
+    2320: goto          2338
+    2323: getstatic     #199                // Field org/bol/Launcher$ENVIRONMENT_TYPES.TEST3:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2326: getstatic     #194                // Field ENVIRONMENT:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2329: if_acmpne     2338
+    2332: ldc_w         #286                // String http://test.tako.litas.lb.lt
+    2335: putstatic     #215                // Field org/bol/transport/DpsScheduler.DPS_CONFIG_URL:Ljava/lang/String;
+    2338: aconst_null
+    2339: getstatic     #213                // Field org/bol/transport/DpsScheduler.DPS_BASE_URL:Ljava/lang/String;
+    2342: if_acmpne     2531
+    2345: getstatic     #287                // Field org/bol/Launcher$6.$SwitchMap$org$bol$Launcher$SYSTEM_GROUP_TYPES:[I
+    2348: getstatic     #204                // Field SYSTEM_GROUP:Lorg/bol/Launcher$SYSTEM_GROUP_TYPES;
+    2351: invokevirtual #288                // Method org/bol/Launcher$SYSTEM_GROUP_TYPES.ordinal:()I
+    2354: iaload
+    2355: tableswitch   { // 1 to 4
+                     1: 2384
+                     2: 2384
+                     3: 2456
+                     4: 2528
+               default: 2531
+          }
+    2384: getstatic     #193                // Field org/bol/Launcher$ENVIRONMENT_TYPES.DEV:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2387: getstatic     #194                // Field ENVIRONMENT:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2390: if_acmpne     2402
+    2393: ldc_w         #283                // String http://dev.litas.lb.lt
+    2396: putstatic     #213                // Field org/bol/transport/DpsScheduler.DPS_BASE_URL:Ljava/lang/String;
+    2399: goto          2531
+    2402: getstatic     #195                // Field org/bol/Launcher$ENVIRONMENT_TYPES.TEST:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2405: getstatic     #194                // Field ENVIRONMENT:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2408: if_acmpne     2420
+    2411: ldc_w         #284                // String https://dstestlitas.lb.lt
+    2414: putstatic     #213                // Field org/bol/transport/DpsScheduler.DPS_BASE_URL:Ljava/lang/String;
+    2417: goto          2531
+    2420: getstatic     #197                // Field org/bol/Launcher$ENVIRONMENT_TYPES.PROD:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2423: getstatic     #194                // Field ENVIRONMENT:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2426: if_acmpne     2438
+    2429: ldc_w         #285                // String https://dslitas.lb.lt
+    2432: putstatic     #213                // Field org/bol/transport/DpsScheduler.DPS_BASE_URL:Ljava/lang/String;
+    2435: goto          2531
+    2438: getstatic     #199                // Field org/bol/Launcher$ENVIRONMENT_TYPES.TEST3:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2441: getstatic     #194                // Field ENVIRONMENT:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2444: if_acmpne     2531
+    2447: ldc_w         #286                // String http://test.tako.litas.lb.lt
+    2450: putstatic     #213                // Field org/bol/transport/DpsScheduler.DPS_BASE_URL:Ljava/lang/String;
+    2453: goto          2531
+    2456: getstatic     #193                // Field org/bol/Launcher$ENVIRONMENT_TYPES.DEV:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2459: getstatic     #194                // Field ENVIRONMENT:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2462: if_acmpne     2474
+    2465: ldc_w         #279                // String http://dev.litas.lb.lt/t2bu
+    2468: putstatic     #213                // Field org/bol/transport/DpsScheduler.DPS_BASE_URL:Ljava/lang/String;
+    2471: goto          2531
+    2474: getstatic     #195                // Field org/bol/Launcher$ENVIRONMENT_TYPES.TEST:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2477: getstatic     #194                // Field ENVIRONMENT:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2480: if_acmpne     2492
+    2483: ldc_w         #280                // String https://dstestlitas.lb.lt/t2bu
+    2486: putstatic     #213                // Field org/bol/transport/DpsScheduler.DPS_BASE_URL:Ljava/lang/String;
+    2489: goto          2531
+    2492: getstatic     #197                // Field org/bol/Launcher$ENVIRONMENT_TYPES.PROD:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2495: getstatic     #194                // Field ENVIRONMENT:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2498: if_acmpne     2510
+    2501: ldc_w         #281                // String https://dslitas.lb.lt/t2bu
+    2504: putstatic     #213                // Field org/bol/transport/DpsScheduler.DPS_BASE_URL:Ljava/lang/String;
+    2507: goto          2531
+    2510: getstatic     #199                // Field org/bol/Launcher$ENVIRONMENT_TYPES.TEST3:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2513: getstatic     #194                // Field ENVIRONMENT:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+    2516: if_acmpne     2531
+    2519: ldc_w         #282                // String http://test.tako.litas.lb.lt/t2bu
+    2522: putstatic     #213                // Field org/bol/transport/DpsScheduler.DPS_BASE_URL:Ljava/lang/String;
+    2525: goto          2531
+    2528: goto          2531
+    2531: getstatic     #242                // Field org/bol/server/ConsoleServlet.SCHEDULE:Z
+    2534: ifeq          2577
+    2537: aconst_null
+    2538: getstatic     #213                // Field org/bol/transport/DpsScheduler.DPS_BASE_URL:Ljava/lang/String;
+    2541: if_acmpne     2555
+    2544: new           #79                 // class java/lang/IllegalStateException
+    2547: dup
+    2548: ldc_w         #289                // String Unable to configure Dps scheduler Base Url
+    2551: invokespecial #81                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+    2554: athrow
+    2555: getstatic     #171                // Field org/bol/crypto/CryptoCore.WITH_SIGNING:Z
+    2558: ifne          2577
+    2561: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+    2564: getstatic     #253                // Field org/slf4j/event/Level.ERROR:Lorg/slf4j/event/Level;
+    2567: ldc_w         #290                // String Schedule is not possible without signing
+    2570: invokestatic  #39                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+    2573: iconst_0
+    2574: putstatic     #242                // Field org/bol/server/ConsoleServlet.SCHEDULE:Z
+    2577: aconst_null
+    2578: astore        10
+    2580: getstatic     #287                // Field org/bol/Launcher$6.$SwitchMap$org$bol$Launcher$SYSTEM_GROUP_TYPES:[I
+    2583: getstatic     #204                // Field SYSTEM_GROUP:Lorg/bol/Launcher$SYSTEM_GROUP_TYPES;
+    2586: invokevirtual #288                // Method org/bol/Launcher$SYSTEM_GROUP_TYPES.ordinal:()I
+    2589: iaload
+    2590: tableswitch   { // 1 to 4
+                     1: 2620
+                     2: 2634
+                     3: 2648
+                     4: 2662
+               default: 2677
+          }
+    2620: new           #291                // class org/bol/transport/LitasDpsTransport
+    2623: dup
+    2624: aload         9
+    2626: invokespecial #292                // Method org/bol/transport/LitasDpsTransport."<init>":(Lorg/bol/transport/HttpsTransport;)V
+    2629: astore        10
+    2631: goto          2688
+    2634: new           #293                // class org/bol/transport/NeoLitasDpsTransport
+    2637: dup
+    2638: aload         9
+    2640: invokespecial #294                // Method org/bol/transport/NeoLitasDpsTransport."<init>":(Lorg/bol/transport/HttpsTransport;)V
+    2643: astore        10
+    2645: goto          2688
+    2648: new           #295                // class org/bol/transport/TakoDpsTransport
+    2651: dup
+    2652: aload         9
+    2654: invokespecial #296                // Method org/bol/transport/TakoDpsTransport."<init>":(Lorg/bol/transport/HttpsTransport;)V
+    2657: astore        10
+    2659: goto          2688
+    2662: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+    2665: getstatic     #251                // Field org/slf4j/event/Level.WARN:Lorg/slf4j/event/Level;
+    2668: ldc_w         #297                // String No Dps Scheduler for LBINDIVIDUALS
+    2671: invokestatic  #39                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+    2674: goto          2688
+    2677: new           #79                 // class java/lang/IllegalStateException
+    2680: dup
+    2681: ldc_w         #298                // String Invalid system group
+    2684: invokespecial #81                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+    2687: athrow
+    2688: aload         10
+    2690: invokestatic  #299                // Method org/bol/server/ConsoleServlet.setDpsScheduler:(Lorg/bol/transport/DpsScheduler;)V
+    2693: new           #300                // class org/eclipse/jetty/util/thread/QueuedThreadPool
+    2696: dup
+    2697: getstatic     #228                // Field maxThreads:I
+    2700: getstatic     #230                // Field minThreads:I
+    2703: getstatic     #232                // Field idleTimeout:I
+    2706: invokespecial #301                // Method org/eclipse/jetty/util/thread/QueuedThreadPool."<init>":(III)V
+    2709: astore        11
+    2711: new           #302                // class org/bol/Launcher$4
+    2714: dup
+    2715: aload         11
+    2717: invokespecial #303                // Method org/bol/Launcher$4."<init>":(Lorg/eclipse/jetty/util/thread/ThreadPool;)V
+    2720: putstatic     #33                 // Field embeddedServer:Lorg/eclipse/jetty/server/Server;
+    2723: iconst_1
+    2724: anewarray     #304                // class java/net/InetSocketAddress
+    2727: dup
+    2728: iconst_0
+    2729: getstatic     #223                // Field org/bol/server/ConsoleServlet.BIND_ADDRESS:Ljava/lang/String;
+    2732: getstatic     #226                // Field org/bol/server/ConsoleServlet.PORT:I
+    2735: invokestatic  #305                // Method java/net/InetSocketAddress.createUnresolved:(Ljava/lang/String;I)Ljava/net/InetSocketAddress;
+    2738: aastore
+    2739: invokestatic  #183                // Method java/util/Arrays.asList:([Ljava/lang/Object;)Ljava/util/List;
+    2742: astore        12
+    2744: new           #306                // class java/util/ArrayList
+    2747: dup
+    2748: aload         12
+    2750: invokeinterface #307,  1          // InterfaceMethod java/util/List.size:()I
+    2755: invokespecial #308                // Method java/util/ArrayList."<init>":(I)V
+    2758: astore        13
+    2760: aload         12
+    2762: invokeinterface #309,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+    2767: astore        14
+    2769: aload         14
+    2771: invokeinterface #310,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+    2776: ifeq          2963
+    2779: aload         14
+    2781: invokeinterface #311,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+    2786: checkcast     #304                // class java/net/InetSocketAddress
+    2789: astore        15
+    2791: new           #312                // class org/eclipse/jetty/server/ServerConnector
+    2794: dup
+    2795: getstatic     #33                 // Field embeddedServer:Lorg/eclipse/jetty/server/Server;
+    2798: invokespecial #313                // Method org/eclipse/jetty/server/ServerConnector."<init>":(Lorg/eclipse/jetty/server/Server;)V
+    2801: astore        16
+    2803: aload         16
+    2805: iconst_1
+    2806: invokevirtual #314                // Method org/eclipse/jetty/server/ServerConnector.setReuseAddress:(Z)V
+    2809: aload         15
+    2811: invokevirtual #315                // Method java/net/InetSocketAddress.getAddress:()Ljava/net/InetAddress;
+    2814: ifnull        2871
+    2817: aload         15
+    2819: invokevirtual #315                // Method java/net/InetSocketAddress.getAddress:()Ljava/net/InetAddress;
+    2822: invokevirtual #316                // Method java/net/InetAddress.isAnyLocalAddress:()Z
+    2825: ifne          2913
+    2828: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+    2831: getstatic     #37                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+    2834: ldc_w         #317                // String Binding API server address: {}
+    2837: iconst_1
+    2838: anewarray     #50                 // class java/lang/Object
+    2841: dup
+    2842: iconst_0
+    2843: aload         15
+    2845: invokevirtual #315                // Method java/net/InetSocketAddress.getAddress:()Ljava/net/InetAddress;
+    2848: invokevirtual #318                // Method java/net/InetAddress.getHostAddress:()Ljava/lang/String;
+    2851: aastore
+    2852: invokestatic  #319                // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;[Ljava/lang/Object;)V
+    2855: aload         16
+    2857: aload         15
+    2859: invokevirtual #315                // Method java/net/InetSocketAddress.getAddress:()Ljava/net/InetAddress;
+    2862: invokevirtual #318                // Method java/net/InetAddress.getHostAddress:()Ljava/lang/String;
+    2865: invokevirtual #320                // Method org/eclipse/jetty/server/ServerConnector.setHost:(Ljava/lang/String;)V
+    2868: goto          2913
+    2871: aload         15
+    2873: invokevirtual #321                // Method java/net/InetSocketAddress.getHostString:()Ljava/lang/String;
+    2876: ifnull        2913
+    2879: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+    2882: getstatic     #37                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+    2885: ldc_w         #322                // String Binding API server address name: {}
+    2888: iconst_1
+    2889: anewarray     #50                 // class java/lang/Object
+    2892: dup
+    2893: iconst_0
+    2894: aload         15
+    2896: invokevirtual #321                // Method java/net/InetSocketAddress.getHostString:()Ljava/lang/String;
+    2899: aastore
+    2900: invokestatic  #319                // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;[Ljava/lang/Object;)V
+    2903: aload         16
+    2905: aload         15
+    2907: invokevirtual #321                // Method java/net/InetSocketAddress.getHostString:()Ljava/lang/String;
+    2910: invokevirtual #320                // Method org/eclipse/jetty/server/ServerConnector.setHost:(Ljava/lang/String;)V
+    2913: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+    2916: getstatic     #37                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+    2919: ldc_w         #323                // String Binding API server port: {}
+    2922: iconst_1
+    2923: anewarray     #50                 // class java/lang/Object
+    2926: dup
+    2927: iconst_0
+    2928: aload         15
+    2930: invokevirtual #324                // Method java/net/InetSocketAddress.getPort:()I
+    2933: invokestatic  #325                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+    2936: aastore
+    2937: invokestatic  #319                // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;[Ljava/lang/Object;)V
+    2940: aload         16
+    2942: aload         15
+    2944: invokevirtual #324                // Method java/net/InetSocketAddress.getPort:()I
+    2947: invokevirtual #326                // Method org/eclipse/jetty/server/ServerConnector.setPort:(I)V
+    2950: aload         13
+    2952: aload         16
+    2954: invokeinterface #327,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+    2959: pop
+    2960: goto          2769
+    2963: aload         13
+    2965: invokeinterface #309,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+    2970: astore        14
+    2972: aload         14
+    2974: invokeinterface #310,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+    2979: ifeq          3056
+    2982: aload         14
+    2984: invokeinterface #311,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+    2989: checkcast     #328                // class org/eclipse/jetty/server/Connector
+    2992: astore        15
+    2994: aload         15
+    2996: invokeinterface #329,  1          // InterfaceMethod org/eclipse/jetty/server/Connector.getConnectionFactories:()Ljava/util/Collection;
+    3001: invokeinterface #330,  1          // InterfaceMethod java/util/Collection.iterator:()Ljava/util/Iterator;
+    3006: astore        16
+    3008: aload         16
+    3010: invokeinterface #310,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+    3015: ifeq          3053
+    3018: aload         16
+    3020: invokeinterface #311,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+    3025: checkcast     #331                // class org/eclipse/jetty/server/ConnectionFactory
+    3028: astore        17
+    3030: aload         17
+    3032: instanceof    #332                // class org/eclipse/jetty/server/HttpConnectionFactory
+    3035: ifeq          3050
+    3038: aload         17
+    3040: checkcast     #332                // class org/eclipse/jetty/server/HttpConnectionFactory
+    3043: invokevirtual #333                // Method org/eclipse/jetty/server/HttpConnectionFactory.getHttpConfiguration:()Lorg/eclipse/jetty/server/HttpConfiguration;
+    3046: iconst_0
+    3047: invokevirtual #334                // Method org/eclipse/jetty/server/HttpConfiguration.setSendServerVersion:(Z)V
+    3050: goto          3008
+    3053: goto          2972
+    3056: getstatic     #33                 // Field embeddedServer:Lorg/eclipse/jetty/server/Server;
+    3059: aload         13
+    3061: aload         13
+    3063: invokeinterface #307,  1          // InterfaceMethod java/util/List.size:()I
+    3068: anewarray     #328                // class org/eclipse/jetty/server/Connector
+    3071: invokeinterface #335,  2          // InterfaceMethod java/util/List.toArray:([Ljava/lang/Object;)[Ljava/lang/Object;
+    3076: checkcast     #336                // class "[Lorg/eclipse/jetty/server/Connector;"
+    3079: invokevirtual #337                // Method org/eclipse/jetty/server/Server.setConnectors:([Lorg/eclipse/jetty/server/Connector;)V
+    3082: getstatic     #33                 // Field embeddedServer:Lorg/eclipse/jetty/server/Server;
+    3085: iconst_1
+    3086: invokevirtual #338                // Method org/eclipse/jetty/server/Server.setStopAtShutdown:(Z)V
+    3089: new           #339                // class org/eclipse/jetty/servlet/ServletContextHandler
+    3092: dup
+    3093: aconst_null
+    3094: ldc_w         #340                // String /
+    3097: iconst_1
+    3098: iconst_0
+    3099: invokespecial #341                // Method org/eclipse/jetty/servlet/ServletContextHandler."<init>":(Lorg/eclipse/jetty/server/HandlerContainer;Ljava/lang/String;ZZ)V
+    3102: astore        14
+    3104: getstatic     #33                 // Field embeddedServer:Lorg/eclipse/jetty/server/Server;
+    3107: aload         14
+    3109: invokevirtual #342                // Method org/eclipse/jetty/server/Server.setHandler:(Lorg/eclipse/jetty/server/Handler;)V
+    3112: aload         14
+    3114: new           #343                // class org/bol/Launcher$5
+    3117: dup
+    3118: invokespecial #344                // Method org/bol/Launcher$5."<init>":()V
+    3121: invokevirtual #345                // Method org/eclipse/jetty/servlet/ServletContextHandler.setErrorHandler:(Lorg/eclipse/jetty/server/handler/ErrorHandler;)V
+    3124: new           #346                // class org/eclipse/jetty/server/session/SessionHandler
+    3127: dup
+    3128: invokespecial #347                // Method org/eclipse/jetty/server/session/SessionHandler."<init>":()V
+    3131: astore        15
+    3133: aload         14
+    3135: aload         15
+    3137: invokevirtual #348                // Method org/eclipse/jetty/servlet/ServletContextHandler.setSessionHandler:(Lorg/eclipse/jetty/server/session/SessionHandler;)V
+    3140: getstatic     #236                // Field org/bol/server/ConsoleServlet.SECURITY:Z
+    3143: ifeq          3183
+    3146: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+    3149: getstatic     #37                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+    3152: ldc_w         #349                // String This Server is using basic authentication
+    3155: invokestatic  #39                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+    3158: aload         14
+    3160: getstatic     #238                // Field org/bol/server/ConsoleServlet.BASIC_AUTH_USER:Ljava/lang/String;
+    3163: getstatic     #240                // Field org/bol/server/ConsoleServlet.BASIC_AUTH_PASS:Ljava/lang/String;
+    3166: getstatic     #64                 // Field PROJ_NAME:Ljava/lang/String;
+    3169: getstatic     #66                 // Field PROJ_VERSION:Ljava/lang/String;
+    3172: invokedynamic #350,  0            // InvokeDynamic #15:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    3177: invokestatic  #351                // Method basicAuth:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lorg/eclipse/jetty/security/SecurityHandler;
+    3180: invokevirtual #352                // Method org/eclipse/jetty/servlet/ServletContextHandler.setSecurityHandler:(Lorg/eclipse/jetty/security/SecurityHandler;)V
+    3183: new           #353                // class org/eclipse/jetty/servlet/ServletHolder
+    3186: dup
+    3187: new           #354                // class org/bol/server/ConsoleServlet
+    3190: dup
+    3191: invokespecial #355                // Method org/bol/server/ConsoleServlet."<init>":()V
+    3194: invokespecial #356                // Method org/eclipse/jetty/servlet/ServletHolder."<init>":(Ljavax/servlet/Servlet;)V
+    3197: astore        16
+    3199: aload         16
+    3201: getstatic     #234                // Field org/bol/server/ConsoleServlet.ASYNC:Z
+    3204: invokevirtual #357                // Method org/eclipse/jetty/servlet/ServletHolder.setAsyncSupported:(Z)V
+    3207: aload         14
+    3209: aload         16
+    3211: ldc           #14                 // String /*
+    3213: invokevirtual #358                // Method org/eclipse/jetty/servlet/ServletContextHandler.addServlet:(Lorg/eclipse/jetty/servlet/ServletHolder;Ljava/lang/String;)V
+    3216: aload         14
+    3218: ldc_w         #359                // class org/eclipse/jetty/servlets/CrossOriginFilter
+    3221: ldc           #14                 // String /*
+    3223: getstatic     #360                // Field javax/servlet/DispatcherType.REQUEST:Ljavax/servlet/DispatcherType;
+    3226: invokestatic  #361                // Method java/util/EnumSet.of:(Ljava/lang/Enum;)Ljava/util/EnumSet;
+    3229: invokevirtual #362                // Method org/eclipse/jetty/servlet/ServletContextHandler.addFilter:(Ljava/lang/Class;Ljava/lang/String;Ljava/util/EnumSet;)Lorg/eclipse/jetty/servlet/FilterHolder;
+    3232: astore        17
+    3234: aload         17
+    3236: ldc_w         #363                // String allowedOrigins
+    3239: ldc_w         #364                // String *,file://*
+    3242: invokevirtual #365                // Method org/eclipse/jetty/servlet/FilterHolder.setInitParameter:(Ljava/lang/String;Ljava/lang/String;)V
+    3245: aload         17
+    3247: ldc_w         #366                // String allowedHeaders
+    3250: ldc_w         #367                // String Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin
+    3253: invokevirtual #365                // Method org/eclipse/jetty/servlet/FilterHolder.setInitParameter:(Ljava/lang/String;Ljava/lang/String;)V
+    3256: aload         17
+    3258: ldc_w         #368                // String allowedMethods
+    3261: ldc_w         #369                // String GET,PUT,POST,HEAD,DELETE,OPTIONS
+    3264: invokevirtual #365                // Method org/eclipse/jetty/servlet/FilterHolder.setInitParameter:(Ljava/lang/String;Ljava/lang/String;)V
+    3267: aload         17
+    3269: ldc_w         #370                // String allowCredentials
+    3272: ldc_w         #371                // String true
+    3275: invokevirtual #365                // Method org/eclipse/jetty/servlet/FilterHolder.setInitParameter:(Ljava/lang/String;Ljava/lang/String;)V
+    3278: invokestatic  #372                // Method org/cacheonix/Cacheonix.getInstance:()Lorg/cacheonix/Cacheonix;
+    3281: astore        18
+    3283: getstatic     #33                 // Field embeddedServer:Lorg/eclipse/jetty/server/Server;
+    3286: invokevirtual #373                // Method org/eclipse/jetty/server/Server.start:()V
+    3289: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+    3292: getstatic     #37                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+    3295: getstatic     #223                // Field org/bol/server/ConsoleServlet.BIND_ADDRESS:Ljava/lang/String;
+    3298: getstatic     #226                // Field org/bol/server/ConsoleServlet.PORT:I
+    3301: invokedynamic #374,  0            // InvokeDynamic #16:makeConcatWithConstants:(Ljava/lang/String;I)Ljava/lang/String;
+    3306: invokestatic  #39                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+    3309: aload_0
+    3310: arraylength
+    3311: ifle          3341
+    3314: aload_0
+    3315: iconst_0
+    3316: aaload
+    3317: ldc_w         #375                // String test
+    3320: invokevirtual #77                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+    3323: ifeq          3341
+    3326: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+    3329: getstatic     #37                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+    3332: ldc_w         #376                // String Test Environment Server
+    3335: invokestatic  #39                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+    3338: goto          3381
+    3341: aload_0
+    3342: arraylength
+    3343: ifle          3355
+    3346: getstatic     #78                 // Field org/bol/server/ConsoleServlet.SERVICE:Z
+    3349: ifeq          3355
+    3352: invokestatic  #377                // Method org/bol/server/ConsoleServlet.initialize:()V
+    3355: aload         11
+    3357: ldc2_w        #378                // long 5000l
+    3360: invokevirtual #380                // Method org/eclipse/jetty/util/thread/QueuedThreadPool.setStopTimeout:(J)V
+    3363: getstatic     #33                 // Field embeddedServer:Lorg/eclipse/jetty/server/Server;
+    3366: invokevirtual #381                // Method org/eclipse/jetty/server/Server.join:()V
+    3369: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+    3372: getstatic     #37                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+    3375: ldc_w         #382                // String Server stopped
+    3378: invokestatic  #39                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+    3381: iconst_0
+    3382: aload_0
+    3383: arraylength
+    3384: if_icmpeq     3399
+    3387: aload_0
+    3388: iconst_0
+    3389: aaload
+    3390: ldc_w         #375                // String test
+    3393: invokevirtual #77                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+    3396: ifne          3593
+    3399: aload         18
+    3401: invokevirtual #383                // Method org/cacheonix/Cacheonix.shutdown:()V
+    3404: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+    3407: getstatic     #37                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+    3410: ldc_w         #384                // String Server terminated
+    3413: invokestatic  #39                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+    3416: iconst_0
+    3417: invokestatic  #385                // Method java/lang/System.exit:(I)V
+    3420: goto          3593
+    3423: astore        19
+    3425: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+    3428: aload         19
+    3430: invokestatic  #386                // Method org/bol/server/LogWrapper.logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+    3433: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+    3436: getstatic     #253                // Field org/slf4j/event/Level.ERROR:Lorg/slf4j/event/Level;
+    3439: ldc_w         #387                // String Stopping Server in 5s
+    3442: invokestatic  #39                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+    3445: ldc2_w        #378                // long 5000l
+    3448: invokestatic  #388                // Method java/lang/Thread.sleep:(J)V
+    3451: iconst_m1
+    3452: invokestatic  #385                // Method java/lang/System.exit:(I)V
+    3455: iconst_0
+    3456: aload_0
+    3457: arraylength
+    3458: if_icmpeq     3473
+    3461: aload_0
+    3462: iconst_0
+    3463: aaload
+    3464: ldc_w         #375                // String test
+    3467: invokevirtual #77                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+    3470: ifne          3593
+    3473: aload         18
+    3475: invokevirtual #383                // Method org/cacheonix/Cacheonix.shutdown:()V
+    3478: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+    3481: getstatic     #37                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+    3484: ldc_w         #384                // String Server terminated
+    3487: invokestatic  #39                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+    3490: iconst_0
+    3491: invokestatic  #385                // Method java/lang/System.exit:(I)V
+    3494: goto          3593
+    3497: astore        19
+    3499: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+    3502: aload         19
+    3504: invokestatic  #386                // Method org/bol/server/LogWrapper.logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+    3507: iconst_0
+    3508: aload_0
+    3509: arraylength
+    3510: if_icmpeq     3525
+    3513: aload_0
+    3514: iconst_0
+    3515: aaload
+    3516: ldc_w         #375                // String test
+    3519: invokevirtual #77                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+    3522: ifne          3593
+    3525: aload         18
+    3527: invokevirtual #383                // Method org/cacheonix/Cacheonix.shutdown:()V
+    3530: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+    3533: getstatic     #37                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+    3536: ldc_w         #384                // String Server terminated
+    3539: invokestatic  #39                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+    3542: iconst_0
+    3543: invokestatic  #385                // Method java/lang/System.exit:(I)V
+    3546: goto          3593
+    3549: astore        20
+    3551: iconst_0
+    3552: aload_0
+    3553: arraylength
+    3554: if_icmpeq     3569
+    3557: aload_0
+    3558: iconst_0
+    3559: aaload
+    3560: ldc_w         #375                // String test
+    3563: invokevirtual #77                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+    3566: ifne          3590
+    3569: aload         18
+    3571: invokevirtual #383                // Method org/cacheonix/Cacheonix.shutdown:()V
+    3574: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+    3577: getstatic     #37                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+    3580: ldc_w         #384                // String Server terminated
+    3583: invokestatic  #39                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+    3586: iconst_0
+    3587: invokestatic  #385                // Method java/lang/System.exit:(I)V
+    3590: aload         20
+    3592: athrow
+    3593: goto          3650
+    3596: astore_1
+    3597: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+    3600: getstatic     #251                // Field org/slf4j/event/Level.WARN:Lorg/slf4j/event/Level;
+    3603: ldc_w         #390                // String Interrupted!
+    3606: iconst_1
+    3607: anewarray     #50                 // class java/lang/Object
+    3610: dup
+    3611: iconst_0
+    3612: aload_1
+    3613: aastore
+    3614: invokestatic  #319                // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;[Ljava/lang/Object;)V
+    3617: invokestatic  #391                // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+    3620: invokevirtual #392                // Method java/lang/Thread.interrupt:()V
+    3623: goto          3650
+    3626: astore_1
+    3627: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+    3630: aload_1
+    3631: invokestatic  #386                // Method org/bol/server/LogWrapper.logException:(Lorg/slf4j/Logger;Ljava/lang/Throwable;)V
+    3634: getstatic     #36                 // Field log:Lorg/slf4j/Logger;
+    3637: getstatic     #37                 // Field org/slf4j/event/Level.INFO:Lorg/slf4j/event/Level;
+    3640: ldc_w         #393                // String Server launch failed, terminating...
+    3643: invokestatic  #39                 // Method org/bol/server/LogWrapper.log:(Lorg/slf4j/Logger;Lorg/slf4j/event/Level;Ljava/lang/String;)V
+    3646: iconst_m1
+    3647: invokestatic  #385                // Method java/lang/System.exit:(I)V
+    3650: return
+    Exception table:
+       from    to  target type
+         456  1885  1893   Class java/lang/Throwable
+        1895  1900  1903   Class java/lang/Throwable
+         435  1915  1923   Class java/lang/Throwable
+        1925  1930  1933   Class java/lang/Throwable
+        3283  3381  3423   Class java/lang/Exception
+        3283  3381  3497   Class java/lang/Throwable
+        3283  3381  3549   any
+        3423  3455  3549   any
+        3497  3507  3549   any
+        3549  3551  3549   any
+           0  3593  3596   Class java/lang/InterruptedException
+           0  3593  3626   Class java/lang/Exception
+
+  static {};
+    Code:
+       0: ldc           #61                 // class org/bol/Launcher
+       2: invokestatic  #394                // Method org/slf4j/LoggerFactory.getLogger:(Ljava/lang/Class;)Lorg/slf4j/Logger;
+       5: putstatic     #36                 // Field log:Lorg/slf4j/Logger;
+       8: aconst_null
+       9: putstatic     #33                 // Field embeddedServer:Lorg/eclipse/jetty/server/Server;
+      12: ldc_w         #395                // String .
+      15: putstatic     #114                // Field WORK_DIR:Ljava/lang/String;
+      18: aconst_null
+      19: putstatic     #64                 // Field PROJ_NAME:Ljava/lang/String;
+      22: aconst_null
+      23: putstatic     #66                 // Field PROJ_VERSION:Ljava/lang/String;
+      26: getstatic     #195                // Field org/bol/Launcher$ENVIRONMENT_TYPES.TEST:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+      29: putstatic     #194                // Field ENVIRONMENT:Lorg/bol/Launcher$ENVIRONMENT_TYPES;
+      32: bipush        100
+      34: putstatic     #228                // Field maxThreads:I
+      37: bipush        50
+      39: putstatic     #230                // Field minThreads:I
+      42: sipush        600
+      45: putstatic     #232                // Field idleTimeout:I
+      48: iconst_1
+      49: putstatic     #84                 // Field heartBeat:Z
+      52: getstatic     #203                // Field org/bol/Launcher$SYSTEM_GROUP_TYPES.LITAS:Lorg/bol/Launcher$SYSTEM_GROUP_TYPES;
+      55: putstatic     #204                // Field SYSTEM_GROUP:Lorg/bol/Launcher$SYSTEM_GROUP_TYPES;
+      58: return
+}

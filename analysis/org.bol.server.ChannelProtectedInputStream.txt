@@ -1,0 +1,105 @@
+Compiled from "ChannelProtectedInputStream.java"
+public class org.bol.server.ChannelProtectedInputStream extends java.io.InputStream {
+  private final java.io.InputStream delegate;
+
+  private volatile boolean streamClosed;
+
+  public org.bol.server.ChannelProtectedInputStream(java.io.InputStream);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/io/InputStream."<init>":()V
+       4: aload_0
+       5: iconst_0
+       6: putfield      #2                  // Field streamClosed:Z
+       9: aload_0
+      10: aload_1
+      11: putfield      #3                  // Field delegate:Ljava/io/InputStream;
+      14: return
+
+  public int read() throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field streamClosed:Z
+       4: ifeq          17
+       7: new           #4                  // class java/io/IOException
+      10: dup
+      11: ldc           #5                  // String Stream closed
+      13: invokespecial #6                  // Method java/io/IOException."<init>":(Ljava/lang/String;)V
+      16: athrow
+      17: aload_0
+      18: getfield      #3                  // Field delegate:Ljava/io/InputStream;
+      21: invokevirtual #7                  // Method java/io/InputStream.read:()I
+      24: ireturn
+
+  public int read(byte[]) throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field streamClosed:Z
+       4: ifeq          17
+       7: new           #4                  // class java/io/IOException
+      10: dup
+      11: ldc           #5                  // String Stream closed
+      13: invokespecial #6                  // Method java/io/IOException."<init>":(Ljava/lang/String;)V
+      16: athrow
+      17: aload_0
+      18: getfield      #3                  // Field delegate:Ljava/io/InputStream;
+      21: aload_1
+      22: invokevirtual #8                  // Method java/io/InputStream.read:([B)I
+      25: ireturn
+
+  public int read(byte[], int, int) throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field streamClosed:Z
+       4: ifeq          17
+       7: new           #4                  // class java/io/IOException
+      10: dup
+      11: ldc           #5                  // String Stream closed
+      13: invokespecial #6                  // Method java/io/IOException."<init>":(Ljava/lang/String;)V
+      16: athrow
+      17: aload_0
+      18: getfield      #3                  // Field delegate:Ljava/io/InputStream;
+      21: aload_1
+      22: iload_2
+      23: iload_3
+      24: invokevirtual #9                  // Method java/io/InputStream.read:([BII)I
+      27: ireturn
+
+  public long skip(long) throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field streamClosed:Z
+       4: ifeq          17
+       7: new           #4                  // class java/io/IOException
+      10: dup
+      11: ldc           #5                  // String Stream closed
+      13: invokespecial #6                  // Method java/io/IOException."<init>":(Ljava/lang/String;)V
+      16: athrow
+      17: aload_0
+      18: getfield      #3                  // Field delegate:Ljava/io/InputStream;
+      21: lload_1
+      22: invokevirtual #10                 // Method java/io/InputStream.skip:(J)J
+      25: lreturn
+
+  public int available() throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field streamClosed:Z
+       4: ifeq          17
+       7: new           #4                  // class java/io/IOException
+      10: dup
+      11: ldc           #5                  // String Stream closed
+      13: invokespecial #6                  // Method java/io/IOException."<init>":(Ljava/lang/String;)V
+      16: athrow
+      17: aload_0
+      18: getfield      #3                  // Field delegate:Ljava/io/InputStream;
+      21: invokevirtual #11                 // Method java/io/InputStream.available:()I
+      24: ireturn
+
+  public void close() throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: putfield      #2                  // Field streamClosed:Z
+       5: return
+}
